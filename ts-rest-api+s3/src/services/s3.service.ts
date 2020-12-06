@@ -41,7 +41,7 @@ export class S3Service {
         Bucket: bucketName,
         Key: location,
       };
-      const putResult = await this.s3.deleteObject(params).promise();
+      await this.s3.deleteObject(params).promise();
       return true;
     } catch (error) {
       return error;
