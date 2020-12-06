@@ -21,12 +21,27 @@ cd cdk
 cdk deploy
 ```
 
-# Test api
+# Destroy
+
+```bash
+cd cdk
+cdk destroy
+```
+
+# Try api locally
 
 ```bash
 cd client
 python3 demo.py
-python3 demo.py -g post
+python3 demo.py -method post
+```
+
+# Try deployed api
+
+```bash
+cd client
+python3 demo.py -region {aws-region} -uuid {aws-uuid}
+python3 demo.py -region {aws-region} -uuid {aws-uuid} -method post
 ```
 
 # Run tests
