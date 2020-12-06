@@ -1,0 +1,11 @@
+{
+  "name": "ts-rest-api-s3",
+  "scripts": {
+    "start": "nodemon --watch \"src/**/*.ts\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node\" src/local.ts",
+    "build": "tsc --outDir ./dist & cp src/package.json dist & npm install --only=prod  --prefix dist"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.10",
+    "express": "^4.17.1"
+  }
+}
