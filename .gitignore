@@ -8,4 +8,9 @@ cdk.out
 
 # Parcel default cache directory
 .parcel-cache
+
+dist
+!dist/README.md
+
 .DS_Store
+__pycache__
