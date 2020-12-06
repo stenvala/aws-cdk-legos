@@ -7,11 +7,7 @@ test("SQS Queue Created", () => {
   // WHEN
   const stack = new CdkSample.CdkStack(app, "MyTestStack");
   // THEN
-  expectCDK(stack).to(
-    haveResource("AWS::SQS::Queue", {
-      VisibilityTimeout: 300,
-    })
-  );
+  expectCDK(stack).to(haveResource("AWS::Lambda::Function"));
 });
 
 test("SNS Topic Created", () => {
@@ -19,5 +15,5 @@ test("SNS Topic Created", () => {
   // WHEN
   const stack = new CdkSample.CdkStack(app, "MyTestStack");
   // THEN
-  expectCDK(stack).to(haveResource("AWS::SNS::Topic"));
+  expectCDK(stack).to(haveResource("AWS::ApiGateway::RestApi"));
 });
