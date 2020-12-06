@@ -36,16 +36,18 @@ cdk destroy
 
 ```bash
 cd client
-python3 demo.py
+python3 demo.py -method get
 python3 demo.py -method post
+python3 demo.py -method delete
 ```
 
 # Try deployed api
 
 ```bash
 cd client
-python3 demo.py -region {aws-region} -uid {aws-uid}
+python3 demo.py -region {aws-region} -uid {aws-uid} -method get
 python3 demo.py -region {aws-region} -uid {aws-uid} -method post
+python3 demo.py -region {aws-region} -uid {aws-uid} -method delete
 ```
 
 # Run tests
