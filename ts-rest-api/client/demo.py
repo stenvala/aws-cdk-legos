@@ -6,24 +6,30 @@ import argparse
 def main(args):
     if args.method == 'get':
         data = requests.get(get_url(args, 'endpoint'))
-        body = json.loads(data.content)
-        print(json.dumps(body, indent=4, sort_keys=True))
+        print_result(data)
 
     if args.method == 'post':
         data = requests.post(get_url(args, 'endpoint'),
                              json={'msg': 'My message'})
-        body = json.loads(data.content)
-        print(json.dumps(body, indent=4, sort_keys=True))
+        print_result(data)
+
+
+def print_result(response):
+    if response.status_code != 200:
+        print('Failed %s' % response.status_code)
+        return
+    body = json.loads(response.content)
+    print(json.dumps(body, indent=4, sort_keys=True))
 
 
 def get_url(args, route):
     base = get_base(args)
-    print(base)
+    print(base + route)
     return base + route
 
 
 def get_base(args):
-    if args.uuid == '':
+    if args.uid == '':
         return 'http://localhost:4001/restapi/'
     else:
         return 'https://%s.execute-api.%s.amazonaws.com/prod/restapi/' % (args.uid, args.region)
