@@ -26,7 +26,7 @@ def get_base(args):
     if args.uuid == '':
         return 'http://localhost:4001/restapi/'
     else:
-        return 'https://%s.execute-api.%s.amazonaws.com/prod/restapi/' % (args.uuid, args.region)
+        return 'https://%s.execute-api.%s.amazonaws.com/prod/restapi/' % (args.uid, args.region)
 
 
 if __name__ == "__main__":
@@ -35,8 +35,8 @@ if __name__ == "__main__":
     parser.add_argument('-region', default='eu-north-1',
                         help='AWS region')
 
-    parser.add_argument('-uuid', default='',
-                        help='Give this to use AWS end point, otherwise uses locale')
+    parser.add_argument('-uid', default='',
+                        help='Give this to use AWS end point, otherwise uses local')
 
     parser.add_argument('-method', default='get',
                         help='What method to use')

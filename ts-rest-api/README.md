@@ -40,8 +40,8 @@ python3 demo.py -method post
 
 ```bash
 cd client
-python3 demo.py -region {aws-region} -uuid {aws-uuid}
-python3 demo.py -region {aws-region} -uuid {aws-uuid} -method post
+python3 demo.py -region {aws-region} -uid {aws-uid}
+python3 demo.py -region {aws-region} -uid {aws-uid} -method post
 ```
 
 # Run tests
