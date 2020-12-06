@@ -11,3 +11,7 @@ You must have AWS CLI installed and configured and AWS CDK installed. Look from 
 ### ts-hello-world
 
 Extremely basic hello world sample. AWS Lambda and API GW are created with CDK.
+
+### ts-rest-api
+
+Rest API lambda with NodeJS and Express.
