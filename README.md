@@ -1,6 +1,6 @@
-# AWS CDK Samples
+# AWS CDK Legos
 
-This repository has various AWS CDK samples.
+This repository has various AWS CDK samples and associated minimalistic microservice code that use AWS services as Lego blocks to do simple things.
 
 ## Pre reqs
 
