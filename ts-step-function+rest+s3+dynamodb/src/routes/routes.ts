@@ -1,3 +1,4 @@
+import { DynamoService } from "../services/dynamo.service";
 import { IntegratorService } from "../services/integrator.service";
 import { S3Service } from "../services/s3.service";
 
@@ -5,7 +6,8 @@ const express = require("express");
 
 function getIntegrator() {
   const s3 = new S3Service();
-  return new IntegratorService(s3);
+  const dynamo = new DynamoService();
+  return new IntegratorService(s3, dynamo);
 }
 
 // Inspired by: https://advancedweb.hu/how-to-use-s3-post-signed-urls/

@@ -25,16 +25,9 @@ export const httpHandler = serverless(app);
 
 export async function stepFunction(event, context) {
   // This is the step function
-  return {
-    statusCode: 200,
-    headers: { "Content-Type": "text/json" },
-    body: JSON.stringify({
-      msg: "Hello world!",
-      event,
-      context,
-      env: process.env,
-    }),
-  };
+  console.info("Starting step function");
+  console.info(event);
+  console.info(context);
 }
 
 // This is needed for local

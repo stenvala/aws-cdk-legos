@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
-    "types": ["jest", "node"]
+    "declaration": true,
+    "types": ["jest", "node"],
+    "target": "es6",
+    "module": "es2015"
   }
 }
