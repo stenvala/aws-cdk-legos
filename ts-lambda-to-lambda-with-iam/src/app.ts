@@ -1,3 +1,4 @@
+import * as aws4 from "aws4";
 import Axios from "axios";
 
 // https://medium.com/@joshua.a.kahn/calling-amazon-api-gateway-authenticated-methods-with-axios-and-aws4-6eeda1aa8696
@@ -8,19 +9,17 @@ export async function lambdaHandler1(event, context) {
     "Info called first lambda and now forwarding the call to second lambda"
   );
 
-  let request = {
+  const unsigned = {
     host: process.env.HOST,
     method: "GET",
     url: process.env.LAMBDA,
     path: "/prod",
   };
 
-  // let request = aws4.sign();
+  const signed = aws4.sign(unsigned);
 
-  delete request["host"];
-  delete request["path"];
-  console.log(request);
-  const response = await Axios((request as unknown) as any);
+  console.log(signed);
+  const response = await Axios((signed as unknown) as any);
   console.log("called");
   console.log(response);
   const data = Object.assign({ newMsg: "Howdy" }, response.data);

@@ -12,6 +12,7 @@ export class TsHelloWorldStack extends cdk.Stack {
       code: lambda.Code.fromAsset("../src"),
       handler: "app.lambdaHandler2",
     });
+
     /*
     // THIS IS NOW WITHOUT AUTHENTICATION
     
@@ -27,24 +28,26 @@ export class TsHelloWorldStack extends cdk.Stack {
     const apiGW = new apigw.LambdaRestApi(this, "Endpoint2", {
       handler: fun,
       proxy: true,
-      options: {},
+      options: {
+        defaultMethodOptions: {
+          authorizationType: apigw.AuthorizationType.IAM,
+        },
+      },
     });
 
-    new apigw.CfnAuthorizer(this, "IAMAuthorizer", {
-      restApiId: apiGW.restApiId,
-      type: apigw.AuthorizationType.IAM,
-    });
-
+    // This is the role of the other lambda
     const lambda1RoleArn =
       "arn:aws:iam::725670626446:role/Lambda2LambdaPart1-IamLambdaHandler1ServiceRoleCF6-165RFCX6APINI";
 
-    const iamUser = new iam.ArnPrincipal(lambda1RoleArn);
+    const iamUser = iam.Role.fromRoleArn(this, "Role", lambda1RoleArn, {
+      mutable: false,
+    });
 
     const policyStatement = new iam.PolicyStatement({
       resources: [apiGW.restApiRootResourceId],
       actions: ["lambda:InvokeFunction"],
     });
 
-    iamUser.addToPolicy(policyStatement);
+    iamUser.addToPrincipalPolicy(policyStatement);
   }
 }
