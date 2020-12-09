@@ -6,14 +6,20 @@ This creates two lambdas you send message to first, it forwards it to next using
 
 ```bash
 cd src
-tsc app.ts ; mv app.js ../dist/
+npm install
+tsc app.ts
 ```
 
 # Deploy
 
 ```bash
-cd cdk1 && cdk deploy && cd ../cdk2 && cdk deploy && cd ..
-
+cd cdk1
+npm install
+cdk deploy
+cd ..
+cd cdk2
+npm install
+cdk deploy
 ```
 
 # Test at
@@ -27,6 +33,8 @@ https://{uid}.execute-api.{region}.amazonaws.com/prod/
 # Clear stack
 
 ```bash
-cd cdk
+cd cdk1
+cdk destroy
+cd cdk2
 cdk destroy
 ```

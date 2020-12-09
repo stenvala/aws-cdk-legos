@@ -1,25 +1,31 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
-import * as lambda from "@aws-cdk/aws-lambda";
 import * as iam from "@aws-cdk/aws-iam";
+import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
-import { pid } from "process";
 
 export class TsHelloWorldStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const name = new lambda.Function(this, "HelloWorldHandler", {
+    const fun = new lambda.Function(this, "IamLambdaHandler2", {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.fromAsset("../dist"),
+      code: lambda.Code.fromAsset("../src"),
       handler: "app.lambdaHandler2",
     });
+    /*
+    // THIS IS NOW WITHOUT AUTHENTICATION
+    
+    const gw = new apigw.LambdaRestApi(this, "Endpoint2", {
+      handler: fun,
+      proxy: true,
+    });
 
-    // API Gateway
+    return;
+    */
+    // This is with iam role based authentication
 
-    const integration = new apigw.LambdaIntegration(name);
-
-    const apiGW = new apigw.LambdaRestApi(this, "Endpoint", {
-      handler: name,
+    const apiGW = new apigw.LambdaRestApi(this, "Endpoint2", {
+      handler: fun,
       proxy: true,
       options: {},
     });
@@ -30,7 +36,8 @@ export class TsHelloWorldStack extends cdk.Stack {
     });
 
     const lambda1RoleArn =
-      "arn:aws:iam::364632538942:role/TsHelloWorldStack-HelloWorldHandlerServiceRole56E6-IX9B9PQMY373";
+      "arn:aws:iam::725670626446:role/Lambda2LambdaPart1-IamLambdaHandler1ServiceRoleCF6-165RFCX6APINI";
+
     const iamUser = new iam.ArnPrincipal(lambda1RoleArn);
 
     const policyStatement = new iam.PolicyStatement({
