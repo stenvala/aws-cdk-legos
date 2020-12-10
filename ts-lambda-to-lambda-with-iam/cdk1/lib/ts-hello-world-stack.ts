@@ -3,7 +3,7 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
 
 // This is the url of the second lambda
-const HOST = "7c53dspx0i.execute-api.eu-north-1.amazonaws.com";
+const HOST = "6spg5qmq07.execute-api.eu-west-1.amazonaws.com";
 const LAMBDA = `https://${HOST}/prod/`;
 
 export class TsHelloWorldStack extends cdk.Stack {

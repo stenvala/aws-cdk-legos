@@ -37,17 +37,21 @@ export class TsHelloWorldStack extends cdk.Stack {
 
     // This is the role of the other lambda
     const lambda1RoleArn =
-      "arn:aws:iam::725670626446:role/Lambda2LambdaPart1-IamLambdaHandler1ServiceRoleCF6-165RFCX6APINI";
+      // "arn:aws:iam::725670626446:role/Lambda2LambdaPart1-IamLambdaHandler1ServiceRoleCF6-165RFCX6APINI";
+      "arn:aws:iam::364632538942:role/Lambda2LambdaPart1-IamLambdaHandler1ServiceRoleCF6-1L7CSNQA30AND";
 
-    const iamUser = iam.Role.fromRoleArn(this, "Role", lambda1RoleArn, {
-      mutable: false,
-    });
+    const iamUser = iam.Role.fromRoleArn(this, "Role", lambda1RoleArn);
 
     const policyStatement = new iam.PolicyStatement({
       resources: [apiGW.restApiRootResourceId],
-      actions: ["lambda:InvokeFunction"],
+      effect: iam.Effect.ALLOW,
+      actions: ["execute-api:Invoke", "lambda:InvokeFunction"],
     });
 
-    iamUser.addToPrincipalPolicy(policyStatement);
+    fun.grantInvoke(iamUser);
+
+    // iamUser.addToPrincipalPolicy(policyStatement);
+
+    // iamUser.attachInlinePolicy(policy);
   }
 }

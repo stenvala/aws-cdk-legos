@@ -19,9 +19,16 @@ export async function lambdaHandler1(event, context) {
   const signed = aws4.sign(unsigned);
 
   console.log(signed);
-  const response = await Axios((signed as unknown) as any);
-  console.log("called");
-  console.log(response);
+  let response;
+  try {
+    response = await Axios((signed as unknown) as any);
+    console.log("called");
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+    response = { data: error };
+  }
+
   const data = Object.assign({ newMsg: "Howdy" }, response.data);
   return {
     statusCode: 200,
