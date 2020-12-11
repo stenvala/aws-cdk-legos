@@ -12,6 +12,10 @@ You must have AWS CLI installed and configured and AWS CDK installed. Look from 
 
 Extremely basic hello world sample. AWS Lambda and API GW are created with CDK.
 
+### ts-lambda-to-lambda-with-iam
+
+Communicate from lambda to lambda with iam auth.
+
 ### ts-rest-api
 
 Rest API lambda with NodeJS and Express.
