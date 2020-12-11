@@ -13,7 +13,6 @@ export async function lambdaHandler1(event, context) {
   const client = Axios.create();
 
   const interceptor = aws4Interceptor({
-    region: "eu-west-1",
     service: "execute-api",
   });
 
