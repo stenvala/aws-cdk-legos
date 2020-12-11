@@ -1,34 +1,35 @@
 import * as aws4 from "aws4";
 import Axios from "axios";
+import { aws4Interceptor } from "aws4-axios";
 
 // https://medium.com/@joshua.a.kahn/calling-amazon-api-gateway-authenticated-methods-with-axios-and-aws4-6eeda1aa8696
 
 // https://cc226v1fyf.execute-api.eu-north-1.amazonaws.com/prod/
 export async function lambdaHandler1(event, context) {
   console.log(
-    "Info called first lambda and now forwarding the call to second lambda"
+    "Info called first lambda and soon forwarding the call to second lambda"
   );
 
-  const unsigned = {
-    host: process.env.HOST,
-    method: "GET",
-    url: process.env.LAMBDA,
-    path: "/prod",
-  };
+  const client = Axios.create();
 
-  const signed = aws4.sign(unsigned);
+  const interceptor = aws4Interceptor({
+    region: "eu-west-1",
+    service: "execute-api",
+  });
 
-  console.log(signed);
+  client.interceptors.request.use(interceptor);
+
   let response;
+
   try {
-    response = await Axios((signed as unknown) as any);
-    console.log("called");
-    console.log(response);
+    response = await client.get(process.env.LAMBDA);
   } catch (error) {
+    console.log("Call failed");
     console.log(error);
     response = { data: error };
   }
 
+  console.log("Call succeeded");
   const data = Object.assign({ newMsg: "Howdy" }, response.data);
   return {
     statusCode: 200,

@@ -15,20 +15,17 @@ tsc app.ts
 ```bash
 cd cdk1
 npm install
-cdk deploy
+cdk deploy --outputs-file output.json
 cd ..
 cd cdk2
 npm install
-cdk deploy
+cdk deploy --outputs-file output.json
+cd ..
+cd cdk1
+cdk deploy --outputs-file output.json
 ```
 
-# Test at
-
-```
-https://{uid}.execute-api.{region}.amazonaws.com/prod/
-```
-
-(URL is revealed at the time of deploy)
+At the first time the first lambda must be deployed twice to have the url of the second lambda as environment variable
 
 # Clear stack
 
