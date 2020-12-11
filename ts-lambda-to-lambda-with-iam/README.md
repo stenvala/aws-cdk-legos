@@ -27,7 +27,9 @@ cdk deploy --outputs-file output.json
 
 At the first time the first lambda must be deployed twice to have the url of the second lambda as environment variable
 
-# Clear stack
+# Clear stacks
+
+First for stack 1 you need to delete stack 2 created policy manually from console
 
 ```bash
 cd cdk1
