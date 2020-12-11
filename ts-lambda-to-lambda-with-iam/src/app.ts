@@ -2,9 +2,6 @@ import * as aws4 from "aws4";
 import Axios from "axios";
 import { aws4Interceptor } from "aws4-axios";
 
-// https://medium.com/@joshua.a.kahn/calling-amazon-api-gateway-authenticated-methods-with-axios-and-aws4-6eeda1aa8696
-
-// https://cc226v1fyf.execute-api.eu-north-1.amazonaws.com/prod/
 export async function lambdaHandler1(event, context) {
   console.log(
     "Info called first lambda and soon forwarding the call to second lambda"
@@ -37,7 +34,6 @@ export async function lambdaHandler1(event, context) {
   };
 }
 
-// https://cc226v1fyf.execute-api.eu-north-1.amazonaws.com/prod/
 export async function lambdaHandler2(event, context) {
   console.log("Info called second lambda");
   return {
