@@ -1,4 +1,3 @@
-import * as aws4 from "aws4";
 import Axios from "axios";
 import { aws4Interceptor } from "aws4-axios";
 
