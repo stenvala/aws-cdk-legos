@@ -2,8 +2,10 @@ import json
 import requests
 import argparse
 
+STACK_NAME = 'TSRestApi-Stack'
 
 def main(args):
+    print(args.method)
     if args.method == 'get':
         data = requests.get(get_url(args, 'endpoint'))
         print_result(data)
@@ -29,19 +31,18 @@ def get_url(args, route):
 
 
 def get_base(args):
-    if args.uid == '':
-        return 'http://localhost:4001/restapi/'
+    if args.aws:
+        with open('stack-data.json', 'rb') as f:
+            data = json.loads(f.read())
+            return data[STACK_NAME]['url'] + 'restapi/'        
     else:
-        return 'https://%s.execute-api.%s.amazonaws.com/prod/restapi/' % (args.uid, args.region)
-
+        return 'http://localhost:4001/restapi/'
+        
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Demo client')
+    parser = argparse.ArgumentParser()
 
-    parser.add_argument('-region', default='eu-north-1',
-                        help='AWS region')
-
-    parser.add_argument('-uid', default='',
+    parser.add_argument('-aws', action='store_true',
                         help='Give this to use AWS end point, otherwise uses local')
 
     parser.add_argument('-method', default='get',

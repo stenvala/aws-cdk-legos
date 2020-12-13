@@ -21,7 +21,7 @@ import { routes } from "./routes/routes";
 app.use("/restapi", routes());
 
 // This is our lambda handler
-export const httpHandler = serverless(app);
+export const lambdaHandler = serverless(app);
 
 // This is needed for local
 export const localApp = app;

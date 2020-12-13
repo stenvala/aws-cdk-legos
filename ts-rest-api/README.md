@@ -1,59 +1,24 @@
 # What's here?
 
-This creates lambda rest api with express
+This creates lambda rest api with express.
 
-# Develop locally
+## Commands
 
 ```bash
-npm run start
+npm run init # After clone init all 3rd parties
+npm run test # Run unit tests
+npm run testwatch # Run api unit tests ith watch
+npm run start # Start local development server
+npm run build # Build application
+npm run deploy # Deploy Cloudformation stack
+npm run demo # Make http request to lambda (via api gw) in aws env and display response
+npm run demolocal # Same as demo but for local
+npm run destroy # Destroy Cloudformation stack
+npm run clear # Clear all local files (build, cdk data, node_modules)
 ```
 
-# Build
+Or run init, test, build, deploy, demo, destroy and clear
 
 ```bash
-npm run build
-```
-
-# Deploy
-
-```bash
-cd cdk
-cdk deploy
-```
-
-# Destroy
-
-```bash
-cd cdk
-cdk destroy
-```
-
-# Try api locally
-
-```bash
-cd client
-python3 demo.py
-python3 demo.py -method post
-```
-
-# Try deployed api
-
-```bash
-cd client
-python3 demo.py -region {aws-region} -uid {aws-uid}
-python3 demo.py -region {aws-region} -uid {aws-uid} -method post
-```
-
-# Run tests
-
-```bash
-cd src
-npx jest --watch
-```
-
-# Check test coverage
-
-```bash
-cd src
-npx jest --collect-coverage
+npm run all
 ```

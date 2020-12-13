@@ -2,23 +2,26 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
 
+const PREFIX = "TSRestApi-"
+
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    super(scope, PREFIX + id, props);
 
-    this.lambda();
-  }
-
-  private lambda() {
-    const hello = new lambda.Function(this, "Ms1DemoHandler", {
-      runtime: lambda.Runtime.NODEJS_12_X, // execution environment
-      code: lambda.Code.fromAsset("../dist"), // code loaded from "../dist" directory
-      handler: "app.httpHandler", // file is "app.js", function is "httpHandler",
+    const name = new lambda.Function(this, PREFIX + "Lambda",
+    {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.fromAsset("../dist"),
+      handler: "app.lambdaHandler",
+    });
+   
+    const api = new apigw.LambdaRestApi(this, PREFIX + "ApiGw", 
+    {
+      handler: name,
+      proxy: true,
     });
 
-    // Wire lambda to api gateway
-    new apigw.LambdaRestApi(this, "Endpoint", {
-      handler: hello,
-    });
+    new cdk.CfnOutput(this, "url", { value: api.url });
+    
+    }
   }
-}

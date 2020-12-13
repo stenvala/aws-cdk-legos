@@ -1,11 +1,16 @@
 {
   "name": "ts-rest-api",
-  "scripts": {
-    "start": "nodemon --watch \"src/**/*.ts\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node\" src/local.ts",
-    "build": "rm -rf dist && mkdir dist && tsc --outDir ./dist && cp src/package.json dist && cp src/package-lock.json dist && npm install --only=prod --prefix dist"
-  },
-  "dependencies": {
-    "@types/node": "^14.14.10",
-    "express": "^4.17.1"
+  "scripts": {    
+    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
+    "test": "cd src && npx jest --collect-coverage && cd ../cdk && npx jest --collect-coverage",
+    "testwatch": "cd src && npx jest --watch",
+    "start": "cd src && npm run start",
+    "build": "rm -rf dist && mkdir dist && cd src && tsc && cd .. && cp src/package.json dist/package.json && cp src/package-lock.json dist/package-lock.json && cd dist && npm install --only=prod && cd ..",
+    "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
+    "demo": "cd client && python3 demo.py -aws && python3 demo.py -aws -method post && cd ..",
+    "demolocal": "cd client && python3 demo.py && python3 demo.py -method post && cd ..",
+    "destroy": "cd cdk && cdk destroy && cd ..",
+    "clear": "rm -rf src/node_modules && rm -rf cdk/cdk.out && rm -rf cdk/node_modules && rm -rf dist && rm -f client/stack-data.json",
+    "all": "npm run init && npm run test && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clear"
   }
 }

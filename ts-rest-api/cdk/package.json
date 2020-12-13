@@ -1,5 +1,5 @@
 {
-  "name": "cdk-ms1",
+  "name": "ts-rest-api",
   "version": "0.1.0",
   "bin": {
     "cdk-sample": "bin/cdk.js"
