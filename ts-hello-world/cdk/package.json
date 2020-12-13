@@ -1,5 +1,5 @@
 {
-  "name": "ts-hello-world-cdk",
+  "name": "ts-hello-world",
   "version": "0.1.0",
   "bin": {
     "ts-hello-world-cdk": "bin/cdk.js"

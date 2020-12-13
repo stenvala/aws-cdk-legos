@@ -2,12 +2,12 @@
   "name": "ts-hello-world",
   "scripts": {
     "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
-    "build": "rm -rf dist && mkdir dist && cd src && tsc app.ts && cd .. && cp src/app.ts dist/app.ts",
+    "build": "rm -rf dist && mkdir dist && cd src && tsc app.ts && cd .. && cp src/app.js dist/app.js",
     "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
     "demo": "cd client && python3 demo.py && cd ..",
     "destroy": "cd cdk && cdk destroy && cd ..",
     "clear": "rm -rf src/node_modules && rm -rf cdk/cdk.out && rm -rf cdk/node_modules && rm -rf dist && rm client/stack-data.json",
-    "full": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clear"
+    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clear"
   },
   "dependencies": {
     "@types/node": "^14.14.13"

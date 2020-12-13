@@ -1,20 +1,21 @@
 # What's here?
 
-Very basic cdk stack with lambda and api gateway.
+Very basic cdk stack with lambda and api gw.
+Lambda returns message and information about request and environment.
 
-# Demo
+# Commands
 
 ```bash
 npm run init # After clone init all 3rd parties
 npm run build # Build application
-npm run deploy # Deploy stack
-npm run demo # Make demo request
-npm run destroy # Destroy stack
+npm run deploy # Deploy Cloudformation stack
+npm run demo # Make http request to lambda (via api gw) and display response
+npm run destroy # Destroy Cloudformation stack
 npm run clear # Clear all local files (build, cdk data, node_modules)
 ```
 
 Or run all
 
 ```bash
-npm run full
+npm run all
 ```

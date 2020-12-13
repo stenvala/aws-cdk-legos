@@ -1,17 +1,16 @@
 # AWS CDK Legos
 
-This repository has various AWS CDK samples and associated minimalistic microservice code that use AWS services as Lego blocks to do simple things.
+This repository has various conceptually different AWS CDK stacks using various AWS services as Lego blocks to do simple and unnecessary things.
 
-## Pre reqs
+## Prerequisites
 
 * You must have AWS CLI installed and configured and AWS CDK installed. Look from web how. 
-* For specific sample, run npm inits yourself to root, cdk and src - whenever needed. Then, build, deploy, experiment and destroy. Each sample has their own instructions. Might have also some unit tests.
 
 ## Samples available
 
 ### ts-hello-world
 
-Extremely basic hello world lambda via api gateway.
+Extremely basic hello world lambda via api gateway. Run this first. It doesn't take too long to go the whole demo through with one command.
 
 ### ts-lambda-to-lambda-with-iam
 
