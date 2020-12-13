@@ -1,8 +1,7 @@
 {
   "name": "ts-rest-api-s3",
   "scripts": {
-    "install": "npm install && cd cdk && npm install && cd .. && cd src && npm install && cd ..",
-    "start": "nodemon --watch \"src/**/*.ts\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node\" src/local.ts",
+    "init": "npm install && cd cdk && npm install && cd .. && cd src && npm install && cd ..", 
     "build": "rm -rf dist && mkdir dist && tsc --outDir ./dist && cp src/package.json dist && cp src/package-lock.json dist && npm install --only=prod --prefix dist && cd ..",
     "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
     "destroy": "cd cdk && cdk destroy && cd .."
