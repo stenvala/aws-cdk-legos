@@ -3,8 +3,9 @@ import requests
 import argparse
 import urllib.parse
 
-FILE_NAME = 'trigger/test2.json'
-
+DEMO_FILE = 'demo_data.json'
+FILE_NAME = 'trigger/some-file-whatever-demo.json'
+CONF_FILE = 'stack-data.json'
 
 def main(args):
     print(args)
@@ -17,11 +18,10 @@ def main(args):
     if args.method == 'post':
         print('Started doing presign')
         presign = get_presigned_url(args)
-        print('Presign done')
-        object_name = 'demo_data.json'
-        with open(object_name, 'rb') as f:
+        print('Presign done')        
+        with open(DEMO_FILE, 'rb') as f:
 
-            files = {'file': (object_name, f)}
+            files = {'file': (DEMO_FILE, f)}
             data = presign['fields']
             #
             data['key'] = FILE_NAME
@@ -60,17 +60,14 @@ def get_url(args, route=''):
 
 
 def get_base(args):
-    return 'https://%s.execute-api.%s.amazonaws.com/prod/restapi' % (args.uid, args.region)
+    with open(CONF_FILE, 'rb') as f:
+        data = json.loads(f.read())
+        url = data['StepDemo-Stack']['url']
+        return '%s/restapi' % (url)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Demo client')
-
-    parser.add_argument('-region', default='eu-north-1',
-                        help='AWS region')
-
-    parser.add_argument('-uid', default='XYZ',
-                        help='Give this to use AWS end point')
 
     parser.add_argument('-method', default='get',
                         help='What method to use, options post and get')

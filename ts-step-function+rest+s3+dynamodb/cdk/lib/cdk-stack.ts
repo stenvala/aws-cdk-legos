@@ -9,11 +9,11 @@ import * as cdk from "@aws-cdk/core";
 const BUCKET_NAME = "lambda-and-s3-to-dynamo-test-s3";
 const TABLE_NAME = "lambda-and-s3-to-dynamo-test-db";
 const TABLE_KEY = "path";
-const AWS_ID_PREFIX = "StepDemo_";
+const AWS_ID_PREFIX = "StepDemo-";
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, AWS_ID_PREFIX + id, props);
+    super(scope, AWS_ID_PREFIX + id, props);      
 
     const table = this.dynamo();
     const lambda = this.restLambda();
@@ -37,15 +37,15 @@ export class CdkStack extends cdk.Stack {
       sourceArn: bucket.bucketArn,
     });
 
-    // (bucket as unknown) as any,
-    const s3EventSource = new S3EventSource(bucket, {
-      events: [s3.EventType.OBJECT_CREATED],
-      batchSize: 1, // Doesn't allow any kind of batching
+    // requires unknown any cast, don't understand why
+    const s3EventSource = new S3EventSource((bucket as unknown) as any, {
+      events: [s3.EventType.OBJECT_CREATED],      
       filters: [{ prefix: "trigger/" }], // optional
     });
 
-    // (s3EventSource as unknown) as any
-    stepLambda.addEventSource(s3EventSource);
+    // requires unknown any cast, don't understand why
+    stepLambda.addEventSource((s3EventSource as unknown) as any);
+
   }
 
   private getLambdaEnvVars() {
@@ -66,7 +66,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   private restLambda() {
-    const hello = new lambda.Function(this, AWS_ID_PREFIX + "RestApiHandler", {
+    const handler = new lambda.Function(this, AWS_ID_PREFIX + "RestApiHandler", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.httpHandler",
@@ -74,10 +74,13 @@ export class CdkStack extends cdk.Stack {
     });
 
     // Wire lambda to api gateway
-    new apigw.LambdaRestApi(this, AWS_ID_PREFIX + "ApiGW", {
-      handler: hello,
+    const api = new apigw.LambdaRestApi(this, AWS_ID_PREFIX + "ApiGW", {
+      handler,
     });
-    return hello;
+
+    new cdk.CfnOutput(this, "url", { value: api.url });
+
+    return handler;
   }
 
   private s3() {

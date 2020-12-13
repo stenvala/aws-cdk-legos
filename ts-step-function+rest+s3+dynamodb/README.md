@@ -16,8 +16,8 @@ npm run build && npm run deploy
 
 ```bash
 cd client
-python3 demo.py -region {aws-region} -uid {aws-uid} -method post
-python3 demo.py -region {aws-region} -uid {aws-uid} -method get
+python3 demo.py -method post
+python3 demo.py -method get
 ```
 
 # Destroy
