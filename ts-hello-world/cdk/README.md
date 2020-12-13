@@ -1,7 +1,7 @@
 # Welcome to your CDK TypeScript project!
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`TsHelloWorldStack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`TsHelloWorld-Stack`)
+which contains an Amazon Lambda that is used via Amazona Api GW.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 

@@ -1,0 +1,14 @@
+{
+  "name": "ts-hello-world",
+  "scripts": {
+    "init": "npm install && cd cdk && npm install && cd ..",
+    "build": "cd src && tsc app.ts && cd ..",
+    "deploy": "cd cdk && cdk deploy --outputs-file ../stack-data.json && cd ..",
+    "demo": "python3 demo.py",
+    "destroy": "cd cdk && cdk destroy && cd ..",
+    "full": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy"
+  },
+  "dependencies": {
+    "@types/node": "^14.14.13"
+  }
+}

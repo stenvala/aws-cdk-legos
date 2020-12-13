@@ -1,8 +1,8 @@
 {
-  "name": "ts-hello-world",
+  "name": "ts-hello-world-cdk",
   "version": "0.1.0",
   "bin": {
-    "ts-hello-world": "bin/ts-hello-world.js"
+    "ts-hello-world-cdk": "bin/cdk.js"
   },
   "scripts": {
     "build": "tsc",

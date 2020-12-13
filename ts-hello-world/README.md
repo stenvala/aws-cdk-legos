@@ -1,39 +1,19 @@
 # What's here?
 
-This creates lambda that returns message, request and context information for you to look.
-CDK has been created with
+Very basic cdk stack with lambda and api gateway.
+
+# Demo
 
 ```bash
-cdk init sample-app --language=typescript
+npm run init # After clone init all 3rd parties
+npm run build # Build application
+npm run deploy # Deploy stack
+npm run demo # Make demo request
+npm run destroy # Destroy stack
 ```
 
-And there are minor change only in the stack.
-
-# Build
+Or run all
 
 ```bash
-cd src
-tsc app.ts ; mv app.js ../dist/
-```
-
-# Deploy
-
-```bash
-cd cdk
-cdk deploy
-```
-
-# Test at
-
-```
-https://{uid}.execute-api.{region}.amazonaws.com/prod/
-```
-
-(URL is revealed at the time of deploy)
-
-# Clear stack
-
-```bash
-cd cdk
-cdk destroy
+npm run full
 ```
