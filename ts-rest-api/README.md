@@ -17,7 +17,7 @@ npm run destroy # Destroy Cloudformation stack
 npm run clear # Clear all local files (build, cdk data, node_modules)
 ```
 
-Or run init, test, build, deploy, demo, destroy and clear
+Or run init, build, deploy, demo, destroy and clear
 
 ```bash
 npm run all
