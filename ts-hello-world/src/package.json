@@ -1,0 +1,6 @@
+{
+  "name": "ts-hello-world-lambda",
+  "dependencies": {
+    "@types/node": "^14.14.13"
+  }
+}

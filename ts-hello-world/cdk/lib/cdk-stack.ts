@@ -11,7 +11,7 @@ export class CdkStack extends cdk.Stack {
     const name = new lambda.Function(this, PREFIX + "Lambda",
     {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.fromAsset("../src"),
+      code: lambda.Code.fromAsset("../dist"),
       handler: "app.lambdaHandler",
     });
    
