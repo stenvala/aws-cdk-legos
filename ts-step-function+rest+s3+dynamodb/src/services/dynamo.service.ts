@@ -1,19 +1,18 @@
 import * as aws from "aws-sdk";
 
-// Inspired by: https://github.com/aws-samples/aws-cdk-examples/tree/master/typescript/api-cors-lambda-crud-dynamodb/src
 export class DynamoService {
   private readonly db: aws.DynamoDB.DocumentClient;
 
   private get table() {
-    return process.env.TABLE_KEY;
+    return process.env.TABLE_NAME;
   }
 
   private get key() {
-    return process.env.TABLE_KEY;
+    return process.env.PRIMARY_KEY;
   }
 
   constructor() {
-    const db = new aws.DynamoDB.DocumentClient();
+    this.db = new aws.DynamoDB.DocumentClient();
   }
 
   async add(path: string, data: any) {
@@ -32,7 +31,8 @@ export class DynamoService {
         [this.key]: path,
       },
     };
-    return await this.db.get(params).promise();
+    const data = await this.db.get(params).promise();
+    return data.Item;
   }
 
   async del(path: string) {

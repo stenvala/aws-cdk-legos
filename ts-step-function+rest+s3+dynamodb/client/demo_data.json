@@ -1,0 +1,4 @@
+{
+  "msg": "Hello world",
+  "description": "This is demo message to be saved to S3, moved to dynamo and deleted on retrieve"
+}

@@ -19,5 +19,5 @@
     "src/routes/routes.ts",
     "src/services/routes.ts"
   ],
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.spec.ts", "node_modules/*"]
 }

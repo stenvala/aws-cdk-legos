@@ -11,14 +11,12 @@ export class S3Service {
   async getPresignData(bucketName: string) {
     const userid = uuidv4();
     try {
+      // default expiration in 1 h
       const params = {
-        Bucket: bucketName,
-        Field: {
-          key: uuidv4(),
-        },
+        Bucket: bucketName,        
         Conditions: [
           ["content-length-range", 0, 1000000],
-          ["start-with", "$Content-Type", "application/json"],
+          ["starts-with", "$key", "trigger/"],          
           ["eq", "$x-amz-meta-userid", userid],
         ],
       };

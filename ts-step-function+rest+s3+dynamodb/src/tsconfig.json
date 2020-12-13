@@ -3,6 +3,13 @@
     "declaration": true,
     "types": ["jest", "node"],
     "target": "es6",
-    "module": "es2015"
-  }
+    "module": "es2015",
+    "moduleResolution": "node",
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },
+  "include": [
+    "node_modules/"
+  ]
 }
