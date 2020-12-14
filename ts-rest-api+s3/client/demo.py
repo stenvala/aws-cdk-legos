@@ -34,8 +34,8 @@ def print_result(response):
     print(json.dumps(body, indent=4, sort_keys=True))
 
 
-def get_url(args, route=None):
-    if route is not None:
+def get_url(args, route=''):
+    if route != '':
         route = '/%s' % route
     base = get_base(args)
     print(base + route)

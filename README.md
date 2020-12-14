@@ -48,3 +48,17 @@ To learn:
 * Use dynamodb
 * Trigger lambda by adding file to s3
 * Presigning s3 url
+
+## Coming
+
+### py-rest-api-own-domain
+
+### csharp-asp-net-serverless-aurora
+
+### ts-csharp-async-html2pdf-s3-sns-sqs-communication
+
+### csharp-asp-net-rest-svelte-cloudfront
+
+### Some ec2 demo
+
+### ...
