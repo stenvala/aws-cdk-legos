@@ -53,11 +53,27 @@ To learn:
 
 ### py-rest-api-own-domain
 
+To learn:
+* Lambda rest with python Flask
+* Own custom domain name in the lambda
+
 ### csharp-asp-net-serverless-aurora
 
-### ts-csharp-async-html2pdf-s3-sns-sqs-communication
+To learn:
+* Asp.net rest api in lambda
+* Serverless RDBS 
 
-### csharp-asp-net-rest-svelte-cloudfront
+### ts-csharp-async-ts-html2pdf-s3-sns-sqs-communication
+
+* Layers in lambda
+* SQS and SNS communication between lambdas
+
+### csharp-asp-net-auth-python-fastapi-ms-svelte-cloudfront
+
+To learn:
+* Use one microbackend for authentication, other for business logic
+* JWT auth to microservice
+* Serving front end with cloudfront
 
 ### Some ec2 demo
 
