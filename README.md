@@ -1,23 +1,23 @@
 # AWS CDK Legos
 
-This repository has various conceptually different aws cdk stacks using various aws services like Lego blocks to do simple and unnecessary things. Everything is really simple: with one command you can go the whole stack through from initialization to destroy and results are displayed in terminal.
+This repository has conceptually different aws cdk stacks using various aws services like Lego blocks to do simple and unnecessary things. Everything is really simple: with one command you can go through the whole stack from initialization after clone to destroy and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack.
 
 ## Prerequisites
 
-* You must have aws cli installed and configured and aws cdk installed. Look from web how. 
+* You must have aws cli and cdk installed and configured. Look from web how. 
 * NPM is needed
 * Python 3 is needed
 
-## Fully functional
+## Currently available stacks
 
 Samples are here in the order in which a newbie might go them through.
 
 ### ts-hello-world
 
 To learn:
-* Concept for these demos
+* Concept for walking through these stacks
 * Basic cdk
-* Map a typescript function to URL
+* Map a typescript function to url
 * Environmental variables, event and context available in lambda
 
 ### ts-rest-api
@@ -30,13 +30,13 @@ To learn:
 ### ts-rest-api+s3
 
 To learn:
-* Create s3 bucket with cdk
+* Create s3 bucket
 * Use s3 bucket
 
 ### ts-lambda-to-lambda-with-iam
 
 To learn:
-* Add iam based authorization to api gateway with cdk
+* Add iam based authorization to api gateway
 * Use iam authorization in aws inter service communication
 
 ### ts-step-function+rest+s3+dynamodb
