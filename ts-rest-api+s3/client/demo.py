@@ -2,7 +2,7 @@ import json
 import requests
 import argparse
 
-STACK_NAME = 'RestApiLambdaS3Example'
+STACK_NAME = 'TSLambdaAndS3-Stack'
 PATH = 'test-message'
 
 def main(args):

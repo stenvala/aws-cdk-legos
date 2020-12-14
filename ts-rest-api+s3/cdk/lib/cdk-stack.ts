@@ -13,7 +13,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    super(scope, PREFIX + id, props);
 
     const lambdaFun = this.lambda();
     this.s3(lambdaFun);
