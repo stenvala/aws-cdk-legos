@@ -20,8 +20,8 @@ export class CdkStack extends cdk.Stack {
       handler: name,
       proxy: true,
     });
-
+    
     new cdk.CfnOutput(this, "url", { value: api.url });
     
-    }
   }
+}
