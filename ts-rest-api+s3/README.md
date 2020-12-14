@@ -1,65 +1,20 @@
 # What's here?
 
-This creates lambda rest api with express that can be used to CRUD json data in S3.
+This creates lambda rest api with express and s3 bucket which can be crud via lambda
 
-# Develop locally
-
-(Not yet solved how to wire this to minio, so in principle it doesn't work)
+## Commands
 
 ```bash
-npm run start
+npm run init # After clone init all 3rd parties
+npm run build # Build application
+npm run deploy # Deploy Cloudformation stack
+npm run demo # Make http requests to lambda (via api gw) in aws env and display response
+npm run destroy # Destroy Cloudformation stack
+npm run clear # Clear all local files (build, cdk data, node_modules)
 ```
 
-# Build
+Or run init, build, deploy, demo, destroy and clear
 
 ```bash
-npm run build
-```
-
-# Deploy
-
-```bash
-cd cdk
-cdk deploy
-```
-
-# Destroy
-
-NOTE! S3 bucket must be empty. Otherwise that phase will fail and you need to delete it manually.
-
-```bash
-cd cdk
-cdk destroy
-```
-
-# Try api locally
-
-```bash
-cd client
-python3 demo.py -method get
-python3 demo.py -method post
-python3 demo.py -method delete
-```
-
-# Try deployed api
-
-```bash
-cd client
-python3 demo.py -region {aws-region} -uid {aws-uid} -method get
-python3 demo.py -region {aws-region} -uid {aws-uid} -method post
-python3 demo.py -region {aws-region} -uid {aws-uid} -method delete
-```
-
-# Run tests
-
-```bash
-cd src
-npx jest --watch
-```
-
-# Check test coverage
-
-```bash
-cd src
-npx jest --collect-coverage
+npm run all
 ```

@@ -8,9 +8,9 @@ This repository has various conceptually different aws cdk stacks using various 
 * NPM is needed
 * Python 3 is needed
 
-## Samples available
+## Fully functional
 
-Samples are here in the order in which a newbie should go them through
+Samples are here in the order in which a newbie might go them through.
 
 ### ts-hello-world
 
@@ -32,6 +32,8 @@ To learn:
 To learn:
 * Create s3 bucket with cdk
 * Use s3 bucket
+
+## Workflow to be done
 
 ### ts-lambda-to-lambda-with-iam
 

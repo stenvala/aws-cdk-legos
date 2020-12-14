@@ -3,9 +3,15 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 
-const BUCKET_NAME = "lambda-and-s3-test";
+const PREFIX = "TSLambdaAndS3-"
+const BUCKET_NAME = "ts-lambda-and-s3-bucket";
 
 export class CdkStack extends cdk.Stack {
+
+  private get bucketName() {
+    return BUCKET_NAME;
+  }
+
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -14,27 +20,28 @@ export class CdkStack extends cdk.Stack {
   }
 
   private lambda() {
-    const hello = new lambda.Function(this, "Ms2DemoHandler", {
+    const fun = new lambda.Function(this, PREFIX + "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.httpHandler",
       environment: {
-        // Add environment variables like this, so then we can use this in app
-        BUCKET_NAME,
+        BUCKET_NAME: this.bucketName
       },
     });
-
-    // Wire lambda to api gateway
-    new apigw.LambdaRestApi(this, "Endpoint", {
-      handler: hello,
+    
+    const api = new apigw.LambdaRestApi(this, PREFIX + "ApiGw", {
+      handler: fun,
     });
-    return hello;
+
+    new cdk.CfnOutput(this, "url", { value: api.url });
+
+    return fun;
   }
 
   private s3(lambda: lambda.Function) {
-    const bucket = new s3.Bucket(this, "sampleBucket", {
+    const bucket = new s3.Bucket(this, PREFIX + "Bucket", {
       versioned: false,
-      bucketName: BUCKET_NAME,
+      bucketName: this.bucketName,
       encryption: s3.BucketEncryption.KMS_MANAGED,
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,

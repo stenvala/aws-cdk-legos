@@ -2,12 +2,11 @@ import json
 import requests
 import argparse
 
+STACK_NAME = 'RestApiLambdaS3Example'
 PATH = 'test-message'
 
-# https://x46d2dp7x0.execute-api.eu-north-1.amazonaws.com/prod/
-
-
 def main(args):
+    print(args.method)
     if args.method == 'get':
         data = requests.get(get_url(args, PATH))
         print_result(data)
@@ -35,8 +34,8 @@ def print_result(response):
     print(json.dumps(body, indent=4, sort_keys=True))
 
 
-def get_url(args, route=''):
-    if route != '':
+def get_url(args, route=None):
+    if route is not None:
         route = '/%s' % route
     base = get_base(args)
     print(base + route)
@@ -44,20 +43,13 @@ def get_url(args, route=''):
 
 
 def get_base(args):
-    if args.uid == '':
-        return 'http://localhost:4001/restapi'
-    else:
-        return 'https://%s.execute-api.%s.amazonaws.com/prod/restapi' % (args.uid, args.region)
+    with open('stack-data.json', 'rb') as f:
+        data = json.loads(f.read())
+        return data[STACK_NAME]['url'] + 'restapi'        
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Demo client')
-
-    parser.add_argument('-region', default='eu-north-1',
-                        help='AWS region')
-
-    parser.add_argument('-uid', default='',
-                        help='Give this to use AWS end point, otherwise uses local')
+    parser = argparse.ArgumentParser()    
 
     parser.add_argument('-method', default='get',
                         help='What method to use')
