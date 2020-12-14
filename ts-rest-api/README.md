@@ -1,6 +1,6 @@
 # What's here?
 
-This creates lambda rest api with express.
+Lambda with Express Rest API.
 
 ## Commands
 
@@ -10,10 +10,10 @@ npm run test # Run unit tests
 npm run testwatch # Run api unit tests ith watch
 npm run start # Start local development server
 npm run build # Build application
-npm run deploy # Deploy Cloudformation stack
+npm run deploy # Deploy CloudFormation stack
 npm run demo # Make http request to lambda (via api gw) in aws env and display response
 npm run demolocal # Same as demo but for local
-npm run destroy # Destroy Cloudformation stack
+npm run destroy # Destroy CloudFormation stack
 npm run clear # Clear all local files (build, cdk data, node_modules)
 ```
 

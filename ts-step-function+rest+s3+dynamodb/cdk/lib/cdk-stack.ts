@@ -9,11 +9,11 @@ import * as cdk from "@aws-cdk/core";
 const BUCKET_NAME = "lambda-and-s3-to-dynamo-test-s3";
 const TABLE_NAME = "lambda-and-s3-to-dynamo-test-db";
 const TABLE_KEY = "path";
-const AWS_ID_PREFIX = "StepDemo-";
+const PREFIX = "TSStepS3DynamoLambda-"
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, AWS_ID_PREFIX + id, props);      
+    super(scope, PREFIX + id, props);      
 
     const table = this.dynamo();
     const lambda = this.restLambda();
@@ -31,7 +31,7 @@ export class CdkStack extends cdk.Stack {
     stepLambda.addToRolePolicy(ps);
 
     // Add stepLambda permissions correctly and add event source
-    stepLambda.addPermission(AWS_ID_PREFIX + "AllowS3Invocation", {
+    stepLambda.addPermission(PREFIX + "AllowS3Invocation", {
       action: "lambda:InvokeFunction",
       principal: new iam.ServicePrincipal("s3.amazonaws.com"),
       sourceArn: bucket.bucketArn,
@@ -57,7 +57,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   private stepLambda() {
-    return new lambda.Function(this, AWS_ID_PREFIX + "StepHandler", {
+    return new lambda.Function(this, PREFIX + "StepLambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.stepFunction",
@@ -66,25 +66,24 @@ export class CdkStack extends cdk.Stack {
   }
 
   private restLambda() {
-    const handler = new lambda.Function(this, AWS_ID_PREFIX + "RestApiHandler", {
+    const fun = new lambda.Function(this, PREFIX + "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.httpHandler",
       environment: this.getLambdaEnvVars(),
     });
-
-    // Wire lambda to api gateway
-    const api = new apigw.LambdaRestApi(this, AWS_ID_PREFIX + "ApiGW", {
-      handler,
+    
+    const api = new apigw.LambdaRestApi(this, PREFIX + "ApiGW", {
+      handler: fun,
     });
 
     new cdk.CfnOutput(this, "url", { value: api.url });
 
-    return handler;
+    return fun;
   }
 
   private s3() {
-    return new s3.Bucket(this, AWS_ID_PREFIX + "S3Bucket", {
+    return new s3.Bucket(this, PREFIX + "Bucket", {
       versioned: false,
       bucketName: BUCKET_NAME,
       encryption: s3.BucketEncryption.KMS_MANAGED,
@@ -95,7 +94,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   private dynamo() {
-    return new dynamodb.Table(this, AWS_ID_PREFIX + "DynamoTable", {
+    return new dynamodb.Table(this, PREFIX + "Table", {
       partitionKey: {
         name: TABLE_KEY,
         type: dynamodb.AttributeType.STRING,

@@ -19,15 +19,13 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, PREFIX + id, props);
     const url = getUrl();
-    console.log(`Has private url ${url}`);
-    console.log(`Default region ${process.env.CDK_DEFAULT_REGION}`)
+    console.log(`Private url set to environment variable LAMBDA ${url}`);    
     const fun = new lambda.Function(this, PREFIX + "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.lambdaHandler1",
       environment: {
-        LAMBDA: url,
-        REGION: process.env.CDK_DEFAULT_REGION!
+        LAMBDA: url,        
       },
     });
     

@@ -1,15 +1,23 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "types": ["jest", "node"],
+    "module": "commonjs",
+    "esModuleInterop": true,
     "target": "es6",
-    "module": "es2015",
+    "noImplicitAny": false,
     "moduleResolution": "node",
+    "sourceMap": false,
+    "experimentalDecorators": false,
+    "outDir": "../dist",
+    "baseUrl": "",
     "paths": {
       "*": ["node_modules/*"]
     }
   },
   "include": [
-    "node_modules/"
-  ]
+    "app.ts",
+    "models/request.models.ts",
+    "routes/routes.ts",
+    "services/routes.ts"
+  ],
+  "exclude": ["**/*.spec.ts", "node_modules/*", "*.d.ts"]
 }

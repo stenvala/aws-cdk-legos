@@ -8,15 +8,13 @@ FILE_NAME = 'trigger/some-file-whatever-demo.json'
 CONF_FILE = 'stack-data.json'
 
 def main(args):
-    print(args)
-    if args.method == 'get':
-        print('getting data')
+    print(args.method)
+    if args.method == 'get':        
         path = 'data/' + urllib.parse.quote_plus(FILE_NAME)
         data = requests.get(get_url(args, path))
         print_result(data)
 
-    if args.method == 'post':
-        print('Started doing presign')
+    if args.method == 'post':        
         presign = get_presigned_url(args)
         print('Presign done')        
         with open(DEMO_FILE, 'rb') as f:
@@ -62,8 +60,8 @@ def get_url(args, route=''):
 def get_base(args):
     with open(CONF_FILE, 'rb') as f:
         data = json.loads(f.read())
-        url = data['StepDemo-Stack']['url']
-        return '%s/restapi' % (url)
+        url = data['TSStepS3DynamoLambda-Stack']['url']
+        return '%srestapi' % (url)
 
 
 if __name__ == "__main__":

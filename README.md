@@ -39,29 +39,27 @@ To learn:
 * Add iam based authorization to api gateway with cdk
 * Use iam authorization in aws inter service communication
 
-## Workflow to be done
-
 ### ts-step-function+rest+s3+dynamodb
 
 To learn:
 * Create dynamodb table in cdk and authorize lambda to use it
 * Use dynamodb
 * Trigger lambda by adding file to s3
-* Presigning s3 url
+* Presigning s3 url and saving file to s3 with it
 
-## Coming
+## Coming in the future
 
 ### py-rest-api-own-domain
 
 To learn:
-* Lambda rest with python Flask
+* Lambda rest api with python Flask
 * Own custom domain name in the lambda
 
 ### csharp-asp-net-serverless-aurora
 
 To learn:
 * Asp.net rest api in lambda
-* Serverless RDBS 
+* Serverless RDBMS 
 
 ### ts-csharp-async-ts-html2pdf-s3-sns-sqs-communication
 
@@ -74,6 +72,7 @@ To learn:
 * Use one microbackend for authentication, other for business logic
 * JWT auth to microservice
 * Serving front end with cloudfront
+* E2E testing with multi microservice system
 
 ### Some ec2 demo
 

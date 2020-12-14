@@ -24,7 +24,7 @@ app.use("/restapi", routes());
 // This is rest handler
 export const httpHandler = serverless(app);
 
-// This is the step function handled (invoked when new file is added to S3)
+// This is the step function handler (invoked when new file is added to S3)
 export async function stepFunction(event, context) {  
   console.info("Starting step function");  
   await IntegratorService.S3EventHandler(event, context);
