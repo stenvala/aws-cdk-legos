@@ -1,39 +1,25 @@
 # What's here?
 
-This creates two lambdas you send message to first, it forwards it to next using iam role as authenticator and returns the message
+This creates two lambdas you send message to first (created in stack 1), it forwards it to second (created in stack 2) using iam role as authenticator and returns the message.
 
-# Build
-
-```bash
-cd src
-npm install
-tsc app.ts
-```
-
-# Deploy
+## Commands
 
 ```bash
-cd cdk1
-npm install
-cdk deploy --outputs-file output.json
-cd ..
-cd cdk2
-npm install
-cdk deploy --outputs-file output.json
-cd ..
-cd cdk1
-cdk deploy --outputs-file output.json
+npm run init # After clone init all 3rd parties
+npm run build # Build application
+npm run deploy1 # Deploy Cloudformation stack 1
+npm run deploy2 # Deploy Cloudformation stack 2
+npm run deploy # Deploy Cloudformation stacks
+npm run firstdeploy # First deployment requires three deploys to get urls right
+npm run demo # Make http request to lambda1 that calls lambda2 as well as directly to lambda2. The second request will fail because missing auth.
+npm run destroy # Destroy Cloudformation stacks
+npm run clear # Clear all local files (build, cdk data, node_modules)
 ```
 
-At the first time the first lambda must be deployed twice to have the url of the second lambda as environment variable
-
-# Clear stacks
-
-First for stack 1 you need to delete stack 2 created policy manually from console
+Or run init, build, test, deploy, demo
 
 ```bash
-cd cdk1
-cdk destroy
-cd cdk2
-cdk destroy
+npm run all
 ```
+
+Stack destroy can't be executed with cdk destroy because other stack ads role that is related to other. However, that could be done by deleting the role with cdk. This is not implemented so far.

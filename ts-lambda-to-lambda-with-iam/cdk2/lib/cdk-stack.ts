@@ -4,34 +4,25 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
 import * as fs from "fs";
 
+const PREFIX = "TSLambda2Lambda2-"
+
+// Get role of first lambda
 function getRoleArn() {
-  const data = fs.readFileSync("../cdk1/output.json", "utf8");
-  return JSON.parse(data)["Lambda2LambdaPart1"]["RoleArn"];
+  const data = fs.readFileSync("../cdk1/stack-data.json", "utf8");
+  return JSON.parse(data)["TSLambda2Lambda1-Stack"]["roleArn"];
 }
 
-export class Lambda2Stack extends cdk.Stack {
+export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    super(scope, PREFIX + id, props);
 
-    const fun = new lambda.Function(this, "IamLambdaHandler2", {
+    const fun = new lambda.Function(this, PREFIX + "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.fromAsset("../src"),
+      code: lambda.Code.fromAsset("../dist"),
       handler: "app.lambdaHandler2",
     });
 
-    /*
-    // This would be fine without authentication
-    
-    const gw = new apigw.LambdaRestApi(this, "Endpoint2", {
-      handler: fun,
-      proxy: true,
-    });
-
-    return;
-    */
-    // This is with iam role based authentication
-
-    const apiGW = new apigw.LambdaRestApi(this, "Endpoint2", {
+    const apiGW = new apigw.LambdaRestApi(this, PREFIX + "ApiGw", {
       handler: fun,
       proxy: true,
       options: {
@@ -42,7 +33,7 @@ export class Lambda2Stack extends cdk.Stack {
     });
 
     // This is the role of the other lambda
-    const iamRole = iam.Role.fromRoleArn(this, "Role", getRoleArn());
+    const iamRole = iam.Role.fromRoleArn(this, PREFIX + "Role", getRoleArn());
 
     // This policy statement allows to invoice lambda via API GW with the other role
     const policyStatement = new iam.PolicyStatement({
@@ -51,12 +42,12 @@ export class Lambda2Stack extends cdk.Stack {
       actions: ["execute-api:Invoke"],
     });
 
-    const policy = new iam.Policy(this, "DemoPolicyLambda2Lambda", {
+    const policy = new iam.Policy(this, PREFIX + "Policy", {
       statements: [policyStatement],
     });
 
     iamRole.attachInlinePolicy(policy);
 
-    new cdk.CfnOutput(this, "PrivateUrl", { value: apiGW.url });
+    new cdk.CfnOutput(this, "url", { value: apiGW.url });
   }
 }

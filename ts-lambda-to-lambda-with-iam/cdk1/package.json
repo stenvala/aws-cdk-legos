@@ -1,8 +1,8 @@
 {
-  "name": "ts-hello-world",
+  "name": "ts-lambda-to-lambda-with-iam",
   "version": "0.1.0",
   "bin": {
-    "ts-hello-world": "bin/ts-hello-world.js"
+    "cdk": "bin/cdk.js"
   },
   "scripts": {
     "build": "tsc",

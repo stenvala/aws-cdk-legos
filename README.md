@@ -33,13 +33,13 @@ To learn:
 * Create s3 bucket with cdk
 * Use s3 bucket
 
-## Workflow to be done
-
 ### ts-lambda-to-lambda-with-iam
 
 To learn:
-* Add iam based access control in cdk to api gateway
+* Add iam based authorization to api gateway with cdk
 * Use iam authorization in aws inter service communication
+
+## Workflow to be done
 
 ### ts-step-function+rest+s3+dynamodb
 

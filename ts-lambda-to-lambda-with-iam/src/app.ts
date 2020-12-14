@@ -9,6 +9,7 @@ export async function lambdaHandler1(event, context) {
   const client = Axios.create();
 
   const interceptor = aws4Interceptor({
+    region: process.env.AWS_REGION,
     service: "execute-api",
   });
 
@@ -25,7 +26,7 @@ export async function lambdaHandler1(event, context) {
   }
 
   console.log("Call succeeded");
-  const data = Object.assign({ newMsg: "Howdy" }, response.data);
+  const data = Object.assign({ firstLambdaMessage: "Howdy" }, response.data);
   return {
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
@@ -38,6 +39,6 @@ export async function lambdaHandler2(event, context) {
   return {
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ msg: "Hello world!" }),
+    body: JSON.stringify({ secondLambdaMessage: "Hello world!" }),
   };
 }
