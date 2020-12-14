@@ -14,10 +14,10 @@ Samples are here in the order in which a newbie might go them through.
 
 ### ts-hello-world
 
-To learn
+To learn:
 * Concept for these demos
 * Basic cdk
-* Map a typescript function to web URL
+* Map a typescript function to URL
 * Environmental variables, event and context available in lambda
 
 ### ts-rest-api
