@@ -47,6 +47,12 @@ To learn:
 * Trigger lambda by adding file to s3
 * Presigning s3 url and saving file to s3 with it
 
+### csharp-aurora
+
+To learn:
+* Asp.net rest api in lambda
+* Serverless RDBMS
+
 ## Coming in the future
 
 ### py-rest-api-own-domain
@@ -55,13 +61,7 @@ To learn:
 * Lambda rest api with python Flask
 * Own custom domain name in the lambda
 
-### csharp-asp-net-serverless-aurora
-
-To learn:
-* Asp.net rest api in lambda
-* Serverless RDBMS 
-
-### ts-csharp-async-ts-html2pdf-s3-sns-sqs-communication
+### csharp-ts-async-html2pdf-s3-sns-sqs-communication
 
 * Layers in lambda
 * SQS and SNS communication between lambdas
