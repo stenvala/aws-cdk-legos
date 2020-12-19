@@ -18,3 +18,5 @@ coverage
 stack-data.json
 obj
 bin
+
+.vs

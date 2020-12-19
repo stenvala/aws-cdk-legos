@@ -7,6 +7,7 @@
     "build": "npm run buildmono && npm run buildamis",
     "buildmono": "cd src/mono && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ../..",
     "buildamis": "cd src/amis && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ../..",
+    "startmono": "cd src/mono && dotnet watch run",
     "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
     "demo": "cd client && python3 demo.py && cd ..",
     "destroy": "cd cdk && cdk destroy && cd ..",

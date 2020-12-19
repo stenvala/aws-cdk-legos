@@ -9,5 +9,17 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DTO\" />
+    <Folder Include="Utils\" />
+    <Folder Include="BL\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="Repositories\Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="DTO\User.dto" />
   </ItemGroup>
 </Project>
