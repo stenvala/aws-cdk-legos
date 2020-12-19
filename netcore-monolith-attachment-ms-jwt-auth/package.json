@@ -1,16 +1,13 @@
 {
-  "name": "csharp-aurora",
+  "name": "netcore-monolith-attachment-ms-jwt-auth",
   "scripts": {
     "initaws": "dotnet tool install -g Amazon.Lambda.Tools",
     "updateaws": "dotnet tool update -g Amazon.Lambda.Tools",
-
-    "init": "cd cdk && npm install && cd ..",    
-    "build": "cd src && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ..",
+    "init": "cd cdk && npm install && cd ..",
+    "buildmono": "cd src/mono && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ../..",
     "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
-    
     "demo": "cd client && python3 demo.py && cd ..",
     "destroy": "cd cdk && cdk destroy && cd ..",
-    
     "clear": "rm -rf src/node_modules && rm -rf cdk/cdk.out && rm -rf cdk/node_modules && rm -rf dist && rm -f client/stack-data.json",
     "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clear"
   }

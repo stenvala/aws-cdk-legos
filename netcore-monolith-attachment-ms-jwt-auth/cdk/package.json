@@ -1,5 +1,5 @@
 {
-  "name": "ts-hello-world",
+  "name": "netcore-monolith-attachment-ms-jwt-auth",
   "version": "0.1.0",
   "bin": {
     "ts-hello-world-cdk": "bin/cdk.js"
