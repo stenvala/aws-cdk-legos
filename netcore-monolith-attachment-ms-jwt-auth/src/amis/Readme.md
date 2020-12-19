@@ -58,6 +58,6 @@ If already installed check if new version is available.
 Execute unit tests
 
 ```
-    cd "mono/test/mono.Tests"
+    cd "amis/test/amis.Tests"
     dotnet test
 ```

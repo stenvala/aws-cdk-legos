@@ -2,12 +2,12 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
 
-const ASSET_LOCATION = "../src/mono/bin/Release/netcoreapp3.1/linux-x64";
-const HANDLER = "mono::Mono.LambdaEntryPoint::FunctionHandlerAsync";
+const ASSET_LOCATION = "../src/amis/bin/Release/netcoreapp3.1/linux-x64";
+const HANDLER = "amis::Amis.LambdaEntryPoint::FunctionHandlerAsync";
 const RUNTIME = lambda.Runtime.DOTNET_CORE_3_1;
-const PREFIX = "mono-";
+const PREFIX = "amis-";
 
-export class MonoStack {
+export class AmisStack {
   lambda: lambda.Function;
   apigw: apigw.LambdaRestApi;
 

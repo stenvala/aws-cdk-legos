@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Mono
+namespace Amis
 {
   public class Startup
   {
@@ -48,7 +48,7 @@ namespace Mono
         endpoints.MapControllers();
         endpoints.MapGet("/", async context =>
               {
-                await context.Response.WriteAsync("mono service");
+                await context.Response.WriteAsync("amis service");
               });
       });
     }

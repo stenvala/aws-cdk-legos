@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Mono
+namespace Amis
 {
   /// <summary>
   /// This class extends from APIGatewayProxyFunction which contains the method FunctionHandlerAsync which is the 
   /// actual Lambda function entry point. The Lambda handler field should be set to
   /// 
-  /// mono::Mono.LambdaEntryPoint::FunctionHandlerAsync
+  /// amis::Amis.LambdaEntryPoint::FunctionHandlerAsync
   /// </summary>
   public class LambdaEntryPoint :
 
