@@ -13,6 +13,10 @@ This demo includes
   - Change salt for signing JWT
 - Graphical user interface to try the thing with browser (ui)
 
+## Prerequisites
+
+- Docker installed
+
 This is based on
 
 ```bash

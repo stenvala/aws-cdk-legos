@@ -52,7 +52,9 @@ To learn:
 - Trigger lambda by adding file to s3
 - Presigning s3 url and saving file to s3 with it
 
-### mono
+### netcore-monolith-attachment-ms-jwt-auth
+
+This is big step from the previous toy examples and represents a real cloud application with multiple services.
 
 To learn:
 

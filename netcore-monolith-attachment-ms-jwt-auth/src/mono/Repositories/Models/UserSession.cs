@@ -1,10 +1,11 @@
 ﻿using System;
-namespace mono.Repositories.Models
+namespace Mono.Repositories.Models
 {
-    public class UserSession
+
+    public class UserSession : BaseModel
     {
-        public UserSession()
-        {
-        }
+        public string UserId { get; set; }
+
+        public int Expires { get; set; }
     }
 }

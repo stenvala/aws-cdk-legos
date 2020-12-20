@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.DynamoDBv2;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Mono.BL;
+using Mono.Repositories;
 using Mono.Utils;
 
 namespace Mono
@@ -31,17 +33,35 @@ namespace Mono
         {
             services.AddControllers();
 
-
             services.AddScoped<IUserLogic, UserLogic>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
-                var mappingConfig = new MapperConfiguration(cfg =>
+            var mappingConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new MappingProfile());
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);
+
+            // Configure DybamoDbDB
+            var dynamoDbConfig = Configuration.GetSection("DynamoDb");
+            var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
+            if (runLocalDynamoDb)
+            {
+                services.AddSingleton<IAmazonDynamoDB>(sp =>
+                {
+                    var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl") };
+                    return new AmazonDynamoDBClient(clientConfig);
+                });
             }
+            else
+            {
+                services.AddAWSService<IAmazonDynamoDB>();
+            }
+            
+        }
+    
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

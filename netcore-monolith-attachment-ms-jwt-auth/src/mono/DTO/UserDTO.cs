@@ -7,8 +7,7 @@ namespace Mono.DTO
     {
         public string GivenName { get; set; }
         public string FamilyName { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
+        public string UserName { get; set; }        
         public string Password { get; set; }
     }
 
@@ -20,11 +19,9 @@ namespace Mono.DTO
 
     public class UserDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string GivenName { get; set; }
-        public string FamilyName { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }          
+        public string FamilyName { get; set; }                       
         public SessionDTO CurrentSession { get; set; }
     }
 
