@@ -24,6 +24,8 @@ namespace Mono.Repositories.Models
 
         public List<string> AttachmentPermissions { get; set; }
 
+        // public List<string> SecretFilesPermissions { get; set; }
+
 
         // Ust this for other properties
         // [DynamoDBIgnore]

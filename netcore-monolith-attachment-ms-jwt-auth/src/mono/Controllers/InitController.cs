@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Mono.DTO;
 using Mono.Repositories;
+using Mono.Repositories.Models;
 using Mono.Utils;
 
 namespace Mono.Controllers
@@ -36,8 +39,12 @@ namespace Mono.Controllers
         public async Task<string> GetInitUsers()
         {
             await userRepository.InitUsers();
-            var admin = await userRepository.GetAdmin();            
-            return Jsoner.Convert(mapper.Map<UserDTO>(admin));
+            var users = new List<UserModel>
+            {
+                await userRepository.GetUserByUsername("admin"),
+                await userRepository.GetUserByUsername("user")
+            };
+            return Jsoner.Convert(users.Select(i => mapper.Map<UserDTO>(i)));
         }
     }
 }

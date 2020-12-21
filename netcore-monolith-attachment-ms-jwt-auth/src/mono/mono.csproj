@@ -1,3 +1,4 @@
+
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -20,8 +21,5 @@
     <Folder Include="BL\" />
     <Folder Include="Repositories\" />
     <Folder Include="Repositories\Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="DTO\User.dto" />
   </ItemGroup>
 </Project>

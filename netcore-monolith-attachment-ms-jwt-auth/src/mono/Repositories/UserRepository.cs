@@ -13,7 +13,7 @@ namespace Mono.Repositories
     {
         Task<CreateTableResponse> InitTable();
         Task InitUsers();
-        Task<UserModel> GetAdmin();
+        Task<UserModel> GetUserByUsername(string username);
     }
 
     // https://www.stevejgordon.co.uk/running-aws-dynamodb-locally-for-net-core-developers
@@ -40,14 +40,15 @@ namespace Mono.Repositories
             return await CreateTableIfNotExists(results, TableName);            
         }        
 
-        public async Task<UserModel> GetAdmin()
+        public async Task<UserModel> GetUserByUsername(string username)
         {
             DynamoDBContext context = new DynamoDBContext(amazonDynamoDb);
-            return await context.LoadAsync<UserModel>("admin");
+            return await context.LoadAsync<UserModel>(username);
         }
 
         public async Task InitUsers()
         {
+            DynamoDBContext context = new DynamoDBContext(amazonDynamoDb);
             var admin = new UserModel
             {
                 Id = "admin",
@@ -61,16 +62,40 @@ namespace Mono.Repositories
                 AttachmentPermissions = new List<string>
                 {
                     "ADD", "GET", "DELETE"
-                }                 
-            };            
-            DynamoDBContext context = new DynamoDBContext(amazonDynamoDb);
-            await context.SaveAsync(admin);            
+                }/*,
+                SecretFilesPermission = new List<string>
+                {
+                    "ADD", "GET", "DELETE"
+                },*/
+
+            };                        
+            await context.SaveAsync(admin);
+            var user = new UserModel
+            {
+                Id = "user",
+                GivenName = "Demo",
+                FamilyName = "User",
+                PasswordHash = UserModel.HashPassword("demo"),
+                ImagePermissions = new List<string>
+                {
+                    "GET"
+                },
+                AttachmentPermissions = new List<string>
+                {
+                    "ADD", "GET", "DELETE"
+                }/*,
+                SecretFilesPermission = new List<string>
+                {                 
+                }*/
+            };
+            await context.SaveAsync(user);
+
         }
 
 
         private async Task<CreateTableResponse> CreateTableIfNotExists(List<string> existingTables, string tableName)
         {
-            if (!existingTables.Contains(tableName) || true)
+            if (!existingTables.Contains(tableName))
             {                
                 var createRequest = new CreateTableRequest
                 {
