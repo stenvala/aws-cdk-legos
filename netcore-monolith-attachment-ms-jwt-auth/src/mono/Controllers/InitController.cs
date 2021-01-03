@@ -15,13 +15,16 @@ namespace Mono.Controllers
     public class InitController : ControllerBase
     {
 
+        private readonly IInitData initData;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 
-        public InitController(         
+        public InitController(
+            IInitData initData,
             IUserRepository userRepository,
             IMapper mapper)
         {
+            this.initData = initData;
             this.userRepository = userRepository;
             this.mapper = mapper;
         }
@@ -30,15 +33,15 @@ namespace Mono.Controllers
         [HttpGet("table")]
         public async Task<string> GetInitTables()
         {            
-            var response = await userRepository.InitTable();
-            return Jsoner.Convert(response);
+            await initData.InitTables();
+            return Jsoner.Ok();
         }
 
         // localhost:6001/api/init/users
         [HttpGet("users")]
         public async Task<string> GetInitUsers()
         {
-            await userRepository.InitUsers();
+            await initData.InitUsers();
             var users = new List<UserModel>
             {
                 await userRepository.GetUserByUsername("admin"),

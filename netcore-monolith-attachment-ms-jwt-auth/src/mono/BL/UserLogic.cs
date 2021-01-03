@@ -5,34 +5,42 @@
 using Amazon.DynamoDBv2;
 using AutoMapper;
     using Mono.DTO;
+using Mono.Repositories;
+using Mono.Repositories.Models;
 
-    namespace Mono.BL
-    {
+namespace Mono.BL
+{
     
-        public interface IUserLogic
+    public interface IUserLogic
+    {            
+        Task<UserModel> Login(string userName, string password);
+        Task Logout(string userName);
+    }
+
+    public class UserLogic : IUserLogic
+    {        
+        private readonly IUserRepository userRepository;
+
+        public UserLogic(IUserRepository userRepository)
         {            
-            Task<UserDTO> Login(string userName, string password);                     
-        }
+            this.userRepository = userRepository;
+        }            
 
-        public class UserLogic : IUserLogic
+
+        public async Task<UserModel> Login(string userName, string password)
         {
-            private IMapper Mapper;
-            
-
-            public UserLogic(IMapper mapper)
+            var user = await userRepository.GetUserByUsername(userName);
+            if (!user.IsPasswordValid(password))
             {
-                Mapper = mapper;
-            }            
-
-
-            public async Task<UserDTO> Login(string userName, string password)
-            {
-                return await Task.FromResult(new UserDTO
-                {                    
-                    Id = userName
-                });
+                return null;
             }
-
+            return user;
         }
-     }
+
+        public async Task Logout(string userName)
+        {
+            await userRepository.ResetSessionId(userName);
+        }
+    }
+}
 

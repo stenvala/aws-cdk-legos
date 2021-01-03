@@ -1,0 +1,14 @@
+certifi==2020.12.5
+chardet==4.0.0
+click==7.1.2
+fastapi==0.61.1
+h11==0.12.0
+idna==2.10
+mangum==0.10.0
+pydantic==1.7.3
+PyJWT==2.0.0
+requests==2.25.1
+starlette==0.13.6
+typing-extensions==3.7.4.3
+urllib3==1.26.2
+uvicorn==0.12.2

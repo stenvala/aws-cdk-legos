@@ -13,6 +13,18 @@ This demo includes
   - Change salt for signing JWT
 - Graphical user interface to try the thing with browser (ui)
 
+## Commands
+
+### For Python virtual environment
+
+```bash
+python3 -m venv ./venv # Create python virtual env
+source venv/bin/activate # Activate virtual env
+pip3 install -r requirements.txt # Install dependencies
+deactivate # Stop virtual env
+cd src/auth; uvicorn main:app --reload --port 6108 # Start auth api
+```
+
 ## Prerequisites
 
 - Docker installed

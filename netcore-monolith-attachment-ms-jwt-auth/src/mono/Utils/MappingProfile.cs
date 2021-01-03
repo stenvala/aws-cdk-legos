@@ -9,8 +9,9 @@ namespace Mono.Utils
     {
         public MappingProfile()
         {            
-            CreateMap<UserModel, UserDTO>();         
-
+            CreateMap<UserModel, UserDTO>();
+            CreateMap<DocumentModel, DocumentDTO>();
+            CreateMap<UserModel, PermissionsDTO>();
         }
     }
 }

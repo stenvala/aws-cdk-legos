@@ -6,7 +6,7 @@ using Amazon.DynamoDBv2.DataModel;
 namespace Mono.Repositories.Models
 {
 
-    [DynamoDBTable("MonoDataTable")]
+    [DynamoDBTable("MonoUser")]
     public class UserModel : BaseModel
     {
 
@@ -18,17 +18,25 @@ namespace Mono.Repositories.Models
 
         public string GivenName { get; set; }
 
-        public string FamilyName { get; set; }        
+        public string FamilyName { get; set; }
+
+        public string SessionId { get; set; }
 
         public List<string> ImagePermissions { get; set; }
 
         public List<string> AttachmentPermissions { get; set; }
 
-        // public List<string> SecretFilesPermissions { get; set; }
+        public List<string> SecretFilePermissions { get; set; }
 
-
-        // Ust this for other properties
-        // [DynamoDBIgnore]
+        
+        [DynamoDBIgnore]
+        public string UserName
+        {
+            get
+            {
+                return Id;
+            }
+        }
 
         public static string HashPassword(string password)
         {

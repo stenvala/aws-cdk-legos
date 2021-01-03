@@ -21,5 +21,6 @@
     <Folder Include="BL\" />
     <Folder Include="Repositories\" />
     <Folder Include="Repositories\Models\" />
+    <Folder Include="Attributes\" />
   </ItemGroup>
 </Project>

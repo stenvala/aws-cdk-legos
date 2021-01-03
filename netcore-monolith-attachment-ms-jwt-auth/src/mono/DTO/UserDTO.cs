@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 
 namespace Mono.DTO
-{
-    public class RegisterDTO
-    {
-        public string GivenName { get; set; }
-        public string FamilyName { get; set; }
-        public string UserName { get; set; }        
-        public string Password { get; set; }
-    }
+{    
 
     public class LoginDTO
     {
-        public string UserName { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
     }
 
@@ -22,13 +15,27 @@ namespace Mono.DTO
         public string Id { get; set; }
         public string GivenName { get; set; }
         public string FamilyName { get; set; }                       
-        public SessionDTO CurrentSession { get; set; }
+        public string SessionId { get; set; }
     }
 
-    public class SessionDTO
+    public class DocumentDTO
     {
-        public DateTime ValidUntil { get; set; }
-        public Guid Id { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
+
+    public class NewDocumentDTO
+    {        
+        public string Name { get; set; }
+    }
+
+    public class PermissionsDTO
+    {
+        public List<string> ImagePermissions { get; set; }
+        public List<string> AttachmentPermissions { get; set; }
+        public List<string> SecretFilePermissions { get; set; }
+
+        public string JWT { get; set; }
+    }    
 
 }

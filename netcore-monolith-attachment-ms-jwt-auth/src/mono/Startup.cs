@@ -34,7 +34,10 @@ namespace Mono
             services.AddControllers();
 
             services.AddScoped<IUserLogic, UserLogic>();
+            services.AddScoped<IInitData, InitData>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<ISecurityContext, SecurityContext>();
 
             var mappingConfig = new MapperConfiguration(cfg =>
             {
@@ -81,7 +84,7 @@ namespace Mono
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers();                
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("mono service");
