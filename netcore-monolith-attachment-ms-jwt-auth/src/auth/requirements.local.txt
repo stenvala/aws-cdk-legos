@@ -1,0 +1,2 @@
+# Add here requirements that are needed only in local env
+uvicorn==0.12.2

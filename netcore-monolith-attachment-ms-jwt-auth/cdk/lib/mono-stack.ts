@@ -30,7 +30,7 @@ export class MonoStack {
       proxy: true,
     });
 
-    const table = new dynamodb.Table(stack, PREFIX + "Table", {
+    const table = new dynamodb.Table(stack, this.prefix + "Table", {
       partitionKey: {
         name: "Id",
         type: dynamodb.AttributeType.STRING,
@@ -46,6 +46,6 @@ export class MonoStack {
 
     this.lambda.addToRolePolicy(ps);
 
-    new cdk.CfnOutput(stack, PREFIX + "Url", { value: this.apigw.url });
+    new cdk.CfnOutput(stack, this.prefix + "Url", { value: this.apigw.url });
   }
 }

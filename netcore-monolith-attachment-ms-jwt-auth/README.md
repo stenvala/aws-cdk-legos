@@ -20,7 +20,8 @@ This demo includes
 ```bash
 python3 -m venv ./venv # Create python virtual env
 source venv/bin/activate # Activate virtual env
-pip3 install -r requirements.txt # Install dependencies
+pip3 install -r src/auth/requirements.txt # Install dependencies that are only needed in local env
+pip3 install -r src/auth/requirements.aws.txt # Install other dependencies
 deactivate # Stop virtual env
 cd src/auth; uvicorn main:app --reload --port 6108 # Start auth api
 ```

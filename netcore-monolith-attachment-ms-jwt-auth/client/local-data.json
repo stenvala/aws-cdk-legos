@@ -1,5 +1,6 @@
 {
   "NetcoreSystem-Stack": {
-    "monoUrl": "http://localhost:6102/"
+    "monoUrl": "http://localhost:6102/",
+    "authUrl": "http://localhost:6108/"
   }
 }

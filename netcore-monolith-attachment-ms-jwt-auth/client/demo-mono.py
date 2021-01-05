@@ -2,14 +2,11 @@ import json
 import requests
 import argparse
 from types import SimpleNamespace
-
-
-STACK_NAME = 'NetcoreSystem-Stack'
+import util
 
 
 def main(args):
-    urls = get_urls(args)
-    base = urls['monoUrl']
+    base = util.get_value(args.aws, 'monoUrl')
     gets = [
         base + 'api/init/table',
         base + 'api/init/users'
@@ -98,19 +95,9 @@ def login(base, username, password):
     }
 
 
-def get_urls(args):
-    file = 'stack-data.json' if args.aws else 'local-data.json'
-    with open(file, 'rb') as f:
-        data = json.loads(f.read())
-        return data[STACK_NAME]
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-
     parser.add_argument('-aws', action='store_true',
                         help='Give this to use AWS end point, otherwise uses local')
-
     args = parser.parse_args()
-
     main(args)
