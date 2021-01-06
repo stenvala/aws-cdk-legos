@@ -11,11 +11,16 @@
     -->
     <h1>Login here</h1>
 
-    <input type="text" placeholder="Username">
+    <p>
+      End point at <code>{{ url }}</code>
+    </p>
+
+    <input placeholder="Username" v-model="username">
     
-    <input type="password" placeholder="Password">
+    <input type="password" placeholder="Password" v-model="password">
     
     <button v-on:click="doLogin">Login</button>
+        
   </div>
 </template>
 
@@ -28,10 +33,12 @@ import axios from 'axios';
   },
 })
 export default class Login extends Vue {
-  doLogin  () {    
-    const url = 'http://localhost:6102/api/auth/login'
+  username: string;
+  password: string;
+  url = 'http://localhost:6102/api/auth/login';
+  doLogin  () {        
     axios
-      .post(url, {username: 'admin', password: 'demo'})
+      .post(this.url, {username: this.username, password: this.password})
       .then(response => console.log(response))
   }
 }
