@@ -22,6 +22,32 @@ export class UIStack {
   constructor(stack: cdk.Stack, prefix: string) {
     this.prefix = prefix + PREFIX;
 
+    const bucket = this.getBucket(stack);
+
+    const cloudFrontOAI = new OriginAccessIdentity(stack, this.prefix + "oai");
+
+    const cloudfrontDist = new CloudFrontWebDistribution(
+      stack,
+      this.prefix + "cfd",
+      this.getCFWDProps(bucket, cloudFrontOAI)
+    );
+
+    const cloudfrontS3Access = new iam.PolicyStatement();
+    cloudfrontS3Access.addActions("s3:GetBucket*");
+    cloudfrontS3Access.addActions("s3:GetObject*");
+    cloudfrontS3Access.addActions("s3:List*");
+    cloudfrontS3Access.addResources(bucket.bucketArn);
+    cloudfrontS3Access.addResources(`${bucket.bucketArn}/*`);
+    cloudfrontS3Access.addCanonicalUserPrincipal(
+      cloudFrontOAI.cloudFrontOriginAccessIdentityS3CanonicalUserId
+    );
+
+    new cdk.CfnOutput(stack, this.prefix + "Url", {
+      value: "https://" + cloudfrontDist.distributionDomainName,
+    });
+  }
+
+  private getBucket(stack: cdk.Stack) {
     const bucket = new S3.Bucket(stack, this.prefix + "bucket", {
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",
@@ -66,28 +92,7 @@ export class UIStack {
         prune: false,
       }
     );
-
-    const cloudFrontOAI = new OriginAccessIdentity(stack, this.prefix + "oai");
-
-    const cloudfrontDist = new CloudFrontWebDistribution(
-      stack,
-      this.prefix + "cfd",
-      this.getCFWDProps(bucket, cloudFrontOAI)
-    );
-
-    const cloudfrontS3Access = new iam.PolicyStatement();
-    cloudfrontS3Access.addActions("s3:GetBucket*");
-    cloudfrontS3Access.addActions("s3:GetObject*");
-    cloudfrontS3Access.addActions("s3:List*");
-    cloudfrontS3Access.addResources(bucket.bucketArn);
-    cloudfrontS3Access.addResources(`${bucket.bucketArn}/*`);
-    cloudfrontS3Access.addCanonicalUserPrincipal(
-      cloudFrontOAI.cloudFrontOriginAccessIdentityS3CanonicalUserId
-    );
-
-    new cdk.CfnOutput(stack, this.prefix + "Url", {
-      value: "https://" + cloudfrontDist.distributionDomainName,
-    });
+    return bucket;
   }
 
   private getCFWDProps(
