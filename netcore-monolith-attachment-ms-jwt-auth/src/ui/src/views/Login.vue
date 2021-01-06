@@ -50,6 +50,7 @@ export default class Login extends Vue {
       .post(this.url, {username: this.username, password: this.password})
       .then(response => {            
         (this as any).$store.state.isLoggedIn = true;
+        (this as any).$store.user = response.data;
         console.log('Logged in successfully');
         (this as any).$router.push('/documents')
       })

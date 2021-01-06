@@ -106,7 +106,7 @@ def login(base, username, password):
     body = json.loads(response.content,
                       object_hook=lambda d: SimpleNamespace(**d))
     return {
-        'Authorization': 'Basic %s,%s' % (body.id, body.sessionId)
+        'Authorization': 'Bearer %s,%s' % (body.id, body.sessionId)
     }
 
 

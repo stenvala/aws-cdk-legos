@@ -1,16 +1,12 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |    
-      <!--  
-      <router-link to="/login">Login</router-link>
-      -->
+      <router-link to="/">Home</router-link> |          
       <router-link to="/login" v-if="!isLoggedIn">Login</router-link>
       <span v-if="isLoggedIn">
-      <router-link to="/document">Documents</router-link> | 
-      <a href="javascript:void(0)" v-on:click="doLogout">Logout</a>
-      </span>
-      
+        <router-link to="/documents">Documents</router-link> | 
+        <a href="javascript:void(0)" v-on:click="doLogout">Logout</a>
+      </span>      
     </div>
     <router-view/>
   </div>

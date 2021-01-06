@@ -1,10 +1,9 @@
 <template>
   <div class="hello">
     <!--<h1>{{ msg }}</h1>-->
-    <h1>Welcome!</h1>
+    <h1>Welcome</h1>
     <p>
-      This is the GUI for attachment microservice demo.
-      Start by logging in!
+      This is the GUI for attachment microservice demo built with Vue.js.      
     </p>
     <!--
     <p>            

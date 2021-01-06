@@ -27,9 +27,9 @@ namespace Mono.Attributes
             var userRepository = context.HttpContext.RequestServices.GetService<IUserRepository>();
 
             string authHeader = context.HttpContext.Request.Headers["Authorization"];
-            if (authHeader != null && authHeader.StartsWith("Basic "))
+            if (authHeader != null && authHeader.StartsWith("Bearer "))
             {
-                var values = authHeader.Replace("Basic ", "").Split(",");
+                var values = authHeader.Replace("Bearer ", "").Split(",");
                 if (values.Count() == 2) {
                     var user = await userRepository.GetUserByUsername(values[0]);
                     if (user != null && user.SessionId == values[1])
