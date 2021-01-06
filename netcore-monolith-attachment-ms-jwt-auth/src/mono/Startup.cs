@@ -21,6 +21,8 @@ namespace Mono
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,6 +33,20 @@ namespace Mono
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            var isLocalMode = Configuration.GetValue<bool>("LocalMode");            
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder
+                                      .AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                  });
+            });
+
             services.AddControllers();
 
             services.AddScoped<IUserLogic, UserLogic>();
@@ -48,8 +64,7 @@ namespace Mono
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);
 
-            // Configure DybamoDbDB
-            var isLocalMode = Configuration.GetValue<bool>("LocalMode");
+            // Configure DybamoDbDB            
             var dynamoDbConfig = Configuration.GetSection("DynamoDb");
             Authorizer.IsIamAuthEnabled = !isLocalMode;
             if (isLocalMode)
@@ -81,6 +96,8 @@ namespace Mono
             {
                 app.UseHttpsRedirection();
             }
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseRouting();
 
