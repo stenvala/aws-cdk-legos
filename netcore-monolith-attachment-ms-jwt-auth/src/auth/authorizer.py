@@ -24,8 +24,11 @@ def encode(body: EncodeBody):
         'iss': ISSUER,
         'iat': datetime.utcnow(),
         'docId': docId,
-        'permissions': {i.id: {p: 0 for p in i.permissions} for i in body.permissions}
+        # {i.id: {p: 0 for p in i.permissions} for i in body.permissions},
+        'permissions': [{"id": i.id, "permissions": i.permissions} for i in body.permissions],
     }
+    if body.meta:
+        to_encode['meta'] = body.meta
     encoded_jwt = jwt.encode(to_encode, SECRET, algorithm='HS256')
     return {'jwt': encoded_jwt}
 
@@ -39,9 +42,19 @@ def auth(body: DecodeBody):
         raise HTTPException(status_code=401, detail='Unauthorized')
 
     if decoded_jwt['docId'] != body.docId or \
-            body.area not in decoded_jwt['permissions'] or \
-            body.permission not in decoded_jwt['permissions'][body.area]:
+            not has_permission(body.area, body.permission, decoded_jwt['permissions']):
+        #    body.area not in decoded_jwt['permissions'] or \
+        #    body.permission not in decoded_jwt['permissions'][body.area]:
         raise HTTPException(status_code=403, detail='Forbidden')
+    fields = ['docId', 'permissions', 'meta']
+    return {i: decoded_jwt[i] for i in fields if i in decoded_jwt}
+
+
+def has_permission(area, permission, permissions):
+    for i in permissions:
+        if i['id'] == area and permission in i['permissions']:
+            return True
+    return False
 
 
 # to make it work with Amazon Lambda, we create a handler object

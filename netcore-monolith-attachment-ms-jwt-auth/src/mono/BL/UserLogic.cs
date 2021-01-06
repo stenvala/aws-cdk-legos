@@ -49,7 +49,7 @@ namespace Mono.BL
 
         public string GetPermissionJwt(UserModel user, string docId)
         {
-            return authorizer.getJwt(docId, new List<Permission>
+            return authorizer.getJwt(docId, user, new List<Permission>
             {
                 new Permission
                 {

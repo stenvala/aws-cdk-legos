@@ -15,7 +15,12 @@ def main(args):
         'permissions': [
             {'id': 'image',
              'permissions': ['DELETE', 'READ', 'WRITE']}
-        ]
+        ],
+        'meta': {
+            'userid': 'randomid',
+            'givenName': 'Keijo',
+            'familyName': 'Test'
+        }
     })
     body = json.loads(response.content)
     jwt = body['jwt']
@@ -29,6 +34,8 @@ def main(args):
         'jwt': jwt
     })
     print(response.status_code)
+    body = json.loads(response.content)
+    print(json.dumps(body, indent=4, sort_keys=True))
 
     print('-- SHOULD FAIL FOR ID')
     response = requests.post(base + 'auth', json={

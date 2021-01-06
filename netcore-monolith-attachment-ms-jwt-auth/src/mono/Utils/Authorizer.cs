@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mono.Repositories.Models;
 using Newtonsoft.Json;
 
 namespace Mono.Utils
@@ -16,7 +17,7 @@ namespace Mono.Utils
 
     public interface IAuthorizer
     {
-        string getJwt(string docId, List<Permission> permissions);
+        string getJwt(string docId, UserModel user, List<Permission> permissions);
     }
 
     public class Authorizer : IAuthorizer
@@ -48,12 +49,18 @@ namespace Mono.Utils
         {            
         }
 
-        public string getJwt(string docId, List<Permission> permissions)
+        public string getJwt(string docId, UserModel user, List<Permission> permissions)
         {
             var json = Jsoner.Convert(new
             {
                 docId,
-                permissions
+                permissions,
+                meta = new
+                {
+                    UserId = user.Id,
+                    GivenName = user.GivenName,
+                    FamilyName = user.FamilyName
+                }
             });            
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(Url_);

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class Area(BaseModel):
@@ -10,6 +10,7 @@ class Area(BaseModel):
 class EncodeBody(BaseModel):
     docId: str
     permissions: List[Area]
+    meta: Optional[dict]
 
 
 class DecodeBody(BaseModel):
