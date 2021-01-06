@@ -41,7 +41,6 @@ namespace Mono.Attributes
             }            
             context.Result = new ForbidResult("AUTHENTICATION_FAILED");            
         }
-
     }
 }
 

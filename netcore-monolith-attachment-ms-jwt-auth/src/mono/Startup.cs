@@ -38,6 +38,7 @@ namespace Mono
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<ISecurityContext, SecurityContext>();
+            services.AddScoped<IAuthorizer, Authorizer>();
 
             var mappingConfig = new MapperConfiguration(cfg =>
             {
@@ -48,19 +49,22 @@ namespace Mono
             services.AddSingleton<IMapper>(mapper);
 
             // Configure DybamoDbDB
+            var isLocalMode = Configuration.GetValue<bool>("LocalMode");
             var dynamoDbConfig = Configuration.GetSection("DynamoDb");
-            var runLocalDynamoDb = dynamoDbConfig.GetValue<bool>("LocalMode");
-            if (runLocalDynamoDb)
+            Authorizer.IsIamAuthEnabled = !isLocalMode;
+            if (isLocalMode)
             {
                 services.AddSingleton<IAmazonDynamoDB>(sp =>
                 {
                     var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbConfig.GetValue<string>("LocalServiceUrl") };
                     return new AmazonDynamoDBClient(clientConfig);
                 });
+                Authorizer.Url = Configuration.GetSection("Auth").GetValue<string>("LocalServiceUrl");                
             }
             else
             {
                 services.AddAWSService<IAmazonDynamoDB>();
+                Authorizer.Url = Environment.GetEnvironmentVariable("authUrl");
             }
             
         }

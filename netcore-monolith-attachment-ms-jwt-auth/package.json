@@ -10,6 +10,7 @@
     "build-mono": "cd src/mono && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ../..",
     "build-amis": "cd src/amis && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ../..",
     "start-mono": "cd src/mono && dotnet watch run",
+    "start-auth": "cd src/auth; uvicorn authorizer:app --reload --port 6108",
     "start-dynamo": "docker run -p 8001:8000 -d amazon/dynamodb-local",
     "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
     "demo": "cd client && python3 demo.py && cd ..",

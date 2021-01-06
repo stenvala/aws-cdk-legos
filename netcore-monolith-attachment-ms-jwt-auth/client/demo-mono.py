@@ -8,11 +8,14 @@ import util
 def main(args):
     base = util.get_value(args.aws, 'monoUrl')
     gets = [
-        base + 'api/init/table',
+        base + 'api/values',
         base + 'api/init/users'
     ]
+    if not args.aws:
+        gets.insert(0, base + 'api/init/table')
+
     #
-    print('Init database')
+    print('Init database and get default')
     for url in gets:
         print(f'Method GET endpoint {url}')
         response = requests.get(url)
@@ -34,6 +37,8 @@ def main(args):
     get_all_documents(base, auth)
     #
     get_permissions(base, auth)
+    #
+    get_permission_jwt(base, auth, doc['id'])
     #
     remove_all_documents(base, auth)
 
@@ -70,13 +75,23 @@ def get_permissions(base, auth):
     return print_result(response)
 
 
+def get_permission_jwt(base, auth, id):
+    print('Get permission jwt')
+    response = requests.get(
+        base + 'api/auth/permissions-jwt/' + id, headers=auth)
+    return print_result(response)
+
+
 def print_result(response):
     failed = False
     if response.status_code != 200:
         print('Failed %s' % response.status_code)
         failed = True
-    body = json.loads(response.content)
-    print(json.dumps(body, indent=4, sort_keys=True))
+    try:
+        body = json.loads(response.content)
+        print(json.dumps(body, indent=4, sort_keys=True))
+    except:
+        print(response.content)
     if failed:
         exit()
     return body

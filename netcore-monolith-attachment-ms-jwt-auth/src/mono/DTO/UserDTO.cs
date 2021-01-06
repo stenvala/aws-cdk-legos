@@ -33,9 +33,12 @@ namespace Mono.DTO
     {
         public List<string> ImagePermissions { get; set; }
         public List<string> AttachmentPermissions { get; set; }
-        public List<string> SecretFilePermissions { get; set; }
+        public List<string> SecretFilePermissions { get; set; }        
+    }
 
-        public string JWT { get; set; }
-    }    
+    public class PermissionJwtDTO
+    {
+        public string Jwt { get; set; }
+    }
 
 }

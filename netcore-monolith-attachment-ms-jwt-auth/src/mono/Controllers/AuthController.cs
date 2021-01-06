@@ -19,13 +19,13 @@ namespace Mono.Controllers
 
         private readonly IUserLogic userLogic;
         private readonly IMapper mapper;
-        private readonly ISecurityContext securityContext;
+        private readonly ISecurityContext securityContext;        
 
         public AuthController(
-            IUserLogic userLogic,
+            IUserLogic userLogic,            
             ISecurityContext securityContext,
             IMapper mapper)
-        {
+        {            
             this.userLogic = userLogic;
             this.securityContext = securityContext;
             this.mapper = mapper;
@@ -68,10 +68,24 @@ namespace Mono.Controllers
         [HttpGet("permissions")]
         [RequireUser()]
         public string GetPermissions()
-        {
-            var user = securityContext.GetUser();
-            var permissions = mapper.Map<PermissionsDTO>(user);
+        {            
+            var user = securityContext.GetUser();            
+            var permissions = mapper.Map<PermissionsDTO>(user);            
             return Jsoner.Convert(permissions);
+        }
+
+        [HttpGet("permissions-jwt/{id}")]
+        [RequireUser()]
+        public string GetPermissionsJwtForDoc(string id)
+        {
+            var user = securityContext.GetUser();            
+            
+            return Jsoner.Convert(
+                new PermissionJwtDTO
+                {
+                    Jwt = userLogic.GetPermissionJwt(user, id)
+                }
+            );
         }
     }
 }

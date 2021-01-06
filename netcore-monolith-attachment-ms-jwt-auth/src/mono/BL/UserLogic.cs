@@ -1,12 +1,13 @@
-﻿    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using AutoMapper;
-    using Mono.DTO;
+using Mono.DTO;
 using Mono.Repositories;
 using Mono.Repositories.Models;
+using Mono.Utils;
 
 namespace Mono.BL
 {
@@ -15,14 +16,18 @@ namespace Mono.BL
     {            
         Task<UserModel> Login(string userName, string password);
         Task Logout(string userName);
+        string GetPermissionJwt(UserModel user, string docId);
     }
 
     public class UserLogic : IUserLogic
     {        
         private readonly IUserRepository userRepository;
+        private readonly IAuthorizer authorizer;
 
-        public UserLogic(IUserRepository userRepository)
-        {            
+        public UserLogic(IUserRepository userRepository,
+            IAuthorizer authorizer)
+        {
+            this.authorizer = authorizer;
             this.userRepository = userRepository;
         }            
 
@@ -40,6 +45,28 @@ namespace Mono.BL
         public async Task Logout(string userName)
         {
             await userRepository.ResetSessionId(userName);
+        }
+
+        public string GetPermissionJwt(UserModel user, string docId)
+        {
+            return authorizer.getJwt(docId, new List<Permission>
+            {
+                new Permission
+                {
+                    Id = "image",
+                    Permissions = user.ImagePermissions
+                },
+                new Permission
+                {
+                    Id = "attachment",
+                    Permissions = user.AttachmentPermissions
+                },
+                new Permission
+                {
+                    Id = "secretfile",
+                    Permissions = user.SecretFilePermissions
+                }
+            });
         }
     }
 }
