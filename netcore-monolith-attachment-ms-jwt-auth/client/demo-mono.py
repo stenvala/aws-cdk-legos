@@ -19,12 +19,12 @@ def main(args):
     for url in gets:
         print(f'Method GET endpoint {url}')
         response = requests.get(url)
-        print_result(response)
+        util.print_result(response)
     #
-    auth = login(base, 'admin', 'demo')
+    auth = util.login(base, 'admin', 'demo')
     #
     print('Get my data')
-    print_result(requests.get(base + 'api/auth/me', headers=auth))
+    util.print_result(requests.get(base + 'api/auth/me', headers=auth))
     #
     get_all_documents(base, auth)
     #
@@ -46,7 +46,7 @@ def main(args):
 def get_all_documents(base, auth):
     print('Get all existing documents')
     response = requests.get(base + 'api/documents', headers=auth)
-    return print_result(response)
+    return util.print_result(response)
 
 
 def add_document(base, auth, name):
@@ -54,13 +54,13 @@ def add_document(base, auth, name):
     response = requests.post(base + 'api/documents', json={
         "name": name
     }, headers=auth)
-    return print_result(response)
+    return util.print_result(response)
 
 
 def remove_document(base, auth, id):
     print('Remove document "%s"' % id)
     response = requests.delete(base + f'api/documents/{id}', headers=auth)
-    return print_result(response)
+    return util.print_result(response)
 
 
 def remove_all_documents(base, auth):
@@ -72,42 +72,14 @@ def remove_all_documents(base, auth):
 def get_permissions(base, auth):
     print('Get permissions')
     response = requests.get(base + 'api/auth/permissions', headers=auth)
-    return print_result(response)
+    return util.print_result(response)
 
 
 def get_permission_jwt(base, auth, id):
     print('Get permission jwt')
     response = requests.get(
         base + 'api/auth/permissions-jwt/' + id, headers=auth)
-    return print_result(response)
-
-
-def print_result(response):
-    failed = False
-    if response.status_code != 200:
-        print('Failed %s' % response.status_code)
-        failed = True
-    try:
-        body = json.loads(response.content)
-        print(json.dumps(body, indent=4, sort_keys=True))
-    except:
-        print(response.content)
-    if failed:
-        exit()
-    return body
-
-
-def login(base, username, password):
-    print('Logging in as %s' % username)
-    response = requests.post(base + 'api/auth/login', json={
-        'username': username,
-        'password': password
-    })
-    body = json.loads(response.content,
-                      object_hook=lambda d: SimpleNamespace(**d))
-    return {
-        'Authorization': 'Bearer %s,%s' % (body.id, body.sessionId)
-    }
+    return util.print_result(response)
 
 
 if __name__ == "__main__":

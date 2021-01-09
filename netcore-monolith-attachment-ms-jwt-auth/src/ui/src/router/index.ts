@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
+import Document from "../views/Document.vue";
 import Documents from "../views/Documents.vue";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
@@ -21,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: "/documents",
     name: "Documents",
     component: Documents,
+  },
+  {
+    path: "/document/:id",
+    name: "Document",
+    component: Document,
   },
   /**
   {

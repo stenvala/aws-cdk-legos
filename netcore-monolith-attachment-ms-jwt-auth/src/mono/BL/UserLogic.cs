@@ -35,7 +35,7 @@ namespace Mono.BL
         public async Task<UserModel> Login(string userName, string password)
         {
             var user = await userRepository.GetUserByUsername(userName);
-            if (!user.IsPasswordValid(password))
+            if (user == null || !user.IsPasswordValid(password))
             {
                 return null;
             }

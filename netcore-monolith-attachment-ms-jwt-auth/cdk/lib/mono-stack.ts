@@ -21,6 +21,7 @@ export class MonoStack {
 
   constructor(private stack: CdkStack, prefix: string, authStack: AuthStack) {
     this.prefix = prefix + PREFIX;
+
     this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
@@ -45,7 +46,7 @@ export class MonoStack {
       this.lambda.addToRolePolicy(ps);
     });
 
-    new cdk.CfnOutput(stack, this.prefix + "Url", { value: this.apigw.url });
+    new cdk.CfnOutput(stack, PREFIX + "Url", { value: this.apigw.url });
   }
 
   private getTable(tableName: string) {

@@ -42,7 +42,7 @@ export class UIStack {
       cloudFrontOAI.cloudFrontOriginAccessIdentityS3CanonicalUserId
     );
 
-    new cdk.CfnOutput(stack, this.prefix + "Url", {
+    new cdk.CfnOutput(stack, PREFIX + "Url", {
       value: "https://" + cloudfrontDist.distributionDomainName,
     });
   }

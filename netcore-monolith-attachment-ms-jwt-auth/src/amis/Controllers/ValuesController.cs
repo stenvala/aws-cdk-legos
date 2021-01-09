@@ -6,39 +6,48 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Amis.Controllers
 {
-  [Route("api/[controller]")]
-  public class ValuesController : ControllerBase
-  {
-    // GET api/values
-    [HttpGet]
-    public IEnumerable<string> Get()
+    [Route("api/[controller]")]
+    public class ValuesController : ControllerBase
     {
-      return new string[] { "value1", "value2", "value3" };
-    }
+        // GET api/values
+        [HttpGet]
+        public IEnumerable<string> Get()
+        {
+            var headers = Request.Headers;
+            var keys = headers.Keys;
+            var value = headers[keys.ElementAt(0)];
+            var reply = new List<string>();
+            foreach (var key in keys)
+            {
+                reply.Add(key + ": " + headers[key]);
+            }
 
-    // GET api/values/5
-    [HttpGet("{id}")]
-    public string Get(string id)
-    {
-      return "value" + id;
-    }
+            return reply;
+        }
 
-    // POST api/values
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
-    }
+        // GET api/values/5
+        [HttpGet("{id}")]
+        public string Get(string id)
+        {
+            return "value" + id;
+        }
 
-    // PUT api/values/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
+        // POST api/values
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
 
-    // DELETE api/values/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
     }
-  }
 }

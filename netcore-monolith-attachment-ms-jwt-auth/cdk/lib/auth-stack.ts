@@ -5,14 +5,17 @@ import { KEY } from "./key";
 
 const ASSET_LOCATION = "../src/auth";
 const LAYER_LOCATION = "../dist/auth";
-const HANDLER = "authorizer.lambda_handler";
+const HANDLER = "api.lambda_handler";
+const AUTH_HANDLER = "authorizer.lambda_handler";
 const RUNTIME = lambda.Runtime.PYTHON_3_8;
 const PREFIX = "auth-";
 
 export class AuthStack {
   lambda: lambda.Function;
+  authLambda: lambda.Function;
   apigw: apigw.LambdaRestApi;
   layer: lambda.LayerVersion;
+  auth: apigw.TokenAuthorizer;
 
   private readonly prefix: string;
 
@@ -24,7 +27,7 @@ export class AuthStack {
       compatibleRuntimes: [RUNTIME],
     });
 
-    this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
+    this.lambda = new lambda.Function(stack, this.prefix + "ApiLambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       environment: {
@@ -39,8 +42,24 @@ export class AuthStack {
       proxy: true,
     });
 
-    // AuthParam.grantRead(this.lambda);
+    this.authLambda = new lambda.Function(
+      stack,
+      this.prefix + "AuthorizerLambda",
+      {
+        runtime: RUNTIME,
+        code: lambda.Code.fromAsset(ASSET_LOCATION),
+        handler: AUTH_HANDLER,
+        layers: [this.layer],
+      }
+    );
 
-    new cdk.CfnOutput(stack, this.prefix + "Url", { value: this.apigw.url });
+    this.auth = new apigw.TokenAuthorizer(stack, this.prefix + "Authorizer", {
+      identitySource: "method.request.header.Authorization",
+      validationRegex: "^Bearer\\s(.*)",
+      authorizerName: "CustomJWTAuthorizer",
+      handler: this.authLambda,
+    });
+
+    new cdk.CfnOutput(stack, PREFIX + "Url", { value: this.apigw.url });
   }
 }

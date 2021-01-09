@@ -40,14 +40,14 @@
 export default {
   computed: {
     isLoggedIn() {
-      return this.$store.state.isLoggedIn;
+      return (this as any).$store.state.isLoggedIn;
     }
   },
   methods: {
     doLogout() {
       console.log('Logging out');
-      this.$store.state.isLoggedIn = false;
-      this.$router.push('/');
+      (this as any).$store.state.isLoggedIn = false;
+      (this as any).$router.push('/');
     }
   }
 }

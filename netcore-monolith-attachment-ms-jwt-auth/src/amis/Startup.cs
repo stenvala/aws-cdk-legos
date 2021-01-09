@@ -14,43 +14,63 @@ using Microsoft.Extensions.Logging;
 
 namespace Amis
 {
-  public class Startup
-  {
-    public Startup(IConfiguration configuration)
+    public class Startup
     {
-      Configuration = configuration;
+        readonly string MyAllowSpecificOrigins = "Anything";
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public static IConfiguration Configuration { get; private set; }
+
+        // This method gets called by the runtime. Use this method to add services to the container
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllers();
+
+            var isLocalMode = Configuration.GetValue<bool>("LocalMode");
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder
+                                      .AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                  });
+            });                    
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHttpsRedirection();
+            }
+
+            app.UseCors(MyAllowSpecificOrigins);
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+            endpoints.MapControllers();
+            endpoints.MapGet("/", async context =>
+                    {
+                    await context.Response.WriteAsync("amis service");
+                    });
+            });
+        }
     }
-
-    public static IConfiguration Configuration { get; private set; }
-
-    // This method gets called by the runtime. Use this method to add services to the container
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddControllers();
-    }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-      }
-
-      app.UseHttpsRedirection();
-
-      app.UseRouting();
-
-      app.UseAuthorization();
-
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
-        endpoints.MapGet("/", async context =>
-              {
-                await context.Response.WriteAsync("amis service");
-              });
-      });
-    }
-  }
 }

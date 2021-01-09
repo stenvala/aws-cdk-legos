@@ -1,6 +1,7 @@
 {
-  "NetcoreSystem-Stack": {
+  "NetcoreSys-Stack": {
     "monoUrl": "http://localhost:6102/",
+    "amisUrl": "http://localhost:6103/",
     "authUrl": "http://localhost:6108/",
     "uiUrl": "http://localhost:8080/"
   }

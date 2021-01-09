@@ -21,7 +21,7 @@ namespace Mono
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        readonly string MyAllowSpecificOrigins = "Anything";
 
         public Startup(IConfiguration configuration)
         {
