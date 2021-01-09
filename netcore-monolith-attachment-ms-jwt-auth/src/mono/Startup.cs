@@ -64,7 +64,7 @@ namespace Mono
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton<IMapper>(mapper);
 
-            // Configure DybamoDbDB            
+            // Configure DybamoDb       
             var dynamoDbConfig = Configuration.GetSection("DynamoDb");
             Authorizer.IsIamAuthEnabled = !isLocalMode;
             if (isLocalMode)

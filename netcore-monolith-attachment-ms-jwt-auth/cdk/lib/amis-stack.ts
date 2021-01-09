@@ -10,7 +10,6 @@ const PREFIX = "amis-";
 
 export class AmisStack {
   lambda: lambda.Function;
-  apigw: apigw.LambdaRestApi;
 
   private readonly prefix: string;
 
@@ -26,16 +25,21 @@ export class AmisStack {
       proxy: true,
     });
 
-    // https://stackoverflow.com/questions/52726914/aws-cdk-user-pool-authorizer/61843635#61843635
+    // Cors don't still work
     const api = new apigw.RestApi(stack, this.prefix + "ApiGw", {
-      restApiName: "Just some name",
-      description: "API for journey services.",
+      restApiName: "AMISAPI",
+      description: "API for AMIS services.",
+      /*
       deployOptions: {
         loggingLevel: apigw.MethodLoggingLevel.INFO,
         dataTraceEnabled: true,
       },
+      */
       defaultCorsPreflightOptions: {
-        allowOrigins: ["*"],
+        allowOrigins: apigw.Cors.ALL_ORIGINS,
+        allowCredentials: true,
+        allowMethods: apigw.Cors.ALL_METHODS,
+        allowHeaders: ["*"],
       },
       defaultIntegration: integration,
       defaultMethodOptions: {
@@ -45,59 +49,9 @@ export class AmisStack {
       },
     });
 
+    // This is crucial!
     api.root.addProxy();
 
-    /*
-    const resource = api.root.addResource("/{proxy+}");
-    resource.addMethod("ANY", integration, {
-      apiKeyRequired: false,
-      authorizationType: apigw.AuthorizationType.CUSTOM,
-      authorizer: authStack.auth,      
-    });
-    /*
-    api.root.addMethod("POST", integration, {
-      authorizationType: apigw.AuthorizationType.CUSTOM,
-      authorizer: authStack.auth,
-    });
-    */
-
     new cdk.CfnOutput(stack, PREFIX + "Url", { value: api.url });
-
-    /*
-    const postMethod = post.node.defaultChild as apigw.CfnMethod;
-    postMethod.addOverride("Properties.AuthorizerId", { Ref: auth.logicalId });
-    */
-
-    /*
-    const authorizer = new apigw.CfnAuthorizer(
-      stack,
-      this.prefix + "JWTAuthorizer",
-      {        
-        authType: "JWT",
-        restApiId: authStack.apigw.restApiId,
-        type: "TOKEN", // HAS TO BE JWT FOR HTTP APIs !?!
-        identitySource: "$request.header.Authorization",
-        name: "my-authorizer",
-        authorizerUri: authStack.apigw.url + "auth",
-        jwtConfiguration: {
-        issuer: "https://martzcodes.us.auth0.com/",
-        audience: ["https://martzcodes.us.auth0.com/api/v2/"],
-      },
-      }
-    );
-
-    this.apigw = new apigw.LambdaRestApi(stack, this.prefix + "ApiGw", {
-      handler: this.lambda,
-      proxy: true,
-      options: {
-        defaultMethodOptions: {
-          authorizationType: apigw.AuthorizationType.CUSTOM,
-          authorizer: authorizer,
-        },
-      },
-    });
-    */
-
-    //new cdk.CfnOutput(stack, PREFIX + "Url", { value: this.apigw.url });
   }
 }

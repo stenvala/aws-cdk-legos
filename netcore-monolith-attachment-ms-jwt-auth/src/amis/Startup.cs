@@ -65,11 +65,11 @@ namespace Amis
 
             app.UseEndpoints(endpoints =>
             {
-            endpoints.MapControllers();
-            endpoints.MapGet("/", async context =>
-                    {
+                endpoints.MapControllers();
+                endpoints.MapGet("/", async context =>
+                {
                     await context.Response.WriteAsync("amis service");
-                    });
+                });
             });
         }
     }
