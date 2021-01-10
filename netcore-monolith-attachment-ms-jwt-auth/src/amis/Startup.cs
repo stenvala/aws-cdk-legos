@@ -11,6 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Amazon.S3;
+using Amazon;
+using Amis.Utils;
+using Amis.BL;
 
 namespace Amis
 {
@@ -26,11 +30,25 @@ namespace Amis
         public static IConfiguration Configuration { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)        
         {
             services.AddControllers();
 
             var isLocalMode = Configuration.GetValue<bool>("LocalMode");
+
+
+            services.AddScoped<ISecurityContext, SecurityContext>();
+
+            if (isLocalMode)
+            {
+                services.AddScoped<IS3, MinioClient>();
+                SecurityContext.AuthType = Configuration.GetSection("Auth").GetValue<string>("Type");
+                SecurityContext.Url = Configuration.GetSection("Auth").GetValue<string>("LocalServiceUrl");
+            }
+            else
+            {                
+                
+            }
 
             services.AddCors(options =>
             {
@@ -42,7 +60,8 @@ namespace Amis
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();
                                   });
-            });                    
+            });           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline

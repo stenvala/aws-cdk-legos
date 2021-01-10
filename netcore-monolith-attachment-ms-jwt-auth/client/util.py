@@ -42,6 +42,10 @@ def login(base, username, password):
         'username': username,
         'password': password
     })
+    if response.status_code != 200:
+        print('Cannot log in. Perhaps data base not initialized. Exiting.')
+        exit()
+
     body = json.loads(response.content,
                       object_hook=lambda d: SimpleNamespace(**d))
     return {

@@ -18,3 +18,7 @@ class DecodeBody(BaseModel):
     area: str
     permission: str
     jwt: str
+
+
+class JwtOnly(BaseModel):
+    jwt: str

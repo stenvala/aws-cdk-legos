@@ -6,6 +6,7 @@ import * as cdk from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import { AuthStack } from "./auth-stack";
 import { CdkStack } from "./cdk-stack";
+import { GlobalProps } from "./models";
 
 const ASSET_LOCATION = "../src/mono/bin/Release/netcoreapp3.1/linux-x64";
 const HANDLER = "mono::Mono.LambdaEntryPoint::FunctionHandlerAsync";
@@ -19,7 +20,12 @@ export class MonoStack {
 
   private readonly prefix: string;
 
-  constructor(private stack: CdkStack, prefix: string, authStack: AuthStack) {
+  constructor(
+    private stack: CdkStack,
+    prefix: string,
+    authStack: AuthStack,
+    props: GlobalProps
+  ) {
     this.prefix = prefix + PREFIX;
 
     this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
@@ -30,6 +36,7 @@ export class MonoStack {
       memorySize: 1024,
       environment: {
         authUrl: authStack.apigw.url + "jwt",
+        amisAuthType: props.amisAuth,
       },
     });
 

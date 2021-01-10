@@ -22,20 +22,48 @@ def main(args):
     #
     docs = demo_mono.get_all_documents(base, auth)
     if len(docs) == 0:
-        print('No documents')
-        exit()
-    doc_id = docs[0]['id']
+        print('No documents. Creating one.')
+        doc = demo_mono.add_document(base, auth, "Some demo document")
+    else:
+        print('There are documents. Selecting first')
+        doc = docs[0]
+    print('Active document ' + doc['name'])
+    doc_id = doc['id']
     #
     jwt_auth = get_jwt(base, auth, doc_id)
     #
     base_amis = util.get_value(args.aws, 'amisUrl')
-    demo(base_amis, jwt_auth)
+    headers(base_amis, jwt_auth)
+    bucket(base_amis, jwt_auth)
+    decoded(base_amis, jwt_auth)
+    #
+    get_files(base_amis, jwt_auth, doc_id)
 
 
-def demo(base, auth):
-    url = base + 'api/values'
-    #url = 'https://ca4wr5cgv9.execute-api.eu-north-1.amazonaws.com/prod/'
-    print('Do demo request to %s' % url)
+def headers(base, auth):
+    url = base + 'api/dev/headers'
+    print('Fetch headers %s' % url)
+    response = requests.get(url, headers=auth)
+    return util.print_result(response)
+
+
+def bucket(base, auth):
+    url = base + 'api/dev/buckets'
+    print('Test bucket %s' % url)
+    response = requests.get(url, headers=auth)
+    return util.print_result(response)
+
+
+def decoded(base, auth):
+    url = base + 'api/dev/decoded-jwt'
+    print('Test decoding jwt from header %s' % url)
+    response = requests.get(url, headers=auth)
+    return util.print_result(response)
+
+
+def get_files(base, auth, doc_id):
+    url = base + f'api/files/document/{doc_id}'
+    print('Get files of document %s' % url)
     response = requests.get(url, headers=auth)
     return util.print_result(response)
 

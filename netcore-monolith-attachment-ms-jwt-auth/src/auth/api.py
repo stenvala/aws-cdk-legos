@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 from mangum import Mangum
 from datetime import datetime, timedelta
-from models import Area, EncodeBody, DecodeBody
+from models import Area, EncodeBody, DecodeBody, JwtOnly
 from starlette.middleware.cors import CORSMiddleware
 import utils
 
@@ -43,6 +43,15 @@ def encode(body: EncodeBody):
 def auth(body: DecodeBody, request: Request):
     decoded_jwt = utils.decode(body.jwt)
     utils.confirm_jwt(decoded_jwt, body.docId, body.area, body.permission)
+    fields = ['docId', 'permissions', 'meta']
+    return {i: decoded_jwt[i] for i in fields if i in decoded_jwt}
+
+
+@app.post('/decode')
+def decode(body: JwtOnly, request: Request):
+    print('keke')
+    print(body.jwt)
+    decoded_jwt = utils.decode(body.jwt)
     fields = ['docId', 'permissions', 'meta']
     return {i: decoded_jwt[i] for i in fields if i in decoded_jwt}
 

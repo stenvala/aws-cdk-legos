@@ -2,6 +2,7 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
 import { KEY } from "./key";
+import { GlobalProps } from "./models";
 
 const ASSET_LOCATION = "../src/auth";
 const LAYER_LOCATION = "../dist/auth";
@@ -19,7 +20,7 @@ export class AuthStack {
 
   private readonly prefix: string;
 
-  constructor(stack: cdk.Stack, prefix: string) {
+  constructor(stack: cdk.Stack, prefix: string, props: GlobalProps) {
     this.prefix = prefix + PREFIX;
 
     this.layer = new lambda.LayerVersion(stack, this.prefix + "Layer", {
@@ -42,23 +43,25 @@ export class AuthStack {
       proxy: true,
     });
 
-    this.authLambda = new lambda.Function(
-      stack,
-      this.prefix + "AuthorizerLambda",
-      {
-        runtime: RUNTIME,
-        code: lambda.Code.fromAsset(ASSET_LOCATION),
-        handler: AUTH_HANDLER,
-        layers: [this.layer],
-      }
-    );
+    if (props.amisAuth === "lambda") {
+      this.authLambda = new lambda.Function(
+        stack,
+        this.prefix + "AuthorizerLambda",
+        {
+          runtime: RUNTIME,
+          code: lambda.Code.fromAsset(ASSET_LOCATION),
+          handler: AUTH_HANDLER,
+          layers: [this.layer],
+        }
+      );
 
-    this.auth = new apigw.TokenAuthorizer(stack, this.prefix + "Authorizer", {
-      identitySource: "method.request.header.Authorization",
-      validationRegex: "^Bearer\\s(.*)",
-      authorizerName: "CustomJWTAuthorizer",
-      handler: this.authLambda,
-    });
+      this.auth = new apigw.TokenAuthorizer(stack, this.prefix + "Authorizer", {
+        identitySource: "method.request.header.Authorization",
+        validationRegex: "^Bearer\\s(.*)",
+        authorizerName: "CustomJWTAuthorizer",
+        handler: this.authLambda,
+      });
+    }
 
     new cdk.CfnOutput(stack, PREFIX + "Url", { value: this.apigw.url });
   }
