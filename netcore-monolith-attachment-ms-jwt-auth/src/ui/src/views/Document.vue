@@ -16,7 +16,7 @@
       JWT<br><code>{{ displayJwt }}</code>
     </p>
 
-    <button v-on:click="loadFiles">Load files</button>
+    <button v-id="displayJwt" v-on:click="loadFiles">Load files</button>
     <br>
     
     <div v-if="areas.length > 0">      
@@ -131,11 +131,16 @@ export default class Document extends Vue {
         });    
   }
 
-  public loadFile(k: File) {
-    console.log(k);
+  public async loadFile(f: File) {
+    const response : any = await getAmisAxiosClient(this.jwt)
+      .get(this.getBase() + '/files/document/' + this.id + '/area/' + f.area + '/file/' + f.path);      
+    const url = response.url;
+    window.open(url);
   }
 
+
   private async getJwt(id: string) {    
+    console.log('Loading jwt for this document');
     const response: any = await getMonoAxiosClient((this as any).$store)
       .get(this.getMonoBase() + '/auth/permissions-jwt/' + id)    
     this.jwt = response.data.jwt;
