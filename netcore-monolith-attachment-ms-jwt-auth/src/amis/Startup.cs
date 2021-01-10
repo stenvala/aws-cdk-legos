@@ -13,11 +13,44 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Amazon.S3;
 using Amazon;
+using Amazon.Internal;
 using Amis.Utils;
 using Amis.BL;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Options;
+using System.Text.Encodings.Web;
+
 
 namespace Amis
 {
+
+    // This is just to cause authentication to work
+    public class AuthOpts : AuthenticationSchemeOptions
+    {
+        public string Realm { get; set; }
+    }
+
+    public class AuthHandler : AuthenticationHandler<AuthOpts>
+    {
+        public AuthHandler(
+            IOptionsMonitor<AuthOpts> options,
+            ILoggerFactory logger,
+            UrlEncoder encoder,
+            ISystemClock clock)
+            : base(options, logger, encoder, clock)
+        {
+        }
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            // This is called when authentication attribute filters set to context result
+            // context.Result = new ForbidResult("AUTHENTICATION_FAILED");
+            return Task.FromResult<AuthenticateResult>(AuthenticateResult.Fail(""));
+        }
+    }
+
+
+
     public class Startup
     {
         readonly string MyAllowSpecificOrigins = "Anything";
@@ -32,6 +65,7 @@ namespace Amis
         // This method gets called by the runtime. Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)        
         {
+            Console.WriteLine("Configuring services");
             services.AddControllers();
 
             var isLocalMode = Configuration.GetValue<bool>("LocalMode");
@@ -46,9 +80,20 @@ namespace Amis
                 SecurityContext.Url = Configuration.GetSection("Auth").GetValue<string>("LocalServiceUrl");
             }
             else
-            {                
-                
+            {
+                Console.WriteLine("Setting IAmazonS3 to AWS Service");
+                services.AddAWSService<IAmazonS3>();
+                /*
+                var options = Configuration.GetAWSOptions();
+                IAmazonS3 client = options.CreateServiceClient<IAmazonS3>();                
+                */
+                services.AddScoped<IS3, S3Client>();
+                SecurityContext.AuthType = Environment.GetEnvironmentVariable("authType");
+                SecurityContext.Url = Environment.GetEnvironmentVariable("authUrl");                
             }
+
+            services.AddAuthentication("Basic")
+                .AddScheme<AuthOpts, AuthHandler>("AUTHENTICATION_FAILED", null);            
 
             services.AddCors(options =>
             {
@@ -80,6 +125,7 @@ namespace Amis
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -42,6 +42,7 @@ namespace Amis.BL
         List<Permission> GetPermissions();
         List<string> GetReadAreas();
         List<string> GetPermissionsOfArea(string id);
+        bool HasAreaPermission(string id, string permission);
         void InitFromJwt(string jwt);
     }
 
@@ -111,9 +112,14 @@ namespace Amis.BL
             return Permissions.Where(i => i.Id == id).Select(i => i.Permissions).FirstOrDefault();
         }
 
-        public List<string> GetReadAreas()
+        public bool HasAreaPermission(string id, string permission)
         {
-            return Permissions.Where(i => i.Permissions.Contains("READ")).Select(i => i.Id).ToList();
+            return GetPermissionsOfArea(id).Contains(permission);
+        }
+
+        public List<string> GetReadAreas()
+        {                        
+            return Permissions.Where(i => i.Permissions.Contains("GET")).Select(i => i.Id).ToList();
         }
 
         public User GetUser()

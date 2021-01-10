@@ -2,7 +2,8 @@
   "name": "netcore-monolith-attachment-ms-jwt-auth",
   "scripts": {
     "amis-auth-lambda": "cd cdk && python prepare.py -amisauth lambda && cd ..",
-    "amis-auth-api": "cd cdk && python prepare.py -amisauth jwt && cd ..",
+    "amis-auth-api": "cd cdk && python prepare.py -amisauth api && cd ..",
+    "amis-auth-jwt": "cd cdk && python prepare.py -amisauth jwt && cd ..",
     "init-dotnet-aws": "dotnet tool install -g Amazon.Lambda.Tools",
     "update-dotnet-aws": "dotnet tool update -g Amazon.Lambda.Tools",
     "create-bucket": "cd client && python create_bucket.py && cd ..",

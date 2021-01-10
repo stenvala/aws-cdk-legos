@@ -45,7 +45,9 @@ def main(args):
 
 def get_all_documents(base, auth):
     print('Get all existing documents')
-    response = requests.get(base + 'api/documents', headers=auth)
+    url = base + 'api/documents'
+    print(url)
+    response = requests.get(url, headers=auth)
     return util.print_result(response)
 
 

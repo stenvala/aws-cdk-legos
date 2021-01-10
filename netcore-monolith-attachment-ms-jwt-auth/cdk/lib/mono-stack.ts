@@ -32,11 +32,11 @@ export class MonoStack {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
-      timeout: Duration.seconds(10),
+      timeout: Duration.seconds(30),
       memorySize: 1024,
       environment: {
         authUrl: authStack.apigw.url + "jwt",
-        amisAuthType: props.amisAuth,
+        authType: props.amisAuth,
       },
     });
 

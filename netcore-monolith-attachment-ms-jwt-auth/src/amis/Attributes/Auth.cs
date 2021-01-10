@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Amis.BL;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +25,8 @@ namespace Amis.Attributes
             switch (SecurityContext.AuthType)
             {
                 case "api":                    
-                    isOk = InitFromJwt(context.HttpContext.Request.Headers["Authorization"], securityContext);
+                    var authHeader = context.HttpContext.Request.Headers["Authorization"];                    
+                    isOk = InitFromJwt(authHeader, securityContext);
                     break;
             }
 

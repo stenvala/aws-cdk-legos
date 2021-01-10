@@ -12,6 +12,7 @@ import * as cdk from "@aws-cdk/core";
 const ASSET_LOCATION = "../src/ui/dist";
 const PREFIX = "ui-";
 const INDEX = "/index.html";
+const BUCKET_NAME = "amismonouibucket";
 
 // Seems good example:
 // https://github.com/nideveloper/CDK-SPA-Deploy
@@ -49,6 +50,7 @@ export class UIStack {
 
   private getBucket(stack: cdk.Stack) {
     const bucket = new S3.Bucket(stack, this.prefix + "bucket", {
+      bucketName: BUCKET_NAME,
       websiteIndexDocument: "index.html",
       websiteErrorDocument: "index.html",
       removalPolicy: cdk.RemovalPolicy.DESTROY,

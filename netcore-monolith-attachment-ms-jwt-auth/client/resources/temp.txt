@@ -1,0 +1,1 @@
+This file is temporary file loaded to S3 with demo_amis.py.

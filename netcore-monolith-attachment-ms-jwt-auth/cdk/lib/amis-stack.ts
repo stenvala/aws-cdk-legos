@@ -1,5 +1,6 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 import * as AS from "./auth-stack";
 import { GlobalProps } from "./models";
@@ -8,6 +9,7 @@ const ASSET_LOCATION = "../src/amis/bin/Release/netcoreapp3.1/linux-x64";
 const HANDLER = "amis::Amis.LambdaEntryPoint::FunctionHandlerAsync";
 const RUNTIME = lambda.Runtime.DOTNET_CORE_3_1;
 const PREFIX = "amis-";
+const BUCKET_NAME = "amisdatabucket";
 
 export class AmisStack {
   lambda: lambda.Function;
@@ -30,10 +32,14 @@ export class AmisStack {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
+      timeout: cdk.Duration.seconds(30),
       environment: {
-        amisAuthType: props.amisAuth,
+        authType: props.amisAuth,
+        authUrl: authStack.apigw.url + "decode",
+        bucket: BUCKET_NAME,
       },
     });
+    this.initBucket();
     switch (props.amisAuth) {
       case "lambda":
         this.withLambdaAuthorizer();
@@ -46,6 +52,18 @@ export class AmisStack {
       default:
         throw new Error("Invalid authentication type to amis");
     }
+  }
+
+  private initBucket() {
+    const bucket = new s3.Bucket(this.stack, this.prefix + "Bucket", {
+      versioned: false,
+      bucketName: BUCKET_NAME,
+      encryption: s3.BucketEncryption.KMS_MANAGED,
+      publicReadAccess: false,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+    bucket.grantReadWrite(this.lambda);
   }
 
   private withoutAuth() {
@@ -64,13 +82,12 @@ export class AmisStack {
     // Cors don't still work
     const api = new apigw.RestApi(this.stack, this.prefix + "ApiGw", {
       restApiName: "AMISAPI",
-      description: "API for AMIS services.",
       /*
-    deployOptions: {
-      loggingLevel: apigw.MethodLoggingLevel.INFO,
-      dataTraceEnabled: true,
-    },
-    */
+      deployOptions: {
+        loggingLevel: apigw.MethodLoggingLevel.INFO,
+        dataTraceEnabled: true,
+      },
+      */
       defaultCorsPreflightOptions: {
         allowOrigins: apigw.Cors.ALL_ORIGINS,
         allowCredentials: true,

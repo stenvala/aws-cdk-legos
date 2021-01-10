@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,12 +15,38 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Mono.BL;
 using Mono.Repositories;
 using Mono.Utils;
 
 namespace Mono
 {
+    // This is just to cause authentication to work
+    public class AuthOpts : AuthenticationSchemeOptions
+    {
+        public string Realm { get; set; }
+    }
+
+    public class AuthHandler : AuthenticationHandler<AuthOpts>
+    {
+        public AuthHandler(
+            IOptionsMonitor<AuthOpts> options,
+            ILoggerFactory logger,
+            UrlEncoder encoder,
+            ISystemClock clock)
+            : base(options, logger, encoder, clock)
+        {
+        }
+
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            // This is called when authentication attribute filters set to context result
+            // context.Result = new ForbidResult("AUTHENTICATION_FAILED");
+            return Task.FromResult<AuthenticateResult>(AuthenticateResult.Fail(""));
+        }
+    }
+
     public class Startup
     {
         readonly string MyAllowSpecificOrigins = "Anything";
@@ -56,6 +84,9 @@ namespace Mono
             services.AddScoped<ISecurityContext, SecurityContext>();
             services.AddScoped<IAuthorizer, Authorizer>();
 
+            services.AddAuthentication("Basic")
+                .AddScheme<AuthOpts, AuthHandler>("AUTHENTICATION_FAILED", null);
+
             var mappingConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new MappingProfile());
@@ -80,8 +111,7 @@ namespace Mono
             {
                 services.AddAWSService<IAmazonDynamoDB>();
                 Authorizer.Url = Environment.GetEnvironmentVariable("authUrl");
-            }
-            
+            }            
         }
     
 
