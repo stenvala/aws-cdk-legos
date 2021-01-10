@@ -24,13 +24,7 @@ namespace Mono.Utils
             {
                 Message = "OK"
             };
-            return JsonConvert.SerializeObject(data,
-                Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
+            return Convert(data);
         }
     }
 }
