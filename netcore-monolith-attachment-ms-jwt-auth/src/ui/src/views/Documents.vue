@@ -61,7 +61,10 @@ export default class Documents extends Vue {
       (this as any).$router.push('/login')
       return;
     }
-    this.loadDocuments()
+    this.loadDocuments();
+    if (!(this as any).$store.state.permissions) {
+      this.loadPermissions();
+    }
   }
 
   async addDocument() {
@@ -91,6 +94,13 @@ export default class Documents extends Vue {
     const response = await getMonoAxiosClient((this as any).$store)
       .get(this.getBase() + '/documents');      
     (this as any).$store.state.documents = response.data;      
+  }
+
+  private async loadPermissions() {
+    console.log('Loading permissions');    
+    const response = await getMonoAxiosClient((this as any).$store)
+      .get(this.getBase() + '/auth/permissions');      
+    (this as any).$store.state.permissions = response.data;      
   }
 
 

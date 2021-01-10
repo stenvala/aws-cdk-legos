@@ -1,16 +1,16 @@
 import * as cdk from "@aws-cdk/core";
-import { AmisStack } from "./amis-stack";
-import { AuthStack } from "./auth-stack";
+import { Amis } from "./amis";
+import { Auth } from "./auth";
 import { GlobalProps } from "./models";
-import { MonoStack } from "./mono-stack";
-import { UIStack } from "./ui-stack";
+import { Mono } from "./mono";
+import { UI } from "./ui";
 
 const PREFIX = "NetcoreSys-";
 
 export class CdkStack extends cdk.Stack {
-  authStack: AuthStack;
-  monoStack: MonoStack;
-  amisStack: AmisStack;
+  authStack: Auth;
+  monoStack: Mono;
+  amisStack: Amis;
 
   constructor(
     scope: cdk.App,
@@ -22,12 +22,12 @@ export class CdkStack extends cdk.Stack {
 
     //const authKey = new AuthParam(this, PREFIX);
 
-    this.authStack = new AuthStack(this, PREFIX, globalProps);
+    this.authStack = new Auth(this, PREFIX, globalProps);
 
-    this.monoStack = new MonoStack(this, PREFIX, this.authStack, globalProps);
+    this.monoStack = new Mono(this, PREFIX, this.authStack, globalProps);
 
-    this.amisStack = new AmisStack(this, PREFIX, this.authStack, globalProps);
+    this.amisStack = new Amis(this, PREFIX, this.authStack, globalProps);
 
-    new UIStack(this, PREFIX);
+    new UI(this, PREFIX);
   }
 }
