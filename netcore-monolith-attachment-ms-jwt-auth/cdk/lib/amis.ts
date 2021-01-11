@@ -9,7 +9,7 @@ const ASSET_LOCATION = "../src/amis/bin/Release/netcoreapp3.1/linux-x64";
 const HANDLER = "amis::Amis.LambdaEntryPoint::FunctionHandlerAsync";
 const RUNTIME = lambda.Runtime.DOTNET_CORE_3_1;
 const PREFIX = "amis-";
-const BUCKET_NAME = "amis-data";
+const BUCKET_NAME = "amis-document-data";
 
 export class Amis {
   lambda: lambda.Function;

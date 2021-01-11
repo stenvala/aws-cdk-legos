@@ -2,6 +2,9 @@
   input {    
     margin-right: 20px;
   }
+  .cap {
+    text-transform: capitalize;
+  }
 </style>
 
 <template>
@@ -16,12 +19,12 @@
       JWT<br><code>{{ displayJwt }}</code>
     </p>
 
-    <button v-id="displayJwt" v-on:click="loadFiles">Load files</button>
+    <button v-if="displayJwt" v-on:click="loadFiles">Load files</button>
     <br>
     
     <div v-if="areas.length > 0">      
       <div v-for="i in areas" :key="i.name">
-        <h2>{{i.name}}</h2>
+        <h2 class="cap">{{i.name}}</h2>
         <p v-if="i.allowAdd">You may add</p>
         <p v-if="i.allowAdd">You may delete</p>      
         <div v-for="k in i.files" :key="k.path">
@@ -108,8 +111,8 @@ export default class Document extends Vue {
   }
 
   async loadFiles() {
-    const response : FileDTO[] = await getAmisAxiosClient(this.jwt)
-      .get(this.getBase() + '/files/document/' + this.id);      
+    const response : FileDTO[] = (await getAmisAxiosClient(this.jwt)
+      .get(this.getBase() + '/files/document/' + this.id)).data;      
     const files : File[] = response.map(i => {
       const parts = i.path.split('/');
       return {
@@ -119,16 +122,18 @@ export default class Document extends Vue {
         size: i.size.toString() // Should be formetted nicely
         }
       });
-      const perm = (this as any).$store.state.permissions;
-      const areas = Object.keys(perm).map(i => i.replace('Permissions',''));
-      this.areas = areas.map((i: string) => {        
+      const perm = (this as any).$store.state.permissions;      
+      const areas = Object.keys(perm);
+      this.areas = areas.map((i: string) => {              
+        const area = i.replace('Permissions','');        
         return {
-            name: i,
-            files: files.filter(j => j.area === i),
-            allowAdd: 'ADD' in perm[i],
-            allowDelete: 'DELETE' in perm[i]
+            name: area,
+            files: files.filter(j => j.area === area),
+            allowAdd: perm[i].indexOf('ADD') !== -1,
+            allowDelete: perm[i].indexOf('DELETE') !== -1
           } 
-        });    
+        }); 
+      console.log(this.areas);   
   }
 
   public async loadFile(f: File) {
