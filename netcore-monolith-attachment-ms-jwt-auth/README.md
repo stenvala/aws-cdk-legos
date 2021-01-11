@@ -15,6 +15,10 @@ This demo includes
 
 ## Commands
 
+###
+
+So many commands in package.json, look
+
 ### For Python virtual environment
 
 ```bash
@@ -30,7 +34,7 @@ cd src/auth; uvicorn main:app --reload --port 6108 # Start auth api
 
 - Docker installed
 
-This is based on
+Netcore lambdas are based on
 
 ```bash
 dotnet new -i "Amazon.Lambda.Templates::*"

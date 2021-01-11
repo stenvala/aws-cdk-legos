@@ -54,12 +54,17 @@ To learn:
 
 ### netcore-monolith-attachment-ms-jwt-auth
 
-This is big step from the previous toy examples and represents a real cloud application with multiple services.
+This is big step from the previous toy examples and represents a real cloud application with multiple micro services.
 
 To learn:
 
-- Asp.net rest api in lambda
-- Serverless RDBMS
+- Asp.net rest api in lambda (times 2 in this example)
+- Vue SPA via CloudFront (I don't know vue, just did something)
+- Using Minio (S3) and lambda locally
+- JWT auth with various authorizers (currently only custom lambda implemented)
+- Python FastAPI lambda
+
+_This is still under progress, but merged to master - just because._
 
 ## Coming in the future
 
