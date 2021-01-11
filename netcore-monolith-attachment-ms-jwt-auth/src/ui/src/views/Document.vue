@@ -123,8 +123,7 @@ export default class Document extends Vue {
     const response : FileDTO[] = (await getAmisAxiosClient(this.jwt)
       .get(this.getBase() + '/files/document/' + this.id)).data;      
     const files : File[] = response.map(i => {
-      const parts = i.path.split('/');
-      console.log(parts);
+      const parts = i.path.split('/');      
       return {
         lastModified: new Date(i.lastModified).toLocaleDateString() + ' ' + new Date(i.lastModified).toLocaleTimeString(),
         area: parts[1],
@@ -147,7 +146,7 @@ export default class Document extends Vue {
   }
 
   public async loadFile(f: File) {
-    console.log('Reqeust file load for ' + f);
+    console.log('Reqeust file load for ' + f.path);
     const response : any = await getAmisAxiosClient(this.jwt)
       .get(this.getBase() + '/files/document/' + this.id + '/area/' + f.area + '/file/' + f.name);      
     const url = response.data.url;
