@@ -72,7 +72,7 @@ export class UI {
           ),
         ],
         destinationBucket: bucket as any,
-        prune: false,
+        prune: true,
       }
     );
 
@@ -91,7 +91,7 @@ export class UI {
           ),
         ],
         destinationBucket: bucket as any,
-        prune: false,
+        prune: true,
       }
     );
     return bucket;

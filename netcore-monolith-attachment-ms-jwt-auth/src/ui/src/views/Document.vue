@@ -15,26 +15,34 @@
       Server base at <code>{{ url }}</code>
     </p>
 
-    <p>
-      JWT<br><code>{{ displayJwt }}</code>
+    <p v-if="!displayJwt"> 
+      Loading JWT...
     </p>
 
-    <button v-if="displayJwt" v-on:click="loadFiles">Load files</button>
-    <br>
-    
-    <div v-if="areas.length > 0">      
-      <div v-for="i in areas" :key="i.name">
-        <h2 class="cap">{{i.name}}</h2>
-        <p v-if="i.allowAdd">You may add</p>
-        <p v-if="i.allowAdd">You may delete</p>      
-        <div v-for="k in i.files" :key="k.path">
-          <p>
-            <a href="javascript:void(0)" v-on:click="loadFile(k)">{{k.name}}</a> {{k.lastModified}} {{k.size}}
-          </p>
-        </div>
-      </div>      
-    </div>        
+    <div v-if="displayJwt"> 
+      <!--
+      <p>
+        JWT<br><code>{{ displayJwt }}</code>
+      </p>
+      -->
 
+      <button v-on:click="loadFiles">Load files</button>
+      <br>
+
+      
+      <div v-if="areas.length > 0">      
+        <div v-for="i in areas" :key="i.name">
+          <h2 class="cap">{{i.name}}</h2>
+          <p v-if="i.allowAdd">You may add</p>
+          <p v-if="i.allowAdd">You may delete</p>      
+          <div v-for="k in i.files" :key="k.path">
+            <p>
+              <a href="javascript:void(0)" v-on:click="loadFile(k)">{{k.name}}</a> {{k.lastModified}} {{k.size}}
+            </p>
+          </div>
+        </div>
+      </div>        
+    </div>
   </div>
 </template>
 
@@ -53,6 +61,7 @@ interface File {
   lastModified: string;
   path: string;
   size: string;
+  name: string;
 }
 
 interface Area {
@@ -115,31 +124,33 @@ export default class Document extends Vue {
       .get(this.getBase() + '/files/document/' + this.id)).data;      
     const files : File[] = response.map(i => {
       const parts = i.path.split('/');
+      console.log(parts);
       return {
-        lastModified: new Date(i.lastModified).toLocaleTimeString(),
+        lastModified: new Date(i.lastModified).toLocaleDateString() + ' ' + new Date(i.lastModified).toLocaleTimeString(),
         area: parts[1],
-        path: parts[2],
-        size: i.size.toString() // Should be formetted nicely
+        name: parts[2],
+        path: i.path,
+        size: i.size.toString() // Should be formatted nicely
         }
       });
-      const perm = (this as any).$store.state.permissions;      
-      const areas = Object.keys(perm);
-      this.areas = areas.map((i: string) => {              
-        const area = i.replace('Permissions','');        
-        return {
-            name: area,
-            files: files.filter(j => j.area === area),
-            allowAdd: perm[i].indexOf('ADD') !== -1,
-            allowDelete: perm[i].indexOf('DELETE') !== -1
-          } 
-        }); 
-      console.log(this.areas);   
+    const perm = (this as any).$store.state.permissions;      
+    const areas = Object.keys(perm);
+    this.areas = areas.map((i: string) => {              
+      const area = i.replace('Permissions','');        
+      return {
+          name: area,
+          files: files.filter(j => j.area === area),
+          allowAdd: perm[i].indexOf('ADD') !== -1,
+          allowDelete: perm[i].indexOf('DELETE') !== -1
+        } 
+      });      
   }
 
   public async loadFile(f: File) {
+    console.log('Reqeust file load for ' + f);
     const response : any = await getAmisAxiosClient(this.jwt)
-      .get(this.getBase() + '/files/document/' + this.id + '/area/' + f.area + '/file/' + f.path);      
-    const url = response.url;
+      .get(this.getBase() + '/files/document/' + this.id + '/area/' + f.area + '/file/' + f.name);      
+    const url = response.data.url;
     window.open(url);
   }
 

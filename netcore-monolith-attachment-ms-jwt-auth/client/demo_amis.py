@@ -58,6 +58,10 @@ def main(args):
             presign_data['url'], presign_data['key'], f)
     files = get_files(base_amis, jwt_auth, doc_id)
 
+    if args.nodelete:
+        print('Not fetching and deleting files. Look from browser. Exiting.')
+        exit()
+
     get_file(base_amis, jwt_auth, files[0]['path'])
     delete_file(base_amis, jwt_auth, files[0]['path'])
 
@@ -160,5 +164,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-aws', action='store_true',
                         help='Give this to use AWS end point, otherwise uses local')
+    parser.add_argument('-nodelete', action='store_true',
+                        help='Keep files in doc')
     args = parser.parse_args()
     main(args)
