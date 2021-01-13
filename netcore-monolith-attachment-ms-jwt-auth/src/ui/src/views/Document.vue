@@ -125,7 +125,7 @@ export default class Document extends Vue {
     const files : File[] = response.map(i => {
       const parts = i.path.split('/');      
       return {
-        lastModified: new Date(i.lastModified).toLocaleDateString() + ' ' + new Date(i.lastModified).toLocaleTimeString(),
+        lastModified: new Date(i.lastModified*1000).toLocaleDateString() + ' ' + new Date(i.lastModified*1000).toLocaleTimeString(),
         area: parts[1],
         name: parts[2],
         path: i.path,
