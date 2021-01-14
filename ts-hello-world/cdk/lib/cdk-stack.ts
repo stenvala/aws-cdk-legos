@@ -55,7 +55,7 @@ export class CdkStack extends cdk.Stack {
     // Finally, add a CName record in the hosted zone with a value of the new custom domain that was created above:
     new route53.CnameRecord(this, "ApiGatewayRecordSet", {
       zone: hostedZone,
-      recordName: "api",
+      recordName: "www",
       domainName: custom.domainNameAliasDomainName,
     });
   }
