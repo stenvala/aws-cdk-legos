@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^1.76.0",
+    "@aws-cdk/aws-certificatemanager": "^1.84.0",
+    "@aws-cdk/aws-route53": "^1.84.0",
     "@aws-cdk/aws-sns": "1.76.0",
     "@aws-cdk/aws-sns-subscriptions": "1.76.0",
     "@aws-cdk/aws-sqs": "1.76.0",
