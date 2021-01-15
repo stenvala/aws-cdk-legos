@@ -3,6 +3,8 @@
 Very basic cdk stack with lambda and api gw.
 Lambda returns message and information about event that triggered it and environment.
 
+![plot](../sketches/only-lambda.png)
+
 # Commands
 
 ```bash

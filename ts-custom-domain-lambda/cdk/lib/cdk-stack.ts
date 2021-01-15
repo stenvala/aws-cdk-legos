@@ -24,7 +24,15 @@ export class CdkStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "automaticUrl", { value: api.url });
 
-    const subdomain = "my-custom-subdomain";
+    // Add some random string at the end just to allow npm run all multiple times without worrying ttls
+    // This is not what you would in reality do
+    const subdomain =
+      "my-custom-subdomain-" +
+      Math.random()
+        .toString(36)
+        .replace(/[^a-z]+/g, "")
+        .substr(0, 5);
+
     const domain = ssm.StringParameter.valueForStringParameter(
       this,
       "/HostedZone/Domain"
@@ -35,7 +43,7 @@ export class CdkStack extends cdk.Stack {
       "/Certificate/MyDomainArn"
     );
 
-    const custom = new apigw.DomainName(this, "customDomain", {
+    const custom = new apigw.DomainName(this, PREFIX + "CustomDomain", {
       domainName: `${subdomain}.${domain}`,
       certificate: cm.Certificate.fromCertificateArn(
         this,
@@ -65,8 +73,9 @@ export class CdkStack extends cdk.Stack {
       }
     );
 
-    // Finally, add a CName record in the hosted zone with a value of the new custom domain that was created above:
-    new route53.CnameRecord(this, "ApiGatewayRecordSet", {
+    // Finally, add a Cname record in the hosted zone with a value of the new custom domain that was created above
+    // Note, there are caches etc and this is not working super nicely
+    new route53.CnameRecord(this, PREFIX + "ApiGatewayRecord", {
       zone: hostedZone,
       recordName: subdomain,
       domainName: custom.domainNameAliasDomainName,

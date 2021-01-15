@@ -1,6 +1,6 @@
 # What's here?
 
-This creates lambda that is attached to EFS and another
+This creates lambda that is attached to EFS and another....
 
 ## Commands
 
