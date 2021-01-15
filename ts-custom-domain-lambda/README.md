@@ -11,6 +11,8 @@ To make this work you need to manually do in console following things before you
 - Add to Parameter Store variable `/Certificate/MyDomainArn` having as value the ARN of the certificate you just created.
 - Add to Parameter Store variable `/HostedZone/Domain` with value `example.com`.
 
+![plot](../sketches/only-lambda.png)
+
 # Commands
 
 ```bash

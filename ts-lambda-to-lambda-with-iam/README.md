@@ -2,6 +2,8 @@
 
 This creates two lambdas. Demo sends get request to the first (created in stack 1), which forwards it to the second (created in stack 2) using iam role as authenticator and returns the message.
 
+![plot](../sketches/iam-lambda.png)
+
 ## Commands
 
 ```bash
