@@ -52,6 +52,12 @@ To learn:
 - Trigger lambda by adding file to s3
 - Presigning s3 url and saving file to s3 with it
 
+### ts-custom-domain-lambda
+
+To learn:
+
+- How to add custom domain name to your lambda function
+
 ### netcore-monolith-attachment-ms-jwt-auth
 
 This is big step from the previous toy examples and represents a real cloud application with multiple micro services.
@@ -64,31 +70,18 @@ To learn:
 - JWT auth with various authorizers (currently only custom lambda implemented)
 - Python FastAPI lambda
 
-_This is still under progress, but merged to master - just because._
+_Work in progress_
+
+### python-s3-to-efs-lambdas
+
+To learn:
+
+- How to connect EFS to lambda
+
+_Work in progress_
 
 ## Coming in the future
 
-### py-rest-api-own-domain
-
-To learn:
-
-- Lambda rest api with python Flask
-- Own custom domain name in the lambda
-
-### csharp-ts-async-html2pdf-s3-sns-sqs-communication
-
-- Layers in lambda
-- SQS and SNS communication between lambdas
-
-### csharp-asp-net-auth-python-fastapi-ms-svelte-cloudfront
-
-To learn:
-
-- Use one microbackend for authentication, other for business logic
-- JWT auth to microservice
-- Serving front end with cloudfront
-- E2E testing with multi microservice system
-
-### Some ec2 demo
-
-### ...
+- Some EC2 demo
+- SNS, SQS, EventBridge, Kinesis demos
+- Cronjob demo
