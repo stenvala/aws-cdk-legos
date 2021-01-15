@@ -1,7 +1,5 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
-import * as cm from "@aws-cdk/aws-certificatemanager";
 import * as lambda from "@aws-cdk/aws-lambda";
-import * as route53 from "@aws-cdk/aws-route53";
 import * as cdk from "@aws-cdk/core";
 
 const PREFIX = "TSHelloWorld-";
@@ -25,38 +23,5 @@ export class CdkStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, "url", { value: api.url });
-
-    const custom = new apigw.DomainName(this, "customDomain", {
-      domainName: "www.osallistujat.com",
-      certificate: cm.Certificate.fromCertificateArn(
-        this,
-        "ACM_Certificate",
-        ACM_CERTIFICATE_ARN
-      ) as any,
-      endpointType: apigw.EndpointType.REGIONAL,
-    });
-
-    // Associate the Custom domain that we created with new APIGateway using BasePathMapping:
-    new apigw.BasePathMapping(this, "CustomBasePathMapping", {
-      domainName: custom,
-      restApi: api,
-    });
-
-    // Get a reference to AN EXISTING hosted zone using the HOSTED_ZONE_ID. You can get this from route53
-    const hostedZone = route53.HostedZone.fromHostedZoneAttributes(
-      this,
-      "HostedZone",
-      {
-        hostedZoneId: "Z097579113AAQ32Z4M1K7",
-        zoneName: "osallistujat.com",
-      }
-    );
-
-    // Finally, add a CName record in the hosted zone with a value of the new custom domain that was created above:
-    new route53.CnameRecord(this, "ApiGatewayRecordSet", {
-      zone: hostedZone,
-      recordName: "www",
-      domainName: custom.domainNameAliasDomainName,
-    });
   }
 }

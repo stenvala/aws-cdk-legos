@@ -4,9 +4,6 @@ export async function lambdaHandler(event, context) {
     headers: { "Content-Type": "text/json" },
     body: JSON.stringify({
       msg: "Hello world!",
-      event,
-      context,
-      env: process.env,
     }),
   };
 }
