@@ -2,6 +2,8 @@
 
 This creates lambda that is attached to EFS and another....
 
+![plot](../sketches/lambda-efs.png)
+
 ## Commands
 
 ```bash

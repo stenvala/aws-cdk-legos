@@ -13,6 +13,8 @@ This demo includes
   - Change salt for signing JWT
 - Graphical user interface to try the thing with browser (ui)
 
+![plot](../sketches/amis.png)
+
 ## Commands
 
 ###
