@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -54,19 +55,18 @@ namespace Mono.Utils
             var json = Jsoner.Convert(new
             {
                 docId,
-                permissions,
+                permissions = permissions.Where(i => i.Permissions != null).ToList(),
                 meta = new
                 {
-                    UserId = user.Id,
-                    GivenName = user.GivenName,
-                    FamilyName = user.FamilyName
+                    user.Id,
+                    user.GivenName,
+                    user.FamilyName
                 }
             });            
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(Url_);
             httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
+            httpWebRequest.Method = "POST";            
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {                
                 streamWriter.Write(json);

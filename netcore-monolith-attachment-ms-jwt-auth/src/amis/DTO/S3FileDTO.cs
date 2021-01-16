@@ -6,6 +6,7 @@ namespace Amis.DTO
         public string Path { get; set; }
         public long Size { get; set; }
         public long LastModified { get; set; }
+        public string UserId { get; set; }
     }
 
     public class GetPresignedUrlDTO

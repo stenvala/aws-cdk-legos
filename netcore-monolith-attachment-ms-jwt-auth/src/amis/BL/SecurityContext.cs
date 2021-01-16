@@ -91,7 +91,7 @@ namespace Amis.BL
         }
 
         public void SetData(Meta user, List<Permission> permissions, string docId = "")
-        {
+        {            
             Meta = user;
             Permissions = permissions;
             DocId = docId;

@@ -15,12 +15,12 @@
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.5.4.11" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.101" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>    
+    <Folder Include="Attributes\" />
+    <Folder Include="Controllers\" />    
     <Folder Include="DTO\" />
-    <Folder Include="Utils\" />
-    <Folder Include="BL\" />
     <Folder Include="Repositories\" />
     <Folder Include="Repositories\Models\" />
-    <Folder Include="Attributes\" />
-  </ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>    
 </Project>

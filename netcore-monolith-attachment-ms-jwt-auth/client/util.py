@@ -45,9 +45,7 @@ def login(base, username, password):
     if response.status_code != 200:
         print('Cannot log in. Perhaps data base not initialized. Exiting.')
         exit()
-
-    body = json.loads(response.content,
-                      object_hook=lambda d: SimpleNamespace(**d))
+    body = print_result(response)
     return {
-        'Authorization': 'Bearer %s,%s' % (body.id, body.sessionId)
-    }
+        'Authorization': 'Bearer %s,%s' % (body['id'], body['sessionId'])
+    }, body['id']

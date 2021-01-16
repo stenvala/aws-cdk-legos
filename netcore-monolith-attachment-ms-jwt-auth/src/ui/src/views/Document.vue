@@ -29,15 +29,21 @@
       <button v-on:click="loadFiles">Load files</button>
       <br>
 
+      <input v-on:change="selectedFile" id="file-input" type="file" name="name" style="display: none;" />
       
       <div v-if="areas.length > 0">      
         <div v-for="i in areas" :key="i.name">
           <h2 class="cap">{{i.name}}</h2>
-          <p v-if="i.allowAdd">You may add</p>
-          <p v-if="i.allowAdd">You may delete</p>      
+          <p v-if="i.allowAdd">
+            <a href="javascript:void(0)" v-on:click="addFile(i)">Add new</a>
+          </p>
+          <p v-if="i.allowDelete">You may delete any attachment</p>      
+          <p v-if="i.allowDeleteMy">You may delete only attachments that you have added</p>      
           <div v-for="k in i.files" :key="k.path">
             <p>
               <a href="javascript:void(0)" v-on:click="loadFile(k)">{{k.name}}</a> {{k.lastModified}} {{k.size}}
+              <a href="javascript:void(0)" v-on:click="deleteFile(k)" v-if="i.allowDelete">Delete</a>      
+              <a href="javascript:void(0)" v-on:click="deleteFile(k, true)" v-if="i.allowDeleteMy && i.userId == myId">Delete</a>      
             </p>
           </div>
         </div>
@@ -49,6 +55,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { getAmisAxiosClient, getMonoAxiosClient } from '../util';
+import axios from "axios";
 
 interface FileDTO {
   lastModified: number;
@@ -68,6 +75,7 @@ interface Area {
   name: string;
   allowAdd: boolean;
   allowDelete: boolean;
+  allowDeleteMy: Boolean;
   files: File[]
 }
 
@@ -77,7 +85,9 @@ interface Area {
 })
 export default class Document extends Vue {
 
+  private addingTo: Area | undefined = undefined;
   name: string = '';  
+  myId: string = '';
   private id = '';
   private jwt = '';
   displayJwt = '';
@@ -107,7 +117,7 @@ export default class Document extends Vue {
       (this as any).$router.push('/login')
       return;
     }
-    
+    this.myId = (this as any).$store.user.id;
     this.id = (this as any).$route.params.id;    
     const document = (this as any).$store.state.documents.find((i: any) => i.id === this.id);
     if (!document) {
@@ -140,13 +150,14 @@ export default class Document extends Vue {
           name: area,
           files: files.filter(j => j.area === area),
           allowAdd: perm[i].indexOf('ADD') !== -1,
-          allowDelete: perm[i].indexOf('DELETE') !== -1
+          allowDelete: perm[i].indexOf('DELETE') !== -1,
+          allowDeleteMy: perm[i].indexOf('DELETE-MY') !== -1
         } 
       });      
   }
 
   public async loadFile(f: File) {
-    console.log('Reqeust file load for ' + f.path);
+    console.log('Request file load for ' + f.path);
     const response : any = await getAmisAxiosClient(this.jwt)
       .get(this.getBase() + '/files/document/' + this.id + '/area/' + f.area + '/file/' + f.name);      
     const url = response.data.url;
@@ -162,12 +173,42 @@ export default class Document extends Vue {
     this.displayJwt = this.jwt.match(/.{1,50}/g)?.join(' ') || '';    
   }
 
-  private addFile() {
-
+  async addFile(area: Area) {    
+    this.addingTo = area;
+    document.getElementById('file-input')?.click();
   }
 
-  private deleteFile() {
+  async selectedFile(event: any) {
+    if (!this.addingTo) {
+      return;
+    }
+    const file = event.target.files[0];      
+    const data = {
+      fileName: file.name,
+      contentType: file.type
+    }
+    const response = await getAmisAxiosClient(this.jwt)
+      .post(this.getBase() + '/files/document/' + this.id + '/area/' + this.addingTo.name, data);
+    if (response.data && response.data.url) {
+      const signedUrl = response.data.url;
+      const options = {
+          headers: {
+            'Content-Type': file.type,
+            'x-amz-meta-userid': this.myId // This is signed, can't be random
+          }
+        };
+      await axios.put(signedUrl, file, options);
+      this.loadFiles();
+    }
+  }
 
+  async deleteFile(f: File, isMy = false) {
+    const file = isMy ? 'my-file' : 'file';
+    console.log('Delete file load for ' + f.path + ' at file path ' + file);
+    await getAmisAxiosClient(this.jwt)
+      .delete(this.getBase() + '/files/document/' + this.id + '/area/' + f.area + `/${file}/` + f.name);
+    await this.loadFiles();  
+    console.log('File deleted and new loaded');
   }
 
 }

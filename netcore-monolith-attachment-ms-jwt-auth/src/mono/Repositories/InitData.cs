@@ -77,7 +77,7 @@ namespace Mono.Repositories
                 },
                 AttachmentPermissions = new List<string>
                 {
-                    "ADD", "GET", "DELETE"
+                    "ADD", "GET", "DELETE-MY"
                 },
                 SecretFilePermissions = new List<string>
                 {

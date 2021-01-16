@@ -19,6 +19,6 @@
     <Folder Include="Utils\" />
     <Folder Include="Attributes\" />
     <Folder Include="BL\" />
-    <Folder Include="DTO\" />
+    <Folder Include="DTO\" />    
   </ItemGroup>
 </Project>

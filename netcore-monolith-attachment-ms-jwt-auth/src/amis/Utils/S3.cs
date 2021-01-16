@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.S3;
@@ -11,13 +13,20 @@ namespace Amis.Utils
     {
         IAmazonS3 GetClient();
         string GetBucketName();
-        string GeneratePreSignedURLForPut(string key, GetPresignedUrlDTO dto);
+        string GeneratePreSignedURLForPut(string key, GetPresignedUrlDTO dto, Dictionary<string, string> metadata);
         string GeneratePresignedURLForGet(string key, GetPresignedUrlDTO dto = null);
         Task<bool> DeleteFileAsync(string key);
+        Task<Dictionary<string, string>> GetObjectMetadata(string key);
     }
 
     abstract public class S3Base : IS3
     {
+
+        public S3Base()
+        {
+
+        }
+
         public virtual IAmazonS3 GetClient()
         {
             throw new Exception("Not implemented");
@@ -34,12 +43,44 @@ namespace Amis.Utils
             return GeneratePreSignedURL(key, HttpVerb.GET, dto);
         }
 
-        public string GeneratePreSignedURLForPut(string key, GetPresignedUrlDTO dto)
+        public string GeneratePreSignedURLForPut(string key, GetPresignedUrlDTO dto, Dictionary<string, string> metadata)
         {
-            return GeneratePreSignedURL(key, HttpVerb.PUT, dto);
+            return GeneratePreSignedURL(key, HttpVerb.PUT, dto, metadata);
         }
 
-        private string GeneratePreSignedURL(string key, HttpVerb verb, GetPresignedUrlDTO dto = null)
+        public async Task<Dictionary<string, string>> GetObjectMetadata(string key)
+        {
+            var metadata = new Dictionary<string, string>();
+            try
+            {
+                GetObjectRequest request = new GetObjectRequest
+                {
+                    BucketName = this.GetBucketName(),
+                    Key = key
+                };
+                using (GetObjectResponse response = await GetClient().GetObjectAsync(request))
+                using (Stream responseStream = response.ResponseStream)
+                using (StreamReader reader = new StreamReader(responseStream))
+                {
+                    foreach (var item in response.Metadata.Keys)
+                    {                        
+                        metadata.Add(item.Replace("x-amz-meta-", ""), response.Metadata[item]);
+                    }                        
+                }                
+            }
+            catch (AmazonS3Exception e)
+            {
+                // If bucket or object does not exist
+                Console.WriteLine("Error encountered ***. Message:'{0}' when reading object", e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unknown encountered on server. Message:'{0}' when reading object", e.Message);
+            }
+            return metadata;
+        }
+
+        private string GeneratePreSignedURL(string key, HttpVerb verb, GetPresignedUrlDTO dto = null, Dictionary<string, string> metadata = null)
         {
             double duration = 600;
             string urlString = "";
@@ -50,17 +91,21 @@ namespace Amis.Utils
                     BucketName = GetBucketName(),
                     Key = key,                    
                     Expires = DateTime.UtcNow.AddSeconds(duration),
-                    Verb = verb
-                };
+                    Verb = verb                   
+                };                
+                if (metadata != null)
+                {
+                    foreach (var item in metadata.Keys)
+                    {
+                        Console.WriteLine("Adding metadata " + item + ":" + metadata[item]);
+                        request.Headers["x-amz-meta-" + item] = metadata[item];
+                    }
+                }
                 if (dto != null)
                 {
                     request.ResponseHeaderOverrides.ContentType = dto.ContentType;
                 }                
-                /*
-                request.ResponseHeaderOverrides.ContentDisposition = "attachment; filename=temp.txt";
-                request.ResponseHeaderOverrides.CacheControl = "No-cache";                
-                request.ResponseHeaderOverrides.Expires = "Thu, 01 Dec 1994 16:00:00 GMT";
-                */
+                
                 urlString = GetClient().GetPreSignedURL(request);
             }
             catch (AmazonS3Exception e)

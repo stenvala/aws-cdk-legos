@@ -38,6 +38,7 @@ export class Amis {
         authUrl: authStack.apigw.url + "decode",
         bucket: BUCKET_NAME,
       },
+      memorySize: 512,
     });
     this.initBucket();
     switch (props.amisAuth) {
@@ -62,6 +63,13 @@ export class Amis {
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      cors: [
+        {
+          allowedOrigins: ["*"],
+          allowedHeaders: ["*"],
+          allowedMethods: [s3.HttpMethods.PUT],
+        },
+      ],
     });
     bucket.grantReadWrite(this.lambda);
   }

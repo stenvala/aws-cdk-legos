@@ -36,6 +36,7 @@ export class Auth {
       },
       handler: HANDLER,
       layers: [this.layer],
+      memorySize: 512,
     });
 
     this.apigw = new apigw.LambdaRestApi(stack, this.prefix + "ApiGw", {

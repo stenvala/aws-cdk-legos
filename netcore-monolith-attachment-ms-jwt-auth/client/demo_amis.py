@@ -18,7 +18,7 @@ def main(args):
             response = requests.get(base + url)
             util.print_result(response)
     #
-    auth = util.login(base, 'admin', 'demo')
+    auth, user_id = util.login(base, 'admin', 'demo')
     #
     docs = demo_mono.get_all_documents(base, auth)
     if len(docs) == 0:
@@ -45,17 +45,14 @@ def main(args):
     area = get_first_area_with_add(permissions)
     print(f'Add files to area {area}')
     files = [
-        {
-            'name': 'temp.txt',
-            'content_type': 'text/plain; charset=UTF-8'},
-        {'name': 'img.jpg',
-         'content_type': 'image/jpeg'}
+        {'name': 'temp.txt', 'content_type': 'text/plain; charset=UTF-8'},
+        {'name': 'img.jpg', 'content_type': 'image/jpeg'}
     ]
     for f in files:
         presign_data = get_presigned_url(
             base_amis, jwt_auth, doc_id, area, f)
         upload_file_to_presigned_url(
-            presign_data['url'], presign_data['key'], f)
+            presign_data['url'], presign_data['key'], f, user_id)
     files = get_files(base_amis, jwt_auth, doc_id)
 
     if args.nodelete:
@@ -72,12 +69,14 @@ def main(args):
     files = get_files(base_amis, jwt_auth, doc_id)
 
 
-def upload_file_to_presigned_url(url, key, f):
+def upload_file_to_presigned_url(url, key, f, user_id):
     print('Upload file from %s' % f['name'])
 
     with open(r'./resources/' + f['name'], 'rb') as file:
         response = requests.put(
-            url=url, headers={'Content-Type': f['content_type']},
+            url=url, headers={
+                'Content-Type': f['content_type'],
+                'x-amz-meta-userId': user_id},
             data=file.read())
         print(f'Status of upload {response.status_code}')
 
@@ -88,6 +87,7 @@ def get_file(base, auth, file_name):
         f'api/files/document/{parts[0]}/area/{parts[1]}/file/{parts[2]}'
     print(f'Getting presigned load url {url}')
     response = util.print_result(requests.get(url=url, headers=auth))
+    print(response)
     presigned_url = response['url']
     print(f'File is available at {presigned_url}')
     print(f'Downloading and saving to {parts[2]}')
