@@ -1,6 +1,8 @@
 # What's here?
 
-Lambda with Express Rest API.
+Lambda with Node.JS Express Rest API.
+
+![plot](../sketches/only-lambda.png)
 
 ## Commands
 

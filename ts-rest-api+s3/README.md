@@ -1,6 +1,8 @@
 # What's here?
 
-This creates lambda rest api with express and s3 bucket to which we can save and delete file via lambda.
+This creates lambda rest api with express and s3 bucket to which we can save and delete json files via lambda.
+
+![plot](../sketches/lambda-s3.png)
 
 ## Commands
 
