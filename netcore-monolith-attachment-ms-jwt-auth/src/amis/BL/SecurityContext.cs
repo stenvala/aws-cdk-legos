@@ -109,11 +109,11 @@ namespace Amis.BL
 
         public List<string> GetPermissionsOfArea(string id)
         {
-            return Permissions.Where(i => i.Id == id).Select(i => i.Permissions).FirstOrDefault();
+            return Permissions.Where(i => i.Id == id.ToLower()).Select(i => i.Permissions).FirstOrDefault();
         }
 
         public bool HasAreaPermission(string id, string permission)
-        {
+        {            
             return GetPermissionsOfArea(id).Contains(permission);
         }
 

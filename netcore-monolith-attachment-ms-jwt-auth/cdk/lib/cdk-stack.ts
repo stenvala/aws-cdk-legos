@@ -24,9 +24,15 @@ export class CdkStack extends cdk.Stack {
 
     this.authStack = new Auth(this, PREFIX, globalProps);
 
-    this.monoStack = new Mono(this, PREFIX, this.authStack, globalProps);
-
     this.amisStack = new Amis(this, PREFIX, this.authStack, globalProps);
+
+    this.monoStack = new Mono(
+      this,
+      PREFIX,
+      this.authStack,
+      this.amisStack.eventBus,
+      globalProps
+    );
 
     new UI(this, PREFIX);
   }

@@ -1,0 +1,13 @@
+{
+  "name": "ts-amis-delete-doc",
+  "scripts": {
+    "start": "nodemon --watch \"**/*.ts\" --exec \"ts-node\" main.ts"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.803.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.10",
+    "typescript": "^4.1.2"
+  }
+}

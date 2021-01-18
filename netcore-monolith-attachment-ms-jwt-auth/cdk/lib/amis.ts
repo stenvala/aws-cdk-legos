@@ -1,4 +1,6 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
+import * as events from "@aws-cdk/aws-events";
+import * as targets from "@aws-cdk/aws-events-targets";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
@@ -8,11 +10,17 @@ import { GlobalProps } from "./models";
 const ASSET_LOCATION = "../src/amis/bin/Release/netcoreapp3.1/linux-x64";
 const HANDLER = "amis::Amis.LambdaEntryPoint::FunctionHandlerAsync";
 const RUNTIME = lambda.Runtime.DOTNET_CORE_3_1;
+
+const DELETER_LOCATION = "../src/amis-delete-doc/dist";
+const DELETER_HANDLER = "main.lambdaHandler";
+const DELETER_RUNTIME = lambda.Runtime.NODEJS_12_X;
+
 const PREFIX = "amis-";
 const BUCKET_NAME = "amis-document-data";
 
 export class Amis {
   lambda: lambda.Function;
+  eventBus: events.EventBus;
   private authStack: A.Auth;
   private stack: cdk.Stack;
 
@@ -26,13 +34,14 @@ export class Amis {
   ) {
     this.stack = stack;
     this.authStack = authStack;
+    this.deleter(stack);
 
     this.prefix = prefix + PREFIX;
     this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
-      timeout: cdk.Duration.seconds(30),
+      timeout: cdk.Duration.seconds(30) as any,
       environment: {
         authType: props.amisAuth,
         authUrl: authStack.apigw.url + "decode",
@@ -53,6 +62,30 @@ export class Amis {
       default:
         throw new Error("Invalid authentication type to amis");
     }
+  }
+
+  private deleter(stack: cdk.Stack) {
+    const fun = new lambda.Function(stack, PREFIX + "DELETE_Lambda", {
+      runtime: DELETER_RUNTIME,
+      code: lambda.Code.fromAsset(DELETER_LOCATION),
+      handler: DELETER_HANDLER,
+      environment: {
+        bucketName: BUCKET_NAME,
+      },
+    });
+
+    this.eventBus = new events.EventBus(stack, PREFIX + "ProfileEventBus", {
+      eventBusName: "DeleteAttachment",
+    });
+
+    const rule = new events.Rule(stack, PREFIX + "NewRule", {
+      description: "Delete document",
+      eventPattern: {
+        source: ["mono.deleteDocument"],
+      },
+      eventBus: this.eventBus,
+    });
+    rule.addTarget(new targets.LambdaFunction(fun));
   }
 
   private initBucket() {

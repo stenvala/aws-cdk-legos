@@ -1,5 +1,6 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as dynamodb from "@aws-cdk/aws-dynamodb";
+import * as events from "@aws-cdk/aws-events";
 import * as iam from "@aws-cdk/aws-iam";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
@@ -24,6 +25,7 @@ export class Mono {
     private stack: CdkStack,
     prefix: string,
     authStack: Auth,
+    eventBus: events.EventBus,
     props: GlobalProps
   ) {
     this.prefix = prefix + PREFIX;
@@ -32,13 +34,21 @@ export class Mono {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
-      timeout: Duration.seconds(30),
+      timeout: Duration.seconds(30) as any,
       memorySize: 1024,
       environment: {
         authUrl: authStack.apigw.url + "jwt",
         authType: props.amisAuth,
       },
     });
+
+    const policyStatement = new iam.PolicyStatement({
+      resources: [eventBus.eventBusArn],
+      effect: iam.Effect.ALLOW,
+      actions: ["events:Put*"],
+    });
+
+    this.lambda.addToRolePolicy(policyStatement);
 
     this.apigw = new apigw.LambdaRestApi(stack, this.prefix + "ApiGw", {
       handler: this.lambda,
