@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Mono.Attributes;
+using Mono.BL;
 using Mono.DTO;
 using Mono.Repositories;
 using Mono.Repositories.Models;
@@ -20,15 +21,18 @@ namespace Mono.Controllers
         private readonly IInitData initData;
         private readonly IDocumentRepository documentRepository;
         private readonly IMapper mapper;
+        private readonly IDocumentLogic documentLogic;
 
         public DocumentsController(
             IInitData initData,
+            IDocumentLogic documentLogic,
             IDocumentRepository documentRepository,
             IMapper mapper)
         {
             this.initData = initData;
             this.documentRepository = documentRepository;
             this.mapper = mapper;
+            this.documentLogic = documentLogic;
         }
 
         [HttpGet("")]
@@ -55,7 +59,7 @@ namespace Mono.Controllers
         [HttpDelete("{id}")]
         public async Task<string> RemoveById(string id)
         {
-            await documentRepository.RemoveById(id);
+            await documentLogic.RemoveById(id);
             return Jsoner.Ok();
         }
     }

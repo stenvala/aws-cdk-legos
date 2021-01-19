@@ -78,6 +78,8 @@ namespace Mono
             services.AddControllers();
 
             services.AddScoped<IUserLogic, UserLogic>();
+            services.AddScoped<IDocumentLogic, DocumentLogic>();
+            services.AddScoped<IEventBus, EventBus>();
             services.AddScoped<IInitData, InitData>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();

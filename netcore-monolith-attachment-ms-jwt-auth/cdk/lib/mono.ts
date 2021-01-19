@@ -7,7 +7,7 @@ import * as cdk from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import { Auth } from "./auth";
 import { CdkStack } from "./cdk-stack";
-import { GlobalProps } from "./models";
+import { DELETE_EVENT_BUS_NAME, GlobalProps } from "./models";
 
 const ASSET_LOCATION = "../src/mono/bin/Release/netcoreapp3.1/linux-x64";
 const HANDLER = "mono::Mono.LambdaEntryPoint::FunctionHandlerAsync";
@@ -39,6 +39,7 @@ export class Mono {
       environment: {
         authUrl: authStack.apigw.url + "jwt",
         authType: props.amisAuth,
+        deleteEventBus: DELETE_EVENT_BUS_NAME,
       },
     });
 

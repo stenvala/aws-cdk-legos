@@ -41,14 +41,7 @@ namespace Mono.Controllers
                         Detail = Jsoner.Convert(
                             new
                             {
-                                action = "withdrawal",
-                                location = "MA-BOS-01",
-                                amount = 500,
-                                result = "approved",
-                                transactionId = "123456",
-                                cardPresent = true,
-                                partnerBank = "Example Bank",
-                                remainingFunds = 723.34
+                                docId = "temp"
                             }
                         )
                     }

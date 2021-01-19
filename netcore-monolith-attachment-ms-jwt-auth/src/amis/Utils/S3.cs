@@ -63,7 +63,8 @@ namespace Amis.Utils
                 using (StreamReader reader = new StreamReader(responseStream))
                 {
                     foreach (var item in response.Metadata.Keys)
-                    {                        
+                    {
+                        Console.WriteLine("Found metadata " + item + ":" + response.Metadata[item]);
                         metadata.Add(item.Replace("x-amz-meta-", ""), response.Metadata[item]);
                     }                        
                 }                

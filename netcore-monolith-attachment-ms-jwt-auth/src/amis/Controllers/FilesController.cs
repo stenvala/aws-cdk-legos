@@ -39,7 +39,7 @@ namespace Amis.Controllers
                 Prefix = docId
             };
 
-            var readAreas = securityContext.GetReadAreas();
+            var readAreas = securityContext.GetReadAreas().Select(i => i.ToLower());
             var files = new List<S3FileDTO>();
             var client = s3.GetClient();
             ListObjectsV2Response response;
@@ -50,7 +50,7 @@ namespace Amis.Controllers
             {                
                 foreach (var j in readAreas)
                 {
-                    if (i.Key.StartsWith(docId + "/" + j))
+                    if (i.Key.ToLower().StartsWith(docId + "/" + j))
                     {
                         var metadataRequest = new GetObjectMetadataRequest
                         {
@@ -110,9 +110,8 @@ namespace Amis.Controllers
         {
             var key = docId + "/" + area + "/" + file;
             var metadata = await s3.GetObjectMetadata(key);
-            var userId = securityContext.GetUser().Id;
-            Console.WriteLine("Trying to delete for " + userId);
-            if (userId != metadata["userId"])
+            var userId = securityContext.GetUser().Id;            
+            if (userId != metadata["userid"])
             {
                 Response.StatusCode = 403;
                 return "";

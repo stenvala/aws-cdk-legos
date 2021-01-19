@@ -5,7 +5,7 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 import * as A from "./auth";
-import { GlobalProps } from "./models";
+import { DELETE_EVENT_BUS_NAME, GlobalProps } from "./models";
 
 const ASSET_LOCATION = "../src/amis/bin/Release/netcoreapp3.1/linux-x64";
 const HANDLER = "amis::Amis.LambdaEntryPoint::FunctionHandlerAsync";
@@ -20,6 +20,7 @@ const BUCKET_NAME = "amis-document-data";
 
 export class Amis {
   lambda: lambda.Function;
+  deleteLambda: lambda.Function;
   eventBus: events.EventBus;
   private authStack: A.Auth;
   private stack: cdk.Stack;
@@ -65,7 +66,7 @@ export class Amis {
   }
 
   private deleter(stack: cdk.Stack) {
-    const fun = new lambda.Function(stack, PREFIX + "DELETE_Lambda", {
+    this.deleteLambda = new lambda.Function(stack, PREFIX + "DELETE_Lambda", {
       runtime: DELETER_RUNTIME,
       code: lambda.Code.fromAsset(DELETER_LOCATION),
       handler: DELETER_HANDLER,
@@ -75,7 +76,7 @@ export class Amis {
     });
 
     this.eventBus = new events.EventBus(stack, PREFIX + "ProfileEventBus", {
-      eventBusName: "DeleteAttachment",
+      eventBusName: DELETE_EVENT_BUS_NAME,
     });
 
     const rule = new events.Rule(stack, PREFIX + "NewRule", {
@@ -85,7 +86,7 @@ export class Amis {
       },
       eventBus: this.eventBus,
     });
-    rule.addTarget(new targets.LambdaFunction(fun));
+    rule.addTarget(new targets.LambdaFunction(this.deleteLambda));
   }
 
   private initBucket() {
@@ -105,6 +106,7 @@ export class Amis {
       ],
     });
     bucket.grantReadWrite(this.lambda);
+    bucket.grantReadWrite(this.deleteLambda);
   }
 
   private withoutAuth() {

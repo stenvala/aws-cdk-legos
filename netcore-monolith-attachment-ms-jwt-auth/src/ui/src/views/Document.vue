@@ -43,7 +43,7 @@
             <p>
               <a href="javascript:void(0)" v-on:click="loadFile(k)">{{k.name}}</a> {{k.lastModified}} {{k.size}}
               <a href="javascript:void(0)" v-on:click="deleteFile(k)" v-if="i.allowDelete">Delete</a>      
-              <a href="javascript:void(0)" v-on:click="deleteFile(k, true)" v-if="i.allowDeleteMy && i.userId == myId">Delete</a>      
+              <a href="javascript:void(0)" v-on:click="deleteFile(k, true)" v-if="i.allowDeleteMy && k.userId == myId">Delete</a>                    
             </p>
           </div>
         </div>
@@ -61,6 +61,7 @@ interface FileDTO {
   lastModified: number;
   path: string;
   size: number;
+  userId: string;
 }
 
 interface File {  
@@ -69,6 +70,7 @@ interface File {
   path: string;
   size: string;
   name: string;
+  userId: string;
 }
 
 interface Area {
@@ -139,6 +141,7 @@ export default class Document extends Vue {
         area: parts[1],
         name: parts[2],
         path: i.path,
+        userId: i.userId,
         size: i.size.toString() // Should be formatted nicely
         }
       });
@@ -153,7 +156,7 @@ export default class Document extends Vue {
           allowDelete: perm[i].indexOf('DELETE') !== -1,
           allowDeleteMy: perm[i].indexOf('DELETE-MY') !== -1
         } 
-      });      
+      });            
   }
 
   public async loadFile(f: File) {
@@ -179,7 +182,7 @@ export default class Document extends Vue {
   }
 
   async selectedFile(event: any) {
-    if (!this.addingTo) {
+    if (!this.addingTo || event.target.files.length != 1) {
       return;
     }
     const file = event.target.files[0];      

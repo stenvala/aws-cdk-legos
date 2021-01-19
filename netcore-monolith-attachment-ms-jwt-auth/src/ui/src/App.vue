@@ -47,6 +47,7 @@ export default {
     doLogout() {
       console.log('Logging out');
       (this as any).$store.state.isLoggedIn = false;
+      (this as any).$store.state.permissions = undefined;
       (this as any).$router.push('/');
     }
   }
