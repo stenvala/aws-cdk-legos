@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using AutoMapper;
 using Mono.DTO;
 using Mono.Repositories.Models;
@@ -11,7 +12,11 @@ namespace Mono.Utils
         {
             CreateMap<UserModel, UserDTO>();
             CreateMap<DocumentModel, DocumentDTO>();
-            CreateMap<UserModel, PermissionsDTO>();
+            CreateMap<UserModel, PermissionsDTO>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) =>
+                    (srcMember != null && !(srcMember is IList)) ||
+                    (srcMember != null && srcMember is IList && (srcMember as IList).Count > 0)));
+
         }
     }
 }

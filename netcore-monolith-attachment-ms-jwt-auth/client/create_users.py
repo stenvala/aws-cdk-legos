@@ -7,19 +7,18 @@ import util
 
 def main(args):
     base = util.get_value(args.aws, 'monoUrl')
-    gets = [
-        base + 'api/init/users'
-    ]
     if not args.aws:
+        url = base + 'api/init/table'
         print('Init database')
-        gets.insert(0, base + 'api/init/table')
-
-    #
-    print('Init users')
-    for url in gets:
         print(f'Method GET endpoint {url}')
         response = requests.get(url)
-        util.print_result(response)
+
+    #
+    url = base + 'api/init/users'
+    print('Init users')
+    print(f'Method GET endpoint {url}')
+    response = requests.get(url)
+    util.print_result(response)
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ namespace Mono.Utils
                 Formatting.Indented,
                 new JsonSerializerSettings
                 {
+                    NullValueHandling = NullValueHandling.Ignore,
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });

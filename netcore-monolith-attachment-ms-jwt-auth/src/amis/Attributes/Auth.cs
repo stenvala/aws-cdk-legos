@@ -1,4 +1,5 @@
 ﻿using System;
+using Amazon.Lambda.Core;
 using Amis.BL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -28,6 +29,18 @@ namespace Amis.Attributes
                     var authHeader = context.HttpContext.Request.Headers["Authorization"];                    
                     isOk = InitFromJwt(authHeader, securityContext);
                     break;
+                case "lambda": // This is jwt lambda
+                    var hasContext = context.HttpContext.Items.TryGetValue("RequestContext", out var cto);
+                    if (!hasContext) {
+                        Console.WriteLine("There was no context");
+                        context.Result = new ForbidResult("AUTHENTICATION_FAILED");
+                        return;
+                    }
+                    
+                        
+                    break;
+                default:
+                    throw new Exception($"Authentication type '{SecurityContext.AuthType}' not implemented");
             }
 
             if (!isOk)
