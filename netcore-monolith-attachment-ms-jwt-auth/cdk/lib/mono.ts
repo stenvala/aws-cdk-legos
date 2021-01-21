@@ -3,6 +3,7 @@ import * as dynamodb from "@aws-cdk/aws-dynamodb";
 import * as events from "@aws-cdk/aws-events";
 import * as iam from "@aws-cdk/aws-iam";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as log from "@aws-cdk/aws-logs";
 import * as cdk from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
 import { Auth } from "./auth";
@@ -36,6 +37,7 @@ export class Mono {
       handler: HANDLER,
       timeout: Duration.seconds(30) as any,
       memorySize: 1024,
+      logRetention: log.RetentionDays.ONE_DAY,
       environment: {
         authUrl: authStack.apigw.url + "jwt",
         authType: props.amisAuth,

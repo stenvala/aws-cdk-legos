@@ -2,6 +2,7 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as events from "@aws-cdk/aws-events";
 import * as targets from "@aws-cdk/aws-events-targets";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as log from "@aws-cdk/aws-logs";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 import * as A from "./auth";
@@ -49,6 +50,7 @@ export class Amis {
         bucket: BUCKET_NAME,
       },
       memorySize: 512,
+      logRetention: log.RetentionDays.ONE_DAY,
     });
     this.initBucket();
     switch (props.amisAuth) {

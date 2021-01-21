@@ -1,5 +1,6 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as log from "@aws-cdk/aws-logs";
 import * as cdk from "@aws-cdk/core";
 import { KEY } from "./key";
 import { GlobalProps } from "./models";
@@ -37,6 +38,7 @@ export class Auth {
       handler: HANDLER,
       layers: [this.layer],
       memorySize: 512,
+      logRetention: log.RetentionDays.ONE_DAY,
     });
 
     this.apigw = new apigw.LambdaRestApi(stack, this.prefix + "ApiGw", {

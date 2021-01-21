@@ -4,9 +4,6 @@ import * as cdk from "@aws-cdk/core";
 
 const PREFIX = "TSHelloWorld-";
 
-const ACM_CERTIFICATE_ARN =
-  "arn:aws:acm:eu-north-1:725670626446:certificate/ba843083-bf89-4018-8232-0b56f16da483";
-
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, PREFIX + id, props);
