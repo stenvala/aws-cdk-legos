@@ -78,10 +78,9 @@ To learn:
 
 - How to connect EFS to lambda
 
-_Work in progress_
-
 ## Coming in the future
 
 - Some EC2 demo
 - SNS, SQS, EventBridge, Kinesis demos
 - Cronjob demo
+- Step functions
