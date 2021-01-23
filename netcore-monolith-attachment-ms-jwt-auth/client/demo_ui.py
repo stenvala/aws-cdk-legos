@@ -11,7 +11,13 @@ def main(args):
     ui = util.get_value(args.aws, 'uiUrl')
     mono = util.get_value(args.aws, 'monoUrl')
     amis = util.get_value(args.aws, 'amisUrl')
+
+    print('To use service, copy paste this')
     print(ui + '?amisApi=' + quote(amis) + '&monoApi=' + quote(mono))
+
+    authDemo = util.get_value(args.aws, 'demoAuthUrl')
+    print('To test authorizer, copy this')
+    print(ui + '?amisApi=' + quote(authDemo) + '&monoApi=' + quote(mono))
 
 
 if __name__ == "__main__":

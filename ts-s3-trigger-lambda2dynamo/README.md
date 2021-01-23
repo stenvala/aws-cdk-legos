@@ -15,7 +15,7 @@ npm run build # Build application
 npm run deploy # Deploy CloudFormation stack
 npm run demo # Get presigned url, save file, wait 10 s, get data
 npm run destroy # Destroy CloudFormation stack
-npm run clear # Clear all local files (build, cdk data, node_modules)
+npm run clean # Clear all local files (build, cdk data, node_modules)
 ```
 
 Or run all

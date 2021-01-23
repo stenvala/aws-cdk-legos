@@ -1,6 +1,6 @@
 {
   "name": "ts-rest-api",
-  "scripts": {    
+  "scripts": {
     "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
     "test": "cd src && npx jest --collect-coverage && cd .. && cd cdk && npx jest --collect-coverage",
     "testwatch": "cd src && npx jest --watch",
@@ -10,7 +10,7 @@
     "demo": "cd client && python3 demo.py -aws && python3 demo.py -aws -method post && cd ..",
     "demolocal": "cd client && python3 demo.py && python3 demo.py -method post && cd ..",
     "destroy": "cd cdk && cdk destroy && cd ..",
-    "clear": "rm -rf src/node_modules && rm -rf cdk/cdk.out && rm -rf cdk/node_modules && rm -rf dist && rm -f client/stack-data.json",
-    "all": "npm run init && npm run build && npm run test && npm run deploy && npm run demo && npm run destroy && npm run clear"
+    "clean": "git clean -xdf",
+    "all": "npm run init && npm run build && npm run test && npm run deploy && npm run demo && npm run destroy && npm run clean"
   }
 }

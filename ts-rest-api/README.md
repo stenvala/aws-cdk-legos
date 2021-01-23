@@ -16,7 +16,7 @@ npm run deploy # Deploy CloudFormation stack
 npm run demo # Make http request to lambda (via api gw) in aws env and display response
 npm run demolocal # Same as demo but for local
 npm run destroy # Destroy CloudFormation stack
-npm run clear # Clear all local files (build, cdk data, node_modules)
+npm run clean # Clear all local files (build, cdk data, node_modules)
 ```
 
 Or run init, build, test, deploy, demo, destroy and clear

@@ -27,7 +27,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   private moverLambda(efsAccessPoint: efs.AccessPoint) {
-    const fun = new lambda.Function(this, PREFIX + "MoverLambda", {
+    const fun = new lambda.Function(this, "MoverLambda", {
       runtime: RUNTIME,
       code: ASSETS,
       handler: "mover_lambda.handler",
@@ -46,7 +46,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   private httpLambda(efsAccessPoint: efs.AccessPoint) {
-    const fun = new lambda.Function(this, PREFIX + "HttpLambda", {
+    const fun = new lambda.Function(this, "HttpLambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION, {
         bundling: {
@@ -72,7 +72,7 @@ export class CdkStack extends cdk.Stack {
       ),
       vpc: this.vpc as any,
     });
-    const api = new apigw.LambdaRestApi(this, PREFIX + "ApiGw", {
+    const api = new apigw.LambdaRestApi(this, "ApiGw", {
       handler: fun,
       binaryMediaTypes: ["*/*"],
     });
@@ -81,7 +81,7 @@ export class CdkStack extends cdk.Stack {
   }
 
   private s3(lambda: lambda.Function) {
-    const bucket = new s3.Bucket(this, PREFIX + "Bucket", {
+    const bucket = new s3.Bucket(this, "Bucket", {
       versioned: false,
       bucketName: BUCKET_NAME,
       encryption: s3.BucketEncryption.KMS_MANAGED,
@@ -99,7 +99,7 @@ export class CdkStack extends cdk.Stack {
 
   private efs() {
     this.vpc = new ec2.Vpc(this, "VPC");
-    const fileSystem = new efs.FileSystem(this, PREFIX + "Efs", {
+    const fileSystem = new efs.FileSystem(this, "EFS", {
       vpc: this.vpc as any,
       encrypted: false,
       lifecyclePolicy: efs.LifecyclePolicy.AFTER_14_DAYS,

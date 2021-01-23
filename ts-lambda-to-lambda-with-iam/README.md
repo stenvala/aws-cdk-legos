@@ -15,7 +15,7 @@ npm run deploy # Deploy CloudFormation stacks
 npm run firstdeploy # First deployment requires three deploys to get urls right
 npm run demo # Make http request to lambda1 that calls lambda2 as well as directly to lambda2. The second request will fail because missing auth.
 npm run destroy # Destroy CloudFormation stacks
-npm run clear # Clear all local files (build, cdk data, node_modules)
+npm run clean # Clear all local files (build, cdk data, node_modules)
 ```
 
 Or run init, build, test, deploy, demo

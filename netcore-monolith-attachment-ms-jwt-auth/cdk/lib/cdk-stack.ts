@@ -1,6 +1,7 @@
 import * as cdk from "@aws-cdk/core";
 import { Amis } from "./amis";
 import { Auth } from "./auth";
+import { DemoAuth } from "./demo-auth";
 import { GlobalProps } from "./models";
 import { Mono } from "./mono";
 import { UI } from "./ui";
@@ -23,6 +24,11 @@ export class CdkStack extends cdk.Stack {
     //const authKey = new AuthParam(this, PREFIX);
 
     this.authStack = new Auth(this, PREFIX, globalProps);
+
+    if (globalProps.amisAuth == "demo") {
+      new DemoAuth(this, PREFIX, this.authStack, globalProps);
+      globalProps.amisAuth = "api";
+    }
 
     this.amisStack = new Amis(this, PREFIX, this.authStack, globalProps);
 

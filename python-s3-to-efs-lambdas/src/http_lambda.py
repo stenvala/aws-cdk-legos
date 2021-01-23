@@ -2,9 +2,13 @@ import utils
 import json
 import os
 import base64
+import subprocess
+import sys
 
 
 def handler(event, context):
+    print(event)
+    print(event['path'])
     try:
         loc = os.environ['EFS'] + event['path']
         mime = magic.from_file(loc, mime=True)
@@ -30,4 +34,15 @@ def handler(event, context):
                 'isBase64Encoded': True
             }
     except:
-        return utils.return_error()
+        task = subprocess.Popen('ls -lahR',
+                                cwd=os.environ['EFS'],
+                                shell=True,
+                                stdout=subprocess.PIPE)
+        directory = task.stdout.read().decode('utf-8')
+        return {
+            'statusCode': 200,
+            'body':  sys.exc_info()[0] + '\n\nEXISTING FILES IN EFS\n\n' + directory,
+            'headers': {
+                'content-type': 'text/plain',
+            }
+        }

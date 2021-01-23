@@ -1,0 +1,13 @@
+{
+  "name": "ts-s3-trigger-lambda2dynamo",
+  "scripts": {
+    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clean",
+    "build": "rm -rf dist && mkdir dist && cd src && tsc && cd .. && cp src/package.json dist/package.json && cp src/package-lock.json dist/package-lock.json && cd dist && npm install --only=prod && cd ..",
+    "clean": "git clean -xdf",
+    "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
+    "demo": "cd client && python3 demo.py -method post && sleep 10 && python3 demo.py -method get && cd ..",
+    "destroy": "npm run empty-bucket && cd cdk && cdk destroy && cd ..",
+    "empty-bucket": "aws s3 rm s3://lambda-and-s3-to-dynamo-test-s3 --recursive",
+    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd .."
+  }
+}

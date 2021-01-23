@@ -1,12 +1,12 @@
 {
   "name": "ts-rest-api-s3",
-  "scripts": {    
-    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",        
+  "scripts": {
+    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
     "build": "rm -rf dist && mkdir dist && cd src && tsc && cd .. && cp src/package.json dist/package.json && cp src/package-lock.json dist/package-lock.json && cd dist && npm install --only=prod && cd ..",
     "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
-    "demo": "cd client && python3 demo.py -method post && python3 demo.py -method get && python3 demo.py -method delete && cd ..",    
+    "demo": "cd client && python3 demo.py -method post && python3 demo.py -method get && python3 demo.py -method delete && cd ..",
     "destroy": "cd cdk && cdk destroy && cd ..",
-    "clear": "rm -rf src/node_modules && rm -rf cdk/cdk.out && rm -rf cdk/node_modules && rm -rf dist && rm -f client/stack-data.json",
-    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clear"
-  }  
+    "clean": "git clean -xdf",
+    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clean"
+  }
 }

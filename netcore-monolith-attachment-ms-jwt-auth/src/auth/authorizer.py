@@ -82,7 +82,8 @@ def lambda_handler(event, context):
     """
 
     decoded = utils.decode(event['authorizationToken'].replace('Bearer ', ''))
-    principalId = decoded['meta']['userId']
+    print(decoded)
+    principalId = decoded['meta']['id']
 
     """you can send a 401 Unauthorized response to the client by failing like so:"""
     """raise Exception('Unauthorized')"""

@@ -12,7 +12,7 @@ npm run build # Build application
 npm run deploy # Deploy CloudFormation stack
 npm run demo # save file to S3, get file content from, delete file from
 npm run destroy # Destroy CloudFormation stack
-npm run clear # Clear all local files (build, cdk data, node_modules)
+npm run clean # Clear all local files (build, cdk data, node_modules)
 ```
 
 Or run all
