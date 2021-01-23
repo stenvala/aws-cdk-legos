@@ -1,4 +1,3 @@
-import utils
 import json
 import os
 import base64
@@ -7,11 +6,15 @@ import sys
 
 
 def handler(event, context):
-    print(event)
-    print(event['path'])
     try:
         loc = os.environ['EFS'] + event['path']
-        mime = magic.from_file(loc, mime=True)
+        print('Load file %s' % loc)
+        mime = 'application/octet-stream'
+        if '.txt' in loc:
+            mime = 'text/plain'
+        if '.png' in loc:
+            mime = 'image/png'
+
         if mime in ['text/plain', 'text/html', 'application/json']:
             with open(loc, 'r') as f:
                 data = f.read()
@@ -39,9 +42,10 @@ def handler(event, context):
                                 shell=True,
                                 stdout=subprocess.PIPE)
         directory = task.stdout.read().decode('utf-8')
+        print(sys.exc_info()[0])
         return {
-            'statusCode': 200,
-            'body':  sys.exc_info()[0] + '\n\nEXISTING FILES IN EFS\n\n' + directory,
+            'statusCode': 404,
+            'body': 'EFS contains files\n\n' + directory,
             'headers': {
                 'content-type': 'text/plain',
             }

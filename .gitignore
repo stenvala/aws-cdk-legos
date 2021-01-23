@@ -15,7 +15,6 @@ __pycache__
 coverage
 stack-data.json
 obj
-bin
 
 .vs
 venv

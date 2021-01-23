@@ -1,1 +1,1 @@
-python-magic==0.4.18
+filetype==1.0.7
