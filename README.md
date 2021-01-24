@@ -101,18 +101,26 @@ To learn:
 - How to connect EFS to Lambda
 - AWS CLI with S3
 
-## Group 3
+## Grade 3
 
-### netcore-monolith-attachment-ms-jwt-auth
+### polyglot-monolith-microservice-ui-jwt-auth
+
+Previous stacks operate with one programming language and if that's not python, there may be some python used in demos. For this following languages / frameworks should be somehow understood. However, I don't know Vue for example, but did this anyway with it.
+
+- ASP.net core (C#)
+- FastAPI (Python)
+- Vue (TypeScript)
+
+Also, before you start doing this, you should be somewhat comfortable with basic S3 and DynamoDB use. And the concept of token authorization.
 
 To learn:
 
 - ASP.net REST API in Lambda (times 2 in this example)
-- Vue SPA via CloudFront (I don't know vue, I'm Angular guy, just did something and not nicely)
+- Vue SPA via CloudFront
 - Using Minio (S3) and DynamoDB locally during development
-- JWT auth with various authorizers (currently only custom lambda implemented)
-- Python FastAPI lambda
-- EventBridge to send events between lambdas
+- JWT auth with various authorizers (currently only custom Lambda implemented)
+- Python FastAPI Öambda
+- EventBridge to send events between Lambdas
 
 _Even though this is in master, it is still work in progress_
 
