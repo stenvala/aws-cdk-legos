@@ -34,9 +34,9 @@ deactivate
 
 Samples are categorized by the advancedness you need to have (grade)
 
-- g1: very basic, start going through these in the order presented below if you are really newbie
-- g2: some simple, but perhaps less used concepts, that might require some experties
-- g3: full microservice architectures or equivalent complexity
+- Grade 1 (g1 prefix): very basic, start going through these in the order presented below if you are newcomer to AWS and/or CDK. Walkthrough is really fast and focus on the things you don't know yet. After you have looked some of these, create your own architecture for some play case, develop a stack and deploy.
+- Grade 2 (g2): some simple, but perhaps less used concepts, that might require some more expertise.
+- Grade 3 (g3): full microservice architectures or equivalent complexity.
 
 ## Grade 1
 
