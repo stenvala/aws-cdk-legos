@@ -26,7 +26,7 @@ deactivate
 
 ## Prerequisites
 
-- You must have AWS CLI and CKD installed and configured. Look from web how. Various stacks require various permissions for your deployer IAM role. These are not explictly mentioned. When you see missing permission in deployment, go to console and add these permissions to your deployer role.
+- You must have AWS CLI and CKD installed and configured. Look from web how. Various stacks require various permissions for your deployer IAM user. These are not explictly mentioned. When you see missing permission in deployment (and it fails), go to AWS Console create groups and attach correct managed policies to these. Then, add your deployer user to these groups.
 - NPM is needed
 - Python 3.x is needed
 
