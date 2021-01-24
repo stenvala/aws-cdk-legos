@@ -2,6 +2,28 @@
 
 This repository has conceptually different aws cdk stacks using various aws services like Lego blocks to do simple and unnecessary things. Everything is really simple: with one command you can go through the whole stack from initialization after clone to destroy and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack.
 
+## Python virtual environment
+
+In demo walkthroughs we use Python and some requirements. It is advisable to create virtual environment. Following command sets it up
+
+```bash
+python3 -m venv ./venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+If you have already created, just activate
+
+```bash
+source venv/bin/activate
+```
+
+And when you are in virtual environment, exit by typing
+
+```bash
+deactivate
+```
+
 ## Prerequisites
 
 - You must have aws cli and cdk installed and configured. Look from web how.
