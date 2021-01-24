@@ -119,7 +119,7 @@ To learn:
 - Vue SPA via CloudFront
 - Using Minio (S3) and DynamoDB locally during development
 - JWT auth with various authorizers (currently only custom Lambda implemented)
-- Python FastAPI Öambda
+- Python FastAPI in Lambda (and pydantic for validation)
 - EventBridge to send events between Lambdas
 
 _Even though this is in master, it is still work in progress_
