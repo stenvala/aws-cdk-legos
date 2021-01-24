@@ -1,10 +1,10 @@
 # AWS CDK Legos
 
-This repository has conceptually different aws cdk stacks using various aws services like Lego blocks to do simple and unnecessary things. Everything is really simple: with one command you can go through the whole stack from initialization after clone to destroy and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack.
+This repository has conceptually different AWS CDK stacks using various AWS services like Lego blocks to do simple and unnecessary things. Everything is typically really simple: with one command you can go through the whole stack from initialization after clone to destroy and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack (like some very elementary testing). Also, the emphasasis is not on the code, it just provides the basic fail prone functionality to the stack. One should consider about the architecture and blueprints of the CDK code.
 
 ## Python virtual environment
 
-In demo walkthroughs we use Python and some requirements. It is advisable to create virtual environment. Following command sets it up
+In demo walkthroughs we use Python and there are some requirements. It is advisable to create virtual environment. Following commands set it up for you
 
 ```bash
 python3 -m venv ./venv
@@ -12,7 +12,7 @@ source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-If you have already created, just activate
+If you have already created it, just activate
 
 ```bash
 source venv/bin/activate
@@ -26,86 +26,103 @@ deactivate
 
 ## Prerequisites
 
-- You must have aws cli and cdk installed and configured. Look from web how.
+- You must have AWS CLI and CKD installed and configured. Look from web how. Various stacks require various permissions for your deployer IAM role. These are not explictly mentioned. When you see missing permission in deployment, go to console and add these permissions to your deployer role.
 - NPM is needed
-- Python 3 is needed
+- Python 3.x is needed
 
 ## Currently available stacks
 
-Samples are here in the order in which a newbie might go them through.
+Samples are categorized by the advancedness you need to have (grade)
+
+- g1: very basic, start going through these in the order presented below if you are really newbie
+- g2: some simple, but perhaps less used concepts, that might require some experties
+- g3: full microservice architectures or equivalent complexity
+
+## Grade 1
 
 ### ts-hello-world
 
 To learn:
 
 - Concept for walking through these stacks
-- Basic cdk
-- Map a typescript function to url
-- Environmental variables, event and context available in lambda
+- To understand what AWS Lambda is and how to call it from browser by mapping a typescript function to url
+- Environmental variables, event and context available in Lambda
 
 ### ts-rest-api
 
 To learn:
 
-- Deploy a full typescript based rest api to lambda
-- Unit testing of cdk and app
-- Running rest api locally during development
+- Deploy a full typescript based REST API to Lambda
+- Unit testing of CDK and APP
+- Running REST API locally during development
 
 ### ts-rest-api+s3
 
 To learn:
 
-- Create s3 bucket
-- Use s3 bucket
+- Create S3 bucket
+- Use S3 bucket
+
+### ts-s3-trigger-lambda2dynamodb
+
+To learn:
+
+- Create DynamoDB table in CDK and authorize Lambda to use it
+- Use Dynamodb
+- Trigger Lambda by adding file to S3
+- Presigning S3 url and saving file to S3 with it
+
+## Grade 2
 
 ### ts-lambda-to-lambda-with-iam
 
 To learn:
 
-- Add iam based authorization to api gateway
-- Use iam authorization in aws inter service communication
-
-### ts-step-function+rest+s3+dynamodb
-
-To learn:
-
-- Create dynamodb table in cdk and authorize lambda to use it
-- Use dynamodb
-- Trigger lambda by adding file to s3
-- Presigning s3 url and saving file to s3 with it
+- Add IAM authorization to Lambda API gateway
+- Use IAM authorization in AWS interservice communication
 
 ### ts-custom-domain-lambda
 
 To learn:
 
-- How to add custom domain name to your lambda function
+- How to add custom domain name to your Lambda function
+- Parameter store
 
-### netcore-monolith-attachment-ms-jwt-auth
-
-This is big step from the previous toy examples and represents a real cloud application with multiple micro services.
+### python-step-functions
 
 To learn:
 
-- Asp.net rest api in lambda (times 2 in this example)
-- Vue SPA via CloudFront (I don't know vue, just did something)
-- Using Minio (S3) and lambda locally
-- JWT auth with various authorizers (currently only custom lambda implemented)
-- Python FastAPI lambda
-
-_Work in progress_
+- Create a state machine with Lambdas
 
 ### python-s3-to-efs-lambdas
 
 To learn:
 
-- How to connect EFS to lambda
+- How to connect EFS to Lambda
+- AWS CLI with S3
+
+## Group 3
+
+### netcore-monolith-attachment-ms-jwt-auth
+
+To learn:
+
+- ASP.net REST API in Lambda (times 2 in this example)
+- Vue SPA via CloudFront (I don't know vue, I'm Angular guy, just did something and not nicely)
+- Using Minio (S3) and DynamoDB locally during development
+- JWT auth with various authorizers (currently only custom lambda implemented)
+- Python FastAPI lambda
+- EventBridge to send events between lambdas
+
+_Even though this is in master, it is still work in progress_
 
 ## Coming in the future
 
 - Some EC2 demo
-- SNS, SQS, EventBridge, Kinesis demos
+- SQS
+- Kinesis
 - Cronjob demo
-- Step functions
+- ECR
 
 ## Some important commands
 

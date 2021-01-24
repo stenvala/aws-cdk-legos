@@ -1,6 +1,6 @@
 # What's here?
 
-Lambda with Node.JS Express Rest API.
+Lambda with Node.JS Express REST API.
 
 ![plot](../sketches/only-lambda.png)
 

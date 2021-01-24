@@ -1,6 +1,6 @@
 # What's here?
 
-This creates two lambdas. Demo sends get request to the first (created in stack 1), which forwards it to the second (created in stack 2) using iam role as authenticator and returns the message.
+This creates two Lambdas and not in a way how you would do them in production - especially in continuous delivery deployments. Demo sends get request to the first (created in stack 1), which forwards it to the second (created in stack 2) using IAM role as authenticator and returns the message.
 
 ![plot](../sketches/iam-lambda.png)
 
@@ -24,4 +24,4 @@ Or run init, build, test, deploy, demo
 npm run all
 ```
 
-Stack destroy can't be executed with cdk destroy because other stack ads role that is related to other. However, that could be done by deleting the role with cdk. This is not implemented so far.
+Stack destroy can't be executed with cdk destroy because other stack ads role that is related to other. However, that could be done by deleting the role from AWS Console manually.

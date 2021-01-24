@@ -1,6 +1,6 @@
 # What's here?
 
-Very basic cdk stack with lambda and api gw.
+Very basic cdk stack with Lambda and API gateway.
 Lambda returns message and information about event that triggered it and environment.
 
 ![plot](../sketches/only-lambda.png)

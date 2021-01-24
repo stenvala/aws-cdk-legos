@@ -1,6 +1,6 @@
 # What's here?
 
-Let's learn step functions here and create a small state machine
+Let's learn step functions here and create a small state machine.
 
 Execute this state machine from AWS by looking for state machine in the cloud formation stack you have created.
 
@@ -15,3 +15,12 @@ This state machine will fail with probability 50%. New loop is started with prob
 ```
 
 This would mean that there is 75% chance thet job is not done when we are in the main loop.
+
+## Commands
+
+```bash
+npm run init # After clone init all 3rd parties
+npm run deploy # Deploy CloudFormation stack
+npm run destroy # Destroy CloudFormation stack (empties also bucket if there are some files)
+npm run clean # Clear all local files
+```

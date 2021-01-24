@@ -1,7 +1,7 @@
 # What's here?
 
-Add custom domain name to lambda.
-To make this work you need to manually do in console following things before you can execute the stack.
+Add custom domain name to Lambda.
+To make this work you need to manually do in AWS Console following things before you can execute the stack.
 
 - Have domain name, either in AWS or elsewhere. Let's assume this is `example.com`.
 - Create hosted zone to Route53.
