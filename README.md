@@ -84,3 +84,15 @@ To learn:
 - SNS, SQS, EventBridge, Kinesis demos
 - Cronjob demo
 - Step functions
+
+## Some important commands
+
+Create new project
+
+```bash
+mkdir new-project
+cd new-project
+mkdir cdk
+cd cdk
+cdk init app --language=typescript
+```

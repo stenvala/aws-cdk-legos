@@ -1,0 +1,14 @@
+{
+  "name": "python-step-functions",
+  "scripts": {
+    "all": "npm run init && npm run deploy && npm run upload-to-bucket && sleep 10 && npm run demo && npm run destroy && npm run clean",
+    "clean": "git clean -xdf",
+    "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
+    "destroy": "npm run empty-bucket && cd cdk && cdk destroy && cd ..",
+    "upload-to-bucket": "npm run upload-demo-files",
+    "demo": "cd client && python3 demo.py && cd ..",
+    "empty-bucket": "aws s3 rm s3://python-lambdas-s3-to-efs --recursive",
+    "init": "cd cdk && npm install && cd ..",
+    "upload-demo-files": "cd client/resources && aws s3 cp . s3://python-lambdas-s3-to-efs --recursive && cd ../.."
+  }
+}
