@@ -1,12 +1,13 @@
 {
   "name": "ts-rest-api-s3",
   "scripts": {
-    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
+    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clean",
     "build": "rm -rf dist && mkdir dist && cd src && tsc && cd .. && cp src/package.json dist/package.json && cp src/package-lock.json dist/package-lock.json && cd dist && npm install --only=prod && cd ..",
-    "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
-    "demo": "cd client && python3 demo.py -method post && python3 demo.py -method get && python3 demo.py -method delete && cd ..",
-    "destroy": "cd cdk && cdk destroy && cd ..",
     "clean": "git clean -xdf",
-    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clean"
+    "demo": "cd client && python3 demo.py -method post && python3 demo.py -method get && python3 demo.py -method delete && cd ..",
+    "deploy": "cd cdk && npx cdk@1.86.0 deploy --outputs-file ../client/stack-data.json && cd ..",
+    "destroy": "npm run empty-bucket && cd cdk && npx cdk@1.86.0 destroy && cd ..",
+    "empty-bucket": "aws s3 rm s3://g1-ts-lambda-and-s3-bucket --recursive",
+    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd .."
   }
 }

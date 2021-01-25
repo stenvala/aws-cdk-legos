@@ -2,7 +2,6 @@ import json
 import requests
 import argparse
 
-STACK_NAME = 'TSLambdaAndS3-Stack'
 PATH = 'test-message'
 
 def main(args):
@@ -45,7 +44,8 @@ def get_url(args, route=''):
 def get_base(args):
     with open('stack-data.json', 'rb') as f:
         data = json.loads(f.read())
-        return data[STACK_NAME]['url'] + 'restapi'        
+        stack_name = list(data.keys())[0]
+        return data[stack_name]['url'] + 'restapi'        
 
 
 if __name__ == "__main__":

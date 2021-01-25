@@ -60,7 +60,8 @@ def get_url(args, route=''):
 def get_base(args):
     with open(CONF_FILE, 'rb') as f:
         data = json.loads(f.read())
-        url = data['TSStepS3DynamoLambda-Stack']['url']
+        stack_name = list(data.keys())[0]
+        url = data[stack_name]['url']
         return '%srestapi' % (url)
 
 
