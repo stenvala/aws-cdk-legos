@@ -2,8 +2,6 @@ import json
 import requests
 import argparse
 
-STACK_NAME = 'TSRestApi-Stack'
-
 def main(args):
     print(args.method)
     if args.method == 'get':
@@ -34,7 +32,8 @@ def get_base(args):
     if args.aws:
         with open('stack-data.json', 'rb') as f:
             data = json.loads(f.read())
-            return data[STACK_NAME]['url'] + 'restapi/'        
+            stack_name = list(data.keys())[0]
+            return data[stack_name]['url'] + 'restapi/'        
     else:
         return 'http://localhost:4001/restapi/'
         

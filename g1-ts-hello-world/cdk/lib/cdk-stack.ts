@@ -2,11 +2,9 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as cdk from "@aws-cdk/core";
 
-const PREFIX = "G1-TSHelloWorld-";
-
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, PREFIX + id, props);
+    super(scope, id, props);
 
     const name = new lambda.Function(this, "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
