@@ -2,6 +2,11 @@
 
 This repository has conceptually different AWS CDK stacks using various AWS services like Lego blocks to do simple and unnecessary things. Everything is typically really simple: with one command you can go through the whole stack from initialization after clone to destroy and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack (like some very elementary testing). Also, the emphasasis is not on the code, it just provides the basic fail prone functionality to the stack. One should consider about the architecture and blueprints of the CDK code.
 
+Stacks use various programming languages, but CDK uses only TypeScript. I have found that the most suitable, out of available options, for CDK. I can't recommend to use any other language. Main reasons are
+
+- Strong typing, easy intellisense
+- Structural (not nominal) typing seems really the way to have most flexibly properties set to constructs
+
 ## Python virtual environment
 
 In demo walkthroughs we use Python and there are some requirements. It is advisable to create virtual environment. Following commands set it up for you
@@ -26,7 +31,7 @@ deactivate
 
 ## Prerequisites
 
-- You must have AWS CLI and CKD installed and configured. Look from web how. Various stacks require various permissions for your deployer IAM user. These are not explictly mentioned. When you see missing permission in deployment (and it fails), go to AWS Console create groups and attach correct managed policies to these. Then, add your deployer user to these groups.
+- You must have AWS CLI 2 installed and configured. CDK is executed with NPX so that the walkthroughs don't get outdated. Various stacks require various permissions for your deployer IAM user. These are not explictly mentioned. When you see missing permission in deployment (and it fails), go to AWS Console create groups and attach correct managed policies to these. Then, add your deployer user to these groups.
 - NPM is needed
 - Python 3.x is needed
 
