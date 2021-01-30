@@ -43,7 +43,7 @@ export class CdkStack extends cdk.Stack {
       "/Certificate/MyDomainArn"
     );
 
-    const custom = new apigw.DomainName(this, PREFIX + "CustomDomain", {
+    const custom = new apigw.DomainName(this, "CustomDomain", {
       domainName: `${subdomain}.${domain}`,
       certificate: cm.Certificate.fromCertificateArn(
         this,
@@ -54,7 +54,7 @@ export class CdkStack extends cdk.Stack {
     });
 
     // Associate the Custom domain that we created with new APIGateway using BasePathMapping:
-    new apigw.BasePathMapping(this, PREFIX + "CustomBasePathMapping", {
+    new apigw.BasePathMapping(this, "CustomBasePathMapping", {
       domainName: custom,
       restApi: api,
     });

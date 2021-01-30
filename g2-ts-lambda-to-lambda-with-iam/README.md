@@ -17,10 +17,8 @@ npm run destroy # Destroy CloudFormation stacks
 npm run clean # Clear all local files (build, cdk data, node_modules)
 ```
 
-Or run init, build, test, deploy, demo
+Or run all
 
 ```bash
 npm run all
 ```
-
-Stack destroy can't be executed with cdk destroy because other stack ads role that is related to other. However, that could be done by deleting the role from AWS Console manually.
