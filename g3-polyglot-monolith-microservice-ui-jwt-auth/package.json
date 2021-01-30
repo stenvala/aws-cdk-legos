@@ -12,7 +12,7 @@
     "build-auth": "rm -rf dist/auth && pip3 install -r src/auth/requirements.aws.txt -t dist/auth/python",
     "build-mono": "cd src/mono && dotnet publish -c Release -p:PublishSingleFile=true --runtime linux-x64 && cd ../..",
     "build-ui": "cd src/ui && rm -rf dist && npm run build && cd ../..",
-    "clean": "git clean -xdf",
+    "clean": "npm run empty-buckets && git clean -xdf",
     "create-bucket": "cd client && python create_bucket.py && cd ..",
     "create-users": "cd client && python create_users.py && cd ..",
     "create-users-aws": "cd client && python create_users.py -aws && cd ..",
