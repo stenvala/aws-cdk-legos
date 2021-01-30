@@ -4,14 +4,12 @@ import * as sfn from "@aws-cdk/aws-stepfunctions";
 import * as tasks from "@aws-cdk/aws-stepfunctions-tasks";
 import * as cdk from "@aws-cdk/core";
 
-const PREFIX = "PythonStepFunctions";
-
 const RUNTIME = lambda.Runtime.PYTHON_3_8;
 const ASSET_LOCATION = "../src/";
 
 export class CdkStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, props?: cdk.StackProps) {
-    super(scope, PREFIX, props);
+  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
 
     const init = this.createStepLambda("Initialization", "initial");
     const main = this.createStepLambda("Main", "main");
@@ -65,7 +63,7 @@ export class CdkStack extends cdk.Stack {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION + handler),
       handler: handler + ".handler",
-      timeout: cdk.Duration.minutes(15) as any,
+      timeout: cdk.Duration.minutes(2) as any,
       logRetention: log.RetentionDays.ONE_DAY,
     });
     return fun;

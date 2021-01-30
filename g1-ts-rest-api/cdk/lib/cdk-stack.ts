@@ -1,5 +1,6 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as log from "@aws-cdk/aws-logs";
 import * as cdk from "@aws-cdk/core";
 
 export class CdkStack extends cdk.Stack {
@@ -10,6 +11,7 @@ export class CdkStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.lambdaHandler",
+      logRetention: log.RetentionDays.ONE_DAY,
     });
 
     const api = new apigw.LambdaRestApi(this, "ApiGw", {

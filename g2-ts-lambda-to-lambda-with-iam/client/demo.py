@@ -2,8 +2,6 @@ import json
 import requests
 import argparse
 
-STACK_NAME1 = 'TSLambda2Lambda1-Stack'
-STACK_NAME2 = 'TSLambda2Lambda2-Stack'
 
 def main(args):    
     print(f'Testing http request to stack #{args.stack}')
@@ -20,12 +18,11 @@ def print_result(response):
 def get_url(args):    
     with open(f'../cdk{args.stack}/stack-data.json', 'rb') as f:
         data = json.loads(f.read())
-        url = data[get_stack_name(args)]['url']
+        stack_name = list(data.keys())[0]
+        url = data[stack_name]['url']
         print(url)
         return url
         
-def get_stack_name(args):
-    return STACK_NAME1 if args.stack == '1' else STACK_NAME2
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

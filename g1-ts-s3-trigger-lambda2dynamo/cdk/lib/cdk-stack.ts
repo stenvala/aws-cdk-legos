@@ -3,6 +3,7 @@ import * as dynamodb from "@aws-cdk/aws-dynamodb";
 import * as iam from "@aws-cdk/aws-iam";
 import * as lambda from "@aws-cdk/aws-lambda";
 import { S3EventSource } from "@aws-cdk/aws-lambda-event-sources";
+import * as log from "@aws-cdk/aws-logs";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 
@@ -58,6 +59,7 @@ export class CdkStack extends cdk.Stack {
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.stepFunction",
       environment: this.getLambdaEnvVars(),
+      logRetention: log.RetentionDays.ONE_DAY,
     });
   }
 
@@ -67,6 +69,7 @@ export class CdkStack extends cdk.Stack {
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.httpHandler",
       environment: this.getLambdaEnvVars(),
+      logRetention: log.RetentionDays.ONE_DAY,
     });
 
     const api = new apigw.LambdaRestApi(this, "ApiGW", {

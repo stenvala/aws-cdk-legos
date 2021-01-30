@@ -4,4 +4,4 @@ import "source-map-support/register";
 import { CdkStack } from "../lib/cdk-stack";
 
 const app = new cdk.App();
-new CdkStack(app);
+new CdkStack(app, "G2-PythonStepFunctions-Stack");

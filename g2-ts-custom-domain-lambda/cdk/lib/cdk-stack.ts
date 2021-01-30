@@ -11,13 +11,13 @@ export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, PREFIX + id, props);
 
-    const name = new lambda.Function(this, PREFIX + "Lambda", {
+    const name = new lambda.Function(this, "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist"),
       handler: "app.lambdaHandler",
     });
 
-    const api = new apigw.LambdaRestApi(this, PREFIX + "ApiGw", {
+    const api = new apigw.LambdaRestApi(this, "ApiGw", {
       handler: name,
       proxy: true,
     });

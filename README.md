@@ -7,6 +7,14 @@ Stacks use various programming languages, but CDK uses only TypeScript. I have f
 - Strong typing, easy intellisense
 - Structural (not nominal) typing seems really the way to have most flexibly properties set to constructs
 
+## Bootstrap CDK environment
+
+Bootstrap CDK with your account if that is not yet done. Note, this is not related to your IAM user, but to account that you have access to. It will create a cloudformation stack called CDKToolkit which has a bucket that is used in cloudformation deployments. These are required foor all regions to which you aim to deploy.
+
+```bash
+cdk bootstrap aws://{account}/{region}
+```
+
 ## Python virtual environment
 
 In demo walkthroughs we use Python and there are some requirements. It is advisable to create virtual environment. Following commands set it up for you

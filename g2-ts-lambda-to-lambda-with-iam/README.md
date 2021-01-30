@@ -10,9 +10,8 @@ This creates two Lambdas and not in a way how you would do them in production - 
 npm run init # After clone init all 3rd parties
 npm run build # Build application
 npm run deploy1 # Deploy CloudFormation stack 1
-npm run deploy2 # Deploy CloudFormation stack 2
+npm run deploy2 # Deploy CloudFormation stack 2 (should be deployed before 1)
 npm run deploy # Deploy CloudFormation stacks
-npm run firstdeploy # First deployment requires three deploys to get urls right
 npm run demo # Make http request to lambda1 that calls lambda2 as well as directly to lambda2. The second request will fail because missing auth.
 npm run destroy # Destroy CloudFormation stacks
 npm run clean # Clear all local files (build, cdk data, node_modules)

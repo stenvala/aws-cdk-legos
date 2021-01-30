@@ -1,5 +1,6 @@
 import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as log from "@aws-cdk/aws-logs";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 
@@ -25,6 +26,7 @@ export class CdkStack extends cdk.Stack {
       environment: {
         BUCKET_NAME: this.bucketName,
       },
+      logRetention: log.RetentionDays.ONE_DAY,
     });
 
     const api = new apigw.LambdaRestApi(this, "ApiGw", {
