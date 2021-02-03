@@ -53,7 +53,6 @@ export class DemoAuth {
         allowCredentials: true,
         allowMethods: apigw.Cors.ALL_METHODS,
         allowHeaders: ["*"],
-        statusCode: 200,
       },
       defaultIntegration: integration,
       defaultMethodOptions: {
