@@ -23,33 +23,32 @@ export class Amis {
   lambda: lambda.Function;
   deleteLambda: lambda.Function;
   eventBus: events.EventBus;
+  apigw: apigw.LambdaRestApi;
   private authStack: A.Auth;
   private stack: cdk.Stack;
 
   private readonly prefix: string;
 
-  constructor(
-    stack: cdk.Stack,
-    prefix: string,
-    authStack: A.Auth,
-    props: GlobalProps
-  ) {
+  constructor(stack: cdk.Stack, authStack: A.Auth, private props: GlobalProps) {
     this.stack = stack;
     this.authStack = authStack;
     this.deleter(stack);
 
-    this.prefix = prefix + PREFIX;
-    this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
+    this.lambda = new lambda.Function(stack, PREFIX + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
       timeout: cdk.Duration.seconds(30) as any,
       environment: {
         authType: props.amisAuth,
-        authUrl: authStack.apigw.url + "decode",
+        authUrl:
+          (props.useCustomDomainName
+            ? props.customDomainNameFactory!.getUrl("auth")
+            : authStack.apigw.url) + "decode",
         bucket: BUCKET_NAME,
       },
       memorySize: 512,
+      reservedConcurrentExecutions: props.maxConcurrency,
       logRetention: log.RetentionDays.ONE_DAY,
     });
     this.initBucket();
@@ -75,6 +74,7 @@ export class Amis {
       environment: {
         bucketName: BUCKET_NAME,
       },
+      reservedConcurrentExecutions: this.props.maxConcurrency,
     });
 
     this.eventBus = new events.EventBus(stack, PREFIX + "ProfileEventBus", {
@@ -92,7 +92,7 @@ export class Amis {
   }
 
   private initBucket() {
-    const bucket = new s3.Bucket(this.stack, this.prefix + "Bucket", {
+    const bucket = new s3.Bucket(this.stack, PREFIX + "Bucket", {
       versioned: false,
       bucketName: BUCKET_NAME,
       encryption: s3.BucketEncryption.KMS_MANAGED,
@@ -112,11 +112,11 @@ export class Amis {
   }
 
   private withoutAuth() {
-    const api = new apigw.LambdaRestApi(this.stack, this.prefix + "ApiGw", {
+    this.apigw = new apigw.LambdaRestApi(this.stack, PREFIX + "ApiGw", {
       handler: this.lambda,
       proxy: true,
     });
-    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: api.url });
+    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }
 
   private withLambdaAuthorizer() {
@@ -125,8 +125,8 @@ export class Amis {
     });
 
     // Cors don't still work
-    const api = new apigw.RestApi(this.stack, this.prefix + "ApiGw", {
-      restApiName: "AMISAPI",
+    this.apigw = new apigw.RestApi(this.stack, PREFIX + "ApiGw", {
+      restApiName: PREFIX + "ApiGW",
       /*
       deployOptions: {
         loggingLevel: apigw.MethodLoggingLevel.INFO,
@@ -148,8 +148,8 @@ export class Amis {
     });
 
     // This is crucial!
-    api.root.addProxy();
+    this.apigw.root.addProxy();
 
-    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: api.url });
+    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }
 }

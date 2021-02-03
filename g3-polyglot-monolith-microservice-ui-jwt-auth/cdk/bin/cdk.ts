@@ -5,7 +5,10 @@ import { CdkStack } from "../lib/cdk-stack";
 import { GlobalProps } from "../lib/models";
 
 let rawdata = fs.readFileSync("props.json");
-const props: GlobalProps = JSON.parse(rawdata.toString("utf-8"));
+const p: GlobalProps = JSON.parse(rawdata.toString("utf-8"));
+p.useCustomDomainName = (p as any).useCustomDomainName === "y";
+p.maxConcurrency = 5;
+const props: GlobalProps = p;
 
 const app = new cdk.App();
-new CdkStack(app, "Stack", props);
+new CdkStack(app, props);

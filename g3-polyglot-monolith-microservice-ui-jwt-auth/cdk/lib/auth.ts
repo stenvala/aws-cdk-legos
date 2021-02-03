@@ -19,17 +19,13 @@ export class Auth {
   layer: lambda.LayerVersion;
   auth: apigw.TokenAuthorizer;
 
-  private readonly prefix: string;
-
-  constructor(stack: cdk.Stack, prefix: string, props: GlobalProps) {
-    this.prefix = prefix + PREFIX;
-
-    this.layer = new lambda.LayerVersion(stack, this.prefix + "Layer", {
+  constructor(stack: cdk.Stack, props: GlobalProps) {
+    this.layer = new lambda.LayerVersion(stack, PREFIX + "Layer", {
       code: lambda.Code.fromAsset(LAYER_LOCATION),
       compatibleRuntimes: [RUNTIME],
     });
 
-    this.lambda = new lambda.Function(stack, this.prefix + "ApiLambda", {
+    this.lambda = new lambda.Function(stack, PREFIX + "ApiLambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       environment: {
@@ -38,27 +34,29 @@ export class Auth {
       handler: HANDLER,
       layers: [this.layer],
       memorySize: 512,
+      reservedConcurrentExecutions: props.maxConcurrency,
       logRetention: log.RetentionDays.ONE_DAY,
     });
 
-    this.apigw = new apigw.LambdaRestApi(stack, this.prefix + "ApiGw", {
+    this.apigw = new apigw.LambdaRestApi(stack, PREFIX + "ApiGw", {
       handler: this.lambda,
       proxy: true,
     });
 
-    if (props.amisAuth === "lambda") {
+    if (props.amisAuth === "lambda" || props.amisAuth === "demo") {
       this.authLambda = new lambda.Function(
         stack,
-        this.prefix + "AuthorizerLambda",
+        PREFIX + "AuthorizerLambda",
         {
           runtime: RUNTIME,
           code: lambda.Code.fromAsset(ASSET_LOCATION),
           handler: AUTH_HANDLER,
           layers: [this.layer],
+          reservedConcurrentExecutions: props.maxConcurrency,
         }
       );
 
-      this.auth = new apigw.TokenAuthorizer(stack, this.prefix + "Authorizer", {
+      this.auth = new apigw.TokenAuthorizer(stack, PREFIX + "Authorizer", {
         identitySource: "method.request.header.Authorization",
         validationRegex: "^Bearer\\s(.*)",
         authorizerName: "CustomJWTAuthorizer",

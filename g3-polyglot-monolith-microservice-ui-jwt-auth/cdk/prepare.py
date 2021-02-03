@@ -13,7 +13,7 @@ def main(args):
             'jwt': 'JWT authenticator in Amis API GW.',
             'lambda': 'Lambda authenticator in Amis API GW.'
         }, args.amisauth),
-        'useCustomDomain': ask_input('Do you want to use custom domain name?', {
+        'useCustomDomainName': ask_input('Do you want to use custom domain name?', {
             'n': 'no',
             'y': 'yes'
         }, args.domain)      

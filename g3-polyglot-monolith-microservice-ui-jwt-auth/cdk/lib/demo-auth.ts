@@ -9,26 +9,21 @@ const ASSET_LOCATION = "../src/demo-auth";
 const HANDLER = "app.handler";
 const RUNTIME = lambda.Runtime.NODEJS_12_X;
 
-const PREFIX = "demoAuth";
+const PREFIX = "demoAuth-";
 
 export class DemoAuth {
   private lambda: lambda.Function;
   private authStack: A.Auth;
   private stack: cdk.Stack;
+  apigw: apigw.RestApi;
 
   private readonly prefix: string;
 
-  constructor(
-    stack: cdk.Stack,
-    prefix: string,
-    authStack: A.Auth,
-    props: GlobalProps
-  ) {
+  constructor(stack: cdk.Stack, authStack: A.Auth, props: GlobalProps) {
     this.stack = stack;
     this.authStack = authStack;
 
-    this.prefix = prefix + PREFIX;
-    this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
+    this.lambda = new lambda.Function(stack, PREFIX + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
@@ -45,8 +40,8 @@ export class DemoAuth {
     });
 
     // Cors don't still work
-    const api = new apigw.RestApi(this.stack, this.prefix + "ApiGw", {
-      restApiName: "AMISAPI",
+    this.apigw = new apigw.RestApi(this.stack, PREFIX + "ApiGw", {
+      restApiName: PREFIX + "ApiGw",
       /*
       deployOptions: {
         loggingLevel: apigw.MethodLoggingLevel.INFO,
@@ -58,6 +53,7 @@ export class DemoAuth {
         allowCredentials: true,
         allowMethods: apigw.Cors.ALL_METHODS,
         allowHeaders: ["*"],
+        statusCode: 200,
       },
       defaultIntegration: integration,
       defaultMethodOptions: {
@@ -68,8 +64,8 @@ export class DemoAuth {
     });
 
     // This is crucial!
-    api.root.addProxy();
+    const res = this.apigw.root.addProxy();
 
-    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: api.url });
+    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }
 }
