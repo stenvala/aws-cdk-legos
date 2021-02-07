@@ -13,6 +13,8 @@ This demo includes
   - Change salt for signing JWT
 - Graphical user interface to try the thing with browser (ui)
 
+To get started add a key ´/Key/AmisAuth/Secret´ to parameter store. Add a uuid to value.
+
 ![plot](../sketches/amis.png)
 
 ## Commands

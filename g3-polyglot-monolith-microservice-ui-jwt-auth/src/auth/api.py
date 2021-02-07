@@ -27,7 +27,7 @@ def encode(body: EncodeBody):
     docId = body.docId
     to_encode = {
         'exp': datetime.utcnow() + timedelta(hours=10),
-        'iss': utils.ISSUER,
+        'iss': utils.get_issuer(),
         'iat': datetime.utcnow(),
         'docId': docId,
         # {i.id: {p: 0 for p in i.permissions} for i in body.permissions},

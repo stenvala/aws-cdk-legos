@@ -3,6 +3,7 @@ import { Amis } from "./amis";
 import { Auth } from "./auth";
 import { CustomDomainNameFactory } from "./custom-domain-name.factory";
 import { DemoAuth } from "./demo-auth";
+import { KeyRotator } from "./key-rotator";
 import { GlobalProps } from "./models";
 import { Mono } from "./mono";
 import { UI } from "./ui";
@@ -27,8 +28,6 @@ export class CdkStack extends cdk.Stack {
       globalProps.customDomainNameFactory = new CustomDomainNameFactory(this);
     }
 
-    //const authKey = new AuthParam(this, PREFIX);
-
     this.authStack = new Auth(this, globalProps);
 
     if (globalProps.amisAuth == "demo") {
@@ -44,6 +43,8 @@ export class CdkStack extends cdk.Stack {
       this.amisStack.eventBus,
       globalProps
     );
+
+    new KeyRotator(this, globalProps);
 
     new UI(this, globalProps);
 

@@ -20,8 +20,6 @@ export class Mono {
   lambda: lambda.Function;
   apigw: apigw.LambdaRestApi;
 
-  private readonly prefix: string;
-
   constructor(
     private stack: CdkStack,
     authStack: Auth,

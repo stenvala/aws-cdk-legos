@@ -68,7 +68,7 @@ export class Amis {
   }
 
   private deleter(stack: cdk.Stack) {
-    this.deleteLambda = new lambda.Function(stack, PREFIX + "DELETE_Lambda", {
+    this.deleteLambda = new lambda.Function(stack, PREFIX + "DeleteLambda", {
       runtime: DELETER_RUNTIME,
       code: lambda.Code.fromAsset(DELETER_LOCATION),
       handler: DELETER_HANDLER,
@@ -78,11 +78,11 @@ export class Amis {
       reservedConcurrentExecutions: this.props.maxConcurrency,
     });
 
-    this.eventBus = new events.EventBus(stack, PREFIX + "ProfileEventBus", {
+    this.eventBus = new events.EventBus(stack, PREFIX + "DeleteEventBus", {
       eventBusName: DELETE_EVENT_BUS_NAME,
     });
 
-    const rule = new events.Rule(stack, PREFIX + "NewRule", {
+    const rule = new events.Rule(stack, PREFIX + "DeleteNewRule", {
       description: "Delete document",
       eventPattern: {
         source: ["mono.deleteDocument"],
