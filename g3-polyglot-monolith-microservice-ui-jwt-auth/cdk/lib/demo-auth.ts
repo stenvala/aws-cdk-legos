@@ -2,6 +2,7 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as log from "@aws-cdk/aws-logs";
 import * as cdk from "@aws-cdk/core";
+import { addCorsOptions } from "./add-cors-options";
 import * as A from "./auth";
 import { GlobalProps } from "./models";
 
@@ -42,28 +43,25 @@ export class DemoAuth {
     // Cors don't still work
     this.apigw = new apigw.RestApi(this.stack, PREFIX + "ApiGw", {
       restApiName: PREFIX + "ApiGw",
-      /*
-      deployOptions: {
-        loggingLevel: apigw.MethodLoggingLevel.INFO,
-        dataTraceEnabled: true,
-      },
-      */
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigw.Cors.ALL_ORIGINS,
-        allowCredentials: true,
-        allowMethods: apigw.Cors.ALL_METHODS,
-        allowHeaders: ["*"],
-      },
-      defaultIntegration: integration,
-      defaultMethodOptions: {
-        apiKeyRequired: false,
-        authorizationType: apigw.AuthorizationType.CUSTOM,
-        authorizer: this.authStack.auth,
-      },
     });
 
-    // This is crucial!
-    const res = this.apigw.root.addProxy();
+    const res = this.apigw.root.addProxy({
+      anyMethod: false,
+      defaultIntegration: integration,
+    });
+
+    const opts = {
+      apiKeyRequired: false,
+      authorizationType: apigw.AuthorizationType.CUSTOM,
+      authorizer: this.authStack.auth,
+    };
+
+    res.addMethod("GET", undefined, opts);
+    res.addMethod("POST", undefined, opts);
+    res.addMethod("PUT", undefined, opts);
+    res.addMethod("DELETE", undefined, opts);
+
+    addCorsOptions(res);
 
     new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }

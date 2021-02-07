@@ -4,7 +4,8 @@ exports.handler =  async function(event, context) {
   console.log("CONTEXT: \n" + JSON.stringify(context, null, 2))
   return {
     statusCode: 200,
-    headers: { "Content-Type": "text/json" },
+    headers: { "Content-Type": "text/json",
+      "Access-Control-Allow-Origin": "*" },
     body: JSON.stringify({ event, context }),
   };
 }

@@ -90,10 +90,7 @@ namespace Amis
                 services.AddScoped<IS3, S3Client>();
                 SecurityContext.AuthType = Environment.GetEnvironmentVariable("authType");
                 SecurityContext.Url = Environment.GetEnvironmentVariable("authUrl");                
-            }
-
-            services.AddAuthentication("Basic")
-                .AddScheme<AuthOpts, AuthHandler>("AUTHENTICATION_FAILED", null);            
+            }            
 
             services.AddCors(options =>
             {
@@ -105,7 +102,10 @@ namespace Amis
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();
                                   });
-            });           
+            });
+
+            services.AddAuthentication("Basic")
+                .AddScheme<AuthOpts, AuthHandler>("AUTHENTICATION_FAILED", null);
 
         }
 

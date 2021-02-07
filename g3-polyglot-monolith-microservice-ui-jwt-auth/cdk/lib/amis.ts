@@ -5,6 +5,7 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as log from "@aws-cdk/aws-logs";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
+import { addCorsOptions } from "./add-cors-options";
 import * as A from "./auth";
 import { DELETE_EVENT_BUS_NAME, GlobalProps } from "./models";
 
@@ -120,35 +121,32 @@ export class Amis {
   }
 
   private withLambdaAuthorizer() {
+    // This is not superhandy way to do. LambdaRestApi does all this automatically, but RestApi doesn't.
     const integration = new apigw.LambdaIntegration(this.lambda, {
       proxy: true,
     });
 
-    // Cors don't still work
     this.apigw = new apigw.RestApi(this.stack, PREFIX + "ApiGw", {
-      restApiName: PREFIX + "ApiGW",
-      /*
-      deployOptions: {
-        loggingLevel: apigw.MethodLoggingLevel.INFO,
-        dataTraceEnabled: true,
-      },
-      */
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigw.Cors.ALL_ORIGINS,
-        allowCredentials: true,
-        allowMethods: apigw.Cors.ALL_METHODS,
-        allowHeaders: ["*"],
-      },
-      defaultIntegration: integration,
-      defaultMethodOptions: {
-        apiKeyRequired: false,
-        authorizationType: apigw.AuthorizationType.CUSTOM,
-        authorizer: this.authStack.auth,
-      },
+      restApiName: PREFIX + "ApiGw",
     });
 
-    // This is crucial!
-    this.apigw.root.addProxy();
+    const resource = this.apigw.root.addProxy({
+      anyMethod: false,
+      defaultIntegration: integration,
+    });
+
+    const opts = {
+      apiKeyRequired: false,
+      authorizationType: apigw.AuthorizationType.CUSTOM,
+      authorizer: this.authStack.auth,
+    };
+
+    resource.addMethod("GET", undefined, opts);
+    resource.addMethod("POST", undefined, opts);
+    resource.addMethod("PUT", undefined, opts);
+    resource.addMethod("DELETE", undefined, opts);
+
+    addCorsOptions(resource);
 
     new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }

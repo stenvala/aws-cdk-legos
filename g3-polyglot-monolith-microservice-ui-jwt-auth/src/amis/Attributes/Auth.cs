@@ -1,6 +1,8 @@
 ﻿using System;
+using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amis.BL;
+using Amis.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,28 +27,31 @@ namespace Amis.Attributes
             var isOk = false;
             switch (SecurityContext.AuthType)
             {
-                case "api":                    
+                case "api":
+                    Console.WriteLine("Using api authorizer");
                     var authHeader = context.HttpContext.Request.Headers["Authorization"];                    
                     isOk = InitFromJwt(authHeader, securityContext);
                     break;
                 case "lambda": // This is jwt lambda
-                    var hasContext = context.HttpContext.Items.TryGetValue("RequestContext", out var cto);
-                    if (!hasContext) {
-                        Console.WriteLine("There was no context");
+                    Console.WriteLine("Using lambda authorizer");                                      
+                    var hasReq = context.HttpContext.Items.TryGetValue("LambdaRequestObject", out var req);                   
+                    if (!hasReq) {                        
                         context.Result = new ForbidResult("AUTHENTICATION_FAILED");
                         return;
                     }
-                    
-                        
+                    isOk = InitFromLambdaRequest((APIGatewayProxyRequest) req, securityContext);                    
                     break;
                 default:
                     throw new Exception($"Authentication type '{SecurityContext.AuthType}' not implemented");
             }
-
             if (!isOk)
             {
                 context.Result = new ForbidResult("AUTHENTICATION_FAILED");
-            }            
+            }
+            else
+            {
+                Console.WriteLine("Authentication is ok");
+            }
         }
 
         private bool InitFromJwt(string authHeader, ISecurityContext securityContext)
@@ -58,6 +63,18 @@ namespace Amis.Attributes
             }
             return false;            
         }
+
+       private bool InitFromLambdaRequest(APIGatewayProxyRequest request, ISecurityContext securityContext)
+       {
+            var auth = request.RequestContext.Authorizer;
+            if (!auth.ContainsKey("meta") || !auth.ContainsKey("permissions") || !auth.ContainsKey("docId"))
+            {
+                return false;
+            }
+            securityContext.InitFromCustomAuthorizerContext(auth);            
+            return true;
+        }
+
     }
 }
 
