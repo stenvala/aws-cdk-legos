@@ -31,8 +31,8 @@ export class CdkStack extends cdk.Stack {
     });
 
     const failed = new sfn.Fail(this, "Failed", {
-      cause: "Batch Job Failed",
-      error: "Job Failed",
+      cause: "Random failure",
+      error: "Job failed (occurs randomly)",
     });
 
     const finalStep = new tasks.LambdaInvoke(this, "Get final status", {

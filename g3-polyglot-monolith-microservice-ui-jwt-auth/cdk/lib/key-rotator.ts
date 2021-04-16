@@ -58,7 +58,7 @@ export class KeyRotator {
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ["ssm:PutParameter"],
-        resources: [`arn:aws:ssm:${region}:*:parameter/${KEY_PREFIX}*`],
+        resources: [`arn:aws:ssm:${region}:*:parameter/${KEY_PREFIX}/*`],
       })
     );
   }
