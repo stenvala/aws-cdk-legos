@@ -8,17 +8,22 @@ import argparse
 
 
 def main(args):
-    ui = util.get_value(args.aws, 'uiUrl')
-    mono = util.get_value(args.aws, 'monoUrl')
-    amis = util.get_value(args.aws, 'amisUrl')
+    print_url('uiUrl', 'monoUrl', 'amisUrl', 'demoAuthUrl')    
 
+    if args.aws:
+        print('Trying also custom domain values')
+        print_url('ui', 'mono', 'amis', 'demoauth')    
+    
+def print_url(ui, mono, amis, auth):
+    ui = util.get_value(args.aws, ui)
+    mono = util.get_value(args.aws, mono)
+    amis = util.get_value(args.aws, amis)    
     print('To use service, copy paste this')
     print(ui + '?amisApi=' + quote(amis) + '&monoApi=' + quote(mono))
 
-    authDemo = util.get_value(args.aws, 'demoAuthUrl')
+    authDemo = util.get_value(args.aws, auth)
     print('To test authorizer, copy this')
     print(ui + '?amisApi=' + quote(authDemo) + '&monoApi=' + quote(mono))
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -1,11 +1,10 @@
 import json
 import requests
 
-STACK_NAME = 'PythonLambdaAndS3toEFS-Stack'
-
 with open('stack-data.json', 'rb') as f:
     data = json.loads(f.read())
-    base = data[STACK_NAME]['url']
+    stack_name = list(data.keys())[0]
+    base = data[stack_name]['url']
 
 urls = ['temp.txt', 'file-does-not-exists']
 for u in urls:

@@ -3,22 +3,21 @@ import * as ec2 from "@aws-cdk/aws-ec2";
 import * as efs from "@aws-cdk/aws-efs";
 import * as lambda from "@aws-cdk/aws-lambda";
 import { S3EventSource } from "@aws-cdk/aws-lambda-event-sources";
+import * as log from "@aws-cdk/aws-logs";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
 
-const PREFIX = "PythonLambdaAndS3toEFS-";
 const BUCKET_NAME = "python-lambdas-s3-to-efs";
 const RUNTIME = lambda.Runtime.PYTHON_3_8;
 const ASSET_LOCATION = "../src";
 const ASSETS = lambda.Code.fromAsset(ASSET_LOCATION);
 const MNT_EFS_TO = "/mnt/efs";
 
-// https://github.com/cdk-patterns/serverless/blob/master/the-efs-lambda/typescript/lib/the-efs-lambda-stack.ts
 export class CdkStack extends cdk.Stack {
   private vpc: ec2.Vpc;
 
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, PREFIX + id, props);
+    super(scope, id, props);
     const efsAccessPoint = this.efs();
 
     this.httpLambda(efsAccessPoint);
@@ -35,6 +34,7 @@ export class CdkStack extends cdk.Stack {
         BUCKET_NAME,
         EFS: MNT_EFS_TO,
       },
+      logRetention: log.RetentionDays.ONE_DAY,
       timeout: cdk.Duration.minutes(15),
       filesystem: lambda.FileSystem.fromEfsAccessPoint(
         efsAccessPoint as any,
@@ -61,6 +61,7 @@ export class CdkStack extends cdk.Stack {
           ],
         },
       }),
+      logRetention: log.RetentionDays.ONE_DAY,
       handler: "http_lambda.handler",
       timeout: cdk.Duration.seconds(30),
       environment: {

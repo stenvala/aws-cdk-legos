@@ -173,12 +173,18 @@ export default class Document extends Vue {
     const response: any = await getMonoAxiosClient((this as any).$store)
       .get(this.getMonoBase() + '/auth/permissions-jwt/' + id)    
     this.jwt = response.data.jwt;
-    this.displayJwt = this.jwt.match(/.{1,50}/g)?.join(' ') || '';    
+    // this.displayJwt = this.jwt.match(/.{1,50}/g)?.join(' ') || '';    
+    const match = this.jwt.match(/.{1,50}/g);
+    this.displayJwt = match ? match.join(' ') : '';    
   }
 
   async addFile(area: Area) {    
-    this.addingTo = area;
-    document.getElementById('file-input')?.click();
+    this.addingTo = area;    
+    // document.getElementById('file-input')?.click();
+    const elem = document.getElementById('file-input');
+    if (elem) {
+      elem.click();
+    }
   }
 
   async selectedFile(event: any) {

@@ -3,7 +3,6 @@ import requests
 from types import SimpleNamespace
 
 
-STACK_NAME = 'NetcoreSys-Stack'
 URLS = None
 
 
@@ -11,14 +10,17 @@ def get_value(is_aws, key):
     global URLS
     if URLS == None:
         URLS = get_urls(is_aws)
+    if key not in URLS:
+        return "undefined"
     return URLS[key]
 
 
 def get_urls(is_aws):
     file = 'stack-data.json' if is_aws else 'local-data.json'
-    with open(file, 'rb') as f:
-        data = json.loads(f.read())
-        return data[STACK_NAME]
+    with open(file, 'r') as f:
+        data = json.loads(f.read())        
+        stack_name = list(data.keys())[0]
+        return data[stack_name]
 
 
 def print_result(response, exit_on_failure=False):

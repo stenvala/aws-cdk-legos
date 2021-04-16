@@ -5,6 +5,7 @@ import * as lambda from "@aws-cdk/aws-lambda";
 import * as log from "@aws-cdk/aws-logs";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as cdk from "@aws-cdk/core";
+import { addCorsOptions } from "./add-cors-options";
 import * as A from "./auth";
 import { DELETE_EVENT_BUS_NAME, GlobalProps } from "./models";
 
@@ -23,33 +24,32 @@ export class Amis {
   lambda: lambda.Function;
   deleteLambda: lambda.Function;
   eventBus: events.EventBus;
+  apigw: apigw.LambdaRestApi;
   private authStack: A.Auth;
   private stack: cdk.Stack;
 
   private readonly prefix: string;
 
-  constructor(
-    stack: cdk.Stack,
-    prefix: string,
-    authStack: A.Auth,
-    props: GlobalProps
-  ) {
+  constructor(stack: cdk.Stack, authStack: A.Auth, private props: GlobalProps) {
     this.stack = stack;
     this.authStack = authStack;
     this.deleter(stack);
 
-    this.prefix = prefix + PREFIX;
-    this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
+    this.lambda = new lambda.Function(stack, PREFIX + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
       timeout: cdk.Duration.seconds(30) as any,
       environment: {
         authType: props.amisAuth,
-        authUrl: authStack.apigw.url + "decode",
+        authUrl:
+          (props.useCustomDomainName
+            ? props.customDomainNameFactory!.getUrl("auth")
+            : authStack.apigw.url) + "decode",
         bucket: BUCKET_NAME,
       },
       memorySize: 512,
+      reservedConcurrentExecutions: props.maxConcurrency,
       logRetention: log.RetentionDays.ONE_DAY,
     });
     this.initBucket();
@@ -68,20 +68,21 @@ export class Amis {
   }
 
   private deleter(stack: cdk.Stack) {
-    this.deleteLambda = new lambda.Function(stack, PREFIX + "DELETE_Lambda", {
+    this.deleteLambda = new lambda.Function(stack, PREFIX + "DeleteLambda", {
       runtime: DELETER_RUNTIME,
       code: lambda.Code.fromAsset(DELETER_LOCATION),
       handler: DELETER_HANDLER,
       environment: {
         bucketName: BUCKET_NAME,
       },
+      reservedConcurrentExecutions: this.props.maxConcurrency,
     });
 
-    this.eventBus = new events.EventBus(stack, PREFIX + "ProfileEventBus", {
+    this.eventBus = new events.EventBus(stack, PREFIX + "DeleteEventBus", {
       eventBusName: DELETE_EVENT_BUS_NAME,
     });
 
-    const rule = new events.Rule(stack, PREFIX + "NewRule", {
+    const rule = new events.Rule(stack, PREFIX + "DeleteNewRule", {
       description: "Delete document",
       eventPattern: {
         source: ["mono.deleteDocument"],
@@ -92,7 +93,7 @@ export class Amis {
   }
 
   private initBucket() {
-    const bucket = new s3.Bucket(this.stack, this.prefix + "Bucket", {
+    const bucket = new s3.Bucket(this.stack, PREFIX + "Bucket", {
       versioned: false,
       bucketName: BUCKET_NAME,
       encryption: s3.BucketEncryption.KMS_MANAGED,
@@ -112,44 +113,41 @@ export class Amis {
   }
 
   private withoutAuth() {
-    const api = new apigw.LambdaRestApi(this.stack, this.prefix + "ApiGw", {
+    this.apigw = new apigw.LambdaRestApi(this.stack, PREFIX + "ApiGw", {
       handler: this.lambda,
       proxy: true,
     });
-    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: api.url });
+    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }
 
   private withLambdaAuthorizer() {
+    // This is not superhandy way to do. LambdaRestApi does all this automatically, but RestApi doesn't.
     const integration = new apigw.LambdaIntegration(this.lambda, {
       proxy: true,
     });
 
-    // Cors don't still work
-    const api = new apigw.RestApi(this.stack, this.prefix + "ApiGw", {
-      restApiName: "AMISAPI",
-      /*
-      deployOptions: {
-        loggingLevel: apigw.MethodLoggingLevel.INFO,
-        dataTraceEnabled: true,
-      },
-      */
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigw.Cors.ALL_ORIGINS,
-        allowCredentials: true,
-        allowMethods: apigw.Cors.ALL_METHODS,
-        allowHeaders: ["*"],
-      },
-      defaultIntegration: integration,
-      defaultMethodOptions: {
-        apiKeyRequired: false,
-        authorizationType: apigw.AuthorizationType.CUSTOM,
-        authorizer: this.authStack.auth,
-      },
+    this.apigw = new apigw.RestApi(this.stack, PREFIX + "ApiGw", {
+      restApiName: PREFIX + "ApiGw",
     });
 
-    // This is crucial!
-    api.root.addProxy();
+    const resource = this.apigw.root.addProxy({
+      anyMethod: false,
+      defaultIntegration: integration,
+    });
 
-    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: api.url });
+    const opts = {
+      apiKeyRequired: false,
+      authorizationType: apigw.AuthorizationType.CUSTOM,
+      authorizer: this.authStack.auth,
+    };
+
+    resource.addMethod("GET", undefined, opts);
+    resource.addMethod("POST", undefined, opts);
+    resource.addMethod("PUT", undefined, opts);
+    resource.addMethod("DELETE", undefined, opts);
+
+    addCorsOptions(resource);
+
+    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }
 }

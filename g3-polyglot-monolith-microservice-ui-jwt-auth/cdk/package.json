@@ -1,5 +1,5 @@
 {
-  "name": "netcore-monolith-attachment-ms-jwt-auth",
+  "name": "polyglot-monolith-microservice-ui-jwt-auth",
   "version": "0.1.0",
   "bin": {
     "ts-hello-world-cdk": "bin/cdk.js"
@@ -11,23 +11,20 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "aws-cdk": "1.82.0",
-    "@aws-cdk/assert": "1.76.0",
+    "aws-cdk": "1.86.0",
+    "@aws-cdk/assert": "1.86.0",
     "@types/node": "10.17.27",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigateway": "^1.82.0",
-    "@aws-cdk/aws-cloudfront": "^1.82.0",
-    "@aws-cdk/aws-dynamodb": "^1.82.0",
-    "@aws-cdk/aws-events": "^1.82.0",
-    "@aws-cdk/aws-events-targets": "^1.82.0",
-    "@aws-cdk/aws-lambda-python": "^1.82.0",
-    "@aws-cdk/aws-s3-deployment": "^1.82.0",
-    "@aws-cdk/aws-sns": "1.82.0",
-    "@aws-cdk/aws-sns-subscriptions": "1.82.0",
-    "@aws-cdk/aws-sqs": "1.82.0",
-    "@aws-cdk/core": "1.82.0"
+    "@aws-cdk/aws-apigateway": "^1.86.0",
+    "@aws-cdk/aws-cloudfront": "^1.86.0",
+    "@aws-cdk/aws-dynamodb": "^1.86.0",
+    "@aws-cdk/aws-events": "^1.86.0",
+    "@aws-cdk/aws-events-targets": "^1.86.0",
+    "@aws-cdk/aws-lambda-python": "^1.86.0",
+    "@aws-cdk/aws-s3-deployment": "^1.86.0",
+    "@aws-cdk/core": "1.86.0"
   }
 }

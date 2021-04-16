@@ -5,9 +5,9 @@ To make this work you need to manually do in AWS Console following things before
 
 - Have domain name, either in AWS or elsewhere. Let's assume this is `example.com`.
 - Create hosted zone to Route53.
-- If your domain name is elsewhere you need to set nameservers of your hosted zone to it in external service, if your domain name is in AWS, it should be in in this hosted zone and already have correct nameserves set.
+- If your domain name is elsewhere you need to set nameservers of your hosted zone in the external service, if your domain name is in AWS, it should be in in this hosted zone and already have correct nameserves set.
 - Add to Parameter Store variable `/HostedZone/MyZone` with value of the id of your hosted zone.
-- Create in Certificate manager wildcard certificate to `\*.example.com`.
+- Create in Certificate manager wildcard certificate to `*.example.com`.
 - Add to Parameter Store variable `/Certificate/MyDomainArn` having as value the ARN of the certificate you just created.
 - Add to Parameter Store variable `/HostedZone/Domain` with value `example.com`.
 

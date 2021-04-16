@@ -2,6 +2,7 @@ import * as apigw from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as log from "@aws-cdk/aws-logs";
 import * as cdk from "@aws-cdk/core";
+import { addCorsOptions } from "./add-cors-options";
 import * as A from "./auth";
 import { GlobalProps } from "./models";
 
@@ -9,26 +10,21 @@ const ASSET_LOCATION = "../src/demo-auth";
 const HANDLER = "app.handler";
 const RUNTIME = lambda.Runtime.NODEJS_12_X;
 
-const PREFIX = "demoAuth";
+const PREFIX = "demoAuth-";
 
 export class DemoAuth {
   private lambda: lambda.Function;
   private authStack: A.Auth;
   private stack: cdk.Stack;
+  apigw: apigw.RestApi;
 
   private readonly prefix: string;
 
-  constructor(
-    stack: cdk.Stack,
-    prefix: string,
-    authStack: A.Auth,
-    props: GlobalProps
-  ) {
+  constructor(stack: cdk.Stack, authStack: A.Auth, props: GlobalProps) {
     this.stack = stack;
     this.authStack = authStack;
 
-    this.prefix = prefix + PREFIX;
-    this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
+    this.lambda = new lambda.Function(stack, PREFIX + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
@@ -45,31 +41,28 @@ export class DemoAuth {
     });
 
     // Cors don't still work
-    const api = new apigw.RestApi(this.stack, this.prefix + "ApiGw", {
-      restApiName: "AMISAPI",
-      /*
-      deployOptions: {
-        loggingLevel: apigw.MethodLoggingLevel.INFO,
-        dataTraceEnabled: true,
-      },
-      */
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigw.Cors.ALL_ORIGINS,
-        allowCredentials: true,
-        allowMethods: apigw.Cors.ALL_METHODS,
-        allowHeaders: ["*"],
-      },
-      defaultIntegration: integration,
-      defaultMethodOptions: {
-        apiKeyRequired: false,
-        authorizationType: apigw.AuthorizationType.CUSTOM,
-        authorizer: this.authStack.auth,
-      },
+    this.apigw = new apigw.RestApi(this.stack, PREFIX + "ApiGw", {
+      restApiName: PREFIX + "ApiGw",
     });
 
-    // This is crucial!
-    api.root.addProxy();
+    const res = this.apigw.root.addProxy({
+      anyMethod: false,
+      defaultIntegration: integration,
+    });
 
-    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: api.url });
+    const opts = {
+      apiKeyRequired: false,
+      authorizationType: apigw.AuthorizationType.CUSTOM,
+      authorizer: this.authStack.auth,
+    };
+
+    res.addMethod("GET", undefined, opts);
+    res.addMethod("POST", undefined, opts);
+    res.addMethod("PUT", undefined, opts);
+    res.addMethod("DELETE", undefined, opts);
+
+    addCorsOptions(res);
+
+    new cdk.CfnOutput(this.stack, PREFIX + "Url", { value: this.apigw.url });
   }
 }

@@ -1,16 +1,16 @@
 {
   "name": "ts-rest-api",
   "scripts": {
-    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
-    "test": "cd src && npx jest --collect-coverage && cd .. && cd cdk && npx jest --collect-coverage",
-    "testwatch": "cd src && npx jest --watch",
-    "start": "cd src && npm run start",
+    "all": "npm run init && npm run build && npm run test && npm run deploy && npm run demo && npm run destroy && npm run clean",
     "build": "rm -rf dist && mkdir dist && cd src && tsc && cd .. && cp src/package.json dist/package.json && cp src/package-lock.json dist/package-lock.json && cd dist && npm install --only=prod && cd ..",
-    "deploy": "cd cdk && cdk deploy --outputs-file ../client/stack-data.json && cd ..",
-    "demo": "cd client && python3 demo.py -aws && python3 demo.py -aws -method post && cd ..",
-    "demolocal": "cd client && python3 demo.py && python3 demo.py -method post && cd ..",
-    "destroy": "cd cdk && cdk destroy && cd ..",
     "clean": "git clean -xdf",
-    "all": "npm run init && npm run build && npm run test && npm run deploy && npm run demo && npm run destroy && npm run clean"
+    "demo": "cd client && python3 demo.py -aws && python3 demo.py -aws -method post && cd ..",
+    "demo-local": "cd client && python3 demo.py && python3 demo.py -method post && cd ..",
+    "deploy": "cd cdk && npx cdk@1.86.0 deploy --outputs-file ../client/stack-data.json && cd ..",
+    "destroy": "cd cdk && npx cdk@1.86.0 destroy && cd ..",
+    "init": "cd src && npm install && cd .. && cd cdk && npm install && cd ..",
+    "start": "cd src && npm run start",
+    "test": "cd src && npx jest@26.6.3 --collect-coverage && cd ..",
+    "test-watch": "cd src && npx jest@26.6.3 --watch"
   }
 }

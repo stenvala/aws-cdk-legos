@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Amazon.Lambda.APIGatewayEvents;
 using Amis.Utils;
 using Newtonsoft.Json;
 
@@ -44,6 +45,7 @@ namespace Amis.BL
         List<string> GetPermissionsOfArea(string id);
         bool HasAreaPermission(string id, string permission);
         void InitFromJwt(string jwt);
+        void InitFromCustomAuthorizerContext(APIGatewayCustomAuthorizerContext context);
     }
 
     public class SecurityContext : ISecurityContext
@@ -156,7 +158,14 @@ namespace Amis.BL
                 SetData(data.Meta, data.Permissions, data.DocId);
             }
         }
-        
+
+        public void InitFromCustomAuthorizerContext(APIGatewayCustomAuthorizerContext auth)
+        {                    
+            SetData(JsonConvert.DeserializeObject<Meta>(auth["meta"].ToString()),
+                JsonConvert.DeserializeObject<List<Permission>>(auth["permissions"].ToString()),
+                auth["docId"].ToString());
+        }
+
     }
 
 }

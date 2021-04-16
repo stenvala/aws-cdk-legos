@@ -2,8 +2,8 @@
   "name": "python-step-functions",
   "scripts": {
     "clean": "git clean -xdf",
-    "deploy": "cd cdk && cdk deploy && cd ..",
-    "destroy": "cd cdk && cdk destroy && cd ..",
+    "deploy": "cd cdk && npx cdk@1.86 deploy && cd ..",
+    "destroy": "cd cdk && npx cdk@1.86 destroy && cd ..",
     "init": "cd cdk && npm install && cd .."
   }
 }

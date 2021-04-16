@@ -20,26 +20,25 @@ export class Mono {
   lambda: lambda.Function;
   apigw: apigw.LambdaRestApi;
 
-  private readonly prefix: string;
-
   constructor(
     private stack: CdkStack,
-    prefix: string,
     authStack: Auth,
     eventBus: events.EventBus,
     props: GlobalProps
   ) {
-    this.prefix = prefix + PREFIX;
-
-    this.lambda = new lambda.Function(stack, this.prefix + "Lambda", {
+    this.lambda = new lambda.Function(stack, PREFIX + "Lambda", {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION),
       handler: HANDLER,
       timeout: Duration.seconds(30) as any,
       memorySize: 1024,
       logRetention: log.RetentionDays.ONE_DAY,
+      reservedConcurrentExecutions: props.maxConcurrency,
       environment: {
-        authUrl: authStack.apigw.url + "jwt",
+        authUrl:
+          (props.useCustomDomainName
+            ? props.customDomainNameFactory!.getUrl("auth")
+            : authStack.apigw.url) + "jwt",
         authType: props.amisAuth,
         deleteEventBus: DELETE_EVENT_BUS_NAME,
       },
@@ -53,7 +52,7 @@ export class Mono {
 
     this.lambda.addToRolePolicy(policyStatement);
 
-    this.apigw = new apigw.LambdaRestApi(stack, this.prefix + "ApiGw", {
+    this.apigw = new apigw.LambdaRestApi(stack, PREFIX + "ApiGw", {
       handler: this.lambda,
       defaultCorsPreflightOptions: {
         allowOrigins: apigw.Cors.ALL_ORIGINS,
@@ -74,7 +73,7 @@ export class Mono {
   }
 
   private getTable(tableName: string) {
-    return new dynamodb.Table(this.stack, this.prefix + "Table" + tableName, {
+    return new dynamodb.Table(this.stack, PREFIX + "Table" + tableName, {
       partitionKey: {
         name: "Id",
         type: dynamodb.AttributeType.STRING,
