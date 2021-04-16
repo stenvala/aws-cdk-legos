@@ -4,13 +4,13 @@ import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
 import * as fs from "fs";
 
-const PREFIX = "Lambda2LambdaSQS-API-";
+const OTHER_STACK_NAME = "G3-TSCrossAccountSQS-SQS2Lambda-Stack";
 
 // Get url of second lambda
 function getQueueUrl() {
   try {
     const data = fs.readFileSync("../cdk2/stack-data.json", "utf8");
-    return JSON.parse(data)["Lambda2LambdaSQS-SQSLambda-Stack"]["queueUrl"];
+    return JSON.parse(data)[OTHER_STACK_NAME]["queueUrl"];
   } catch (error) {
     return "NOT_AVAILABLE";
   }
@@ -19,7 +19,7 @@ function getQueueUrl() {
 function getRoleArn() {
   try {
     const data = fs.readFileSync("../cdk2/stack-data.json", "utf8");
-    return JSON.parse(data)["Lambda2LambdaSQS-SQSLambda-Stack"]["roleArn"];
+    return JSON.parse(data)[OTHER_STACK_NAME]["roleArn"];
   } catch (error) {
     return "NOT_AVAILABLE";
   }
@@ -27,11 +27,11 @@ function getRoleArn() {
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, PREFIX + id, props);
+    super(scope, id, props);
 
     const roleArn = getRoleArn();
 
-    const fun = new lambda.Function(this, PREFIX + "Lambda", {
+    const fun = new lambda.Function(this, "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist1"),
       handler: "app.lambdaHandler",
@@ -41,7 +41,7 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
-    const gw = new apigw.LambdaRestApi(this, PREFIX + "ApiGw", {
+    const gw = new apigw.LambdaRestApi(this, "ApiGw", {
       handler: fun,
       proxy: true,
     });
@@ -56,5 +56,6 @@ export class CdkStack extends cdk.Stack {
 
     // Save these outputs
     new cdk.CfnOutput(this, "url", { value: gw.url });
+    new cdk.CfnOutput(this, "lambdaRoleArn", { value: fun.role!.roleArn });
   }
 }

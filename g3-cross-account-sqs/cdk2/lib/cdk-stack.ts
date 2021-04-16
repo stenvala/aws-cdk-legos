@@ -5,17 +5,15 @@ import { SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import * as sqs from "@aws-cdk/aws-sqs";
 import { Duration } from "@aws-cdk/core";
 
-const PREFIX = "Lambda2LambdaSQS-SQSLambda-";
-
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
-    super(scope, PREFIX + id, props);
+    super(scope, id, props);
 
-    const queue = new sqs.Queue(this, PREFIX + "Queue", {
+    const queue = new sqs.Queue(this, "Queue", {
       visibilityTimeout: Duration.seconds(30), // default,
     });
 
-    const fun = new lambda.Function(this, PREFIX + "Lambda", {
+    const fun = new lambda.Function(this, "Lambda", {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist2"),
       handler: "app.lambdaHandler",
@@ -34,15 +32,16 @@ export class CdkStack extends cdk.Stack {
       actions: ["sqs:SendMessage"],
     });
 
-    const policy = new iam.Policy(this, PREFIX + "Policy", {
+    const policy = new iam.Policy(this, "Policy", {
       statements: [policyStatement],
     });
 
     // Might be that we don't need role, but policy would be enough
-    const roleName = PREFIX + "SQSSendMessageRole";
+    const roleName = "SQSSendMessageRole";
 
     const role = new iam.Role(this, roleName, {
-      assumedBy: new iam.ServicePrincipal("sqs.amazonaws.com"),
+      //assumedBy: new iam.ServicePrincipal("sqs.amazonaws.com"),
+      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
     });
     role.attachInlinePolicy(policy);
 
