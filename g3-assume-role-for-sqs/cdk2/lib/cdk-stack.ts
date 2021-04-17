@@ -72,5 +72,6 @@ export class CdkStack extends cdk.Stack {
 
     new cdk.CfnOutput(this, "queueUrl", { value: queue.queueUrl });
     new cdk.CfnOutput(this, "roleArn", { value: role.roleArn });
+    new cdk.CfnOutput(this, "bucketName", { value: BUCKET_NAME });
   }
 }

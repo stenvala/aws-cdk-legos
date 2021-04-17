@@ -7,25 +7,25 @@ import {
 } from "@aws-sdk/client-sqs";
 import * as AWS from "aws-sdk";
 
-function assumeRole() {
+type Obj = { roleArn: string; queueUrl: string; msg: string };
+
+function assumeRole(roleArn: string) {
   return new Promise((resolve, reject) => {
     const sts = new AWS.STS();
     const params = {
-      RoleArn: process.env.ROLE_ARN,
+      RoleArn: roleArn,
       RoleSessionName: "demo-session",
       DurationSeconds: 900,
     };
-    console.log("Trying to assume role with params");
+    console.log("Trying to assume role with parameters");
     console.log(params);
     sts.assumeRole(params, function (err, data) {
       if (err) {
-        // an error occurred
-        console.log("Cannot assume role");
+        console.log("Can't assume role");
         console.log(err, err.stack);
         resolve(false);
       } else {
         console.log("Assumed role sucessfully");
-        // successful response
         resolve({
           accessKeyId: data.Credentials.AccessKeyId,
           secretAccessKey: data.Credentials.SecretAccessKey,
@@ -36,49 +36,48 @@ function assumeRole() {
   });
 }
 
-async function sendMessage() {
-  const accessParams = await assumeRole();
+async function sendMessage(obj: Obj) {
+  console.log("Sending message with parameters", obj);
+  const accessParams = await assumeRole(obj.roleArn);
   if (!accessParams) {
-    console.error(
-      "Can't set role, thus can't send a message but not quitting now"
-    );
     return {
       statusCode: 403,
       headers: { "Content-Type": "text/plain" },
       body: "Unauthorized",
     };
   }
-  console.log("Role set correctly");
+
   // Set the parameters
   const params: SendMessageCommandInput = {
     DelaySeconds: 10,
-    MessageBody: JSON.stringify({ hello: "world" }),
-    QueueUrl: process.env.QUEUE_URL,
+    MessageBody: JSON.stringify({ msg: obj.msg }),
+    QueueUrl: obj.queueUrl,
   };
+
+  console.log("Sending message with parameters");
+  console.log(params);
 
   // Create SQS service object
   const client = new SQSClient({
     region: process.env.AWS_REGION,
     credentials: accessParams as any,
   });
-  // async/await.
+
   try {
-    const data = await client.send(new SendMessageCommand(params));
-    // process data
+    return await client.send(new SendMessageCommand(params));
   } catch (error) {
     console.log(error);
     return error;
   }
-  return true;
 }
 
 export async function lambdaHandler(event, context) {
-  console.log(event);
   console.log(
-    "Called first lambda via URL, now sending SQS message that is picked by the other lambda"
+    "Called first lambda via URL, now sending SQS message that is processed by the other lambda"
   );
+  const body: Obj = JSON.parse(event.body);
 
-  const status = await sendMessage();
+  const status = await sendMessage(body);
 
   return {
     statusCode: 200,
