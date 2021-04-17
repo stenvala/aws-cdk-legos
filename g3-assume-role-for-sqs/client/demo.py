@@ -2,7 +2,9 @@ import json
 import requests
 import argparse
 import time
-import subprocess
+import boto3
+
+client = boto3.client('s3')
 
 FILE_NAME = 'temp.json'
 
@@ -24,8 +26,11 @@ def main(args):
 
     if not args.nodelete:
         print(f'Deleting file')        
-        for output in execute(['aws', 's3', 'rm', f's3://{bucket_name}/{FILE_NAME}']):
-            print(output)
+        response = client.delete_object(
+           Bucket=bucket_name,
+           Key=FILE_NAME)
+        print(response)
+
     else:
         print(f'Keeping file in S3')
 
@@ -35,16 +40,14 @@ def check_until_file(bucket_name, round=0):
         print('Too many tries. Stopping.')
         return False
     print(f'Checking file for the {round} time')
-    for output in execute(['aws', 's3', 'ls', f's3://{bucket_name}']):
-        print(output)
-        if FILE_NAME in output:
-            print('File found')
-            print(output)
-            return True
-        else:
-            print('File not found. Waiting 1 s')
-            time.sleep(1)
-            return check_until_file(bucket_name, round + 1)
+    objs = client.list_objects_v2(Bucket=bucket_name)
+    if 'Contents' in objs:
+        for i in objs['Contents']:
+            if i['Key'] == FILE_NAME:
+                return True
+    print('File not found. Waiting 1 s')
+    time.sleep(1)
+    return check_until_file(bucket_name, round + 1)
     
 
 def print_result(response):    
@@ -71,17 +74,6 @@ def get_queue_params():
 
 def get_bucket_name():    
     return get_queue_params()['bucketName']
-
-
-def execute(cmd):
-    print('Executing %s' % " ".join(cmd))
-    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-    for stdout_line in iter(popen.stdout.readline, ""):
-        yield stdout_line 
-    popen.stdout.close()
-    return_code = popen.wait()
-    if return_code:
-        raise subprocess.CalledProcessError(return_code, cmd)
 
 
 if __name__ == "__main__":
