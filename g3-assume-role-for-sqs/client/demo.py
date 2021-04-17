@@ -7,25 +7,27 @@ import boto3
 client = boto3.client('s3')
 
 FILE_NAME = 'temp.json'
-
+WAIT_TIME = 2
 
 def main(args):    
-    print(f'Sending message {args.msg}')
-    url = get_url()
-    request_data = get_queue_params()
-    request_data['msg'] = args.msg
-    print(request_data)
-    data = requests.post(get_url(), json=request_data)
-    print_result(data)
-    print(f'Checking if file is there')
     bucket_name = get_bucket_name()
-    was_file_found = check_until_file(bucket_name)
+    if not args.onlydelete:
+        print(f'Sending message {args.msg}')
+        url = get_url()
+        request_data = get_queue_params()
+        request_data['msg'] = args.msg
+        print(request_data)
+        data = requests.post(get_url(), json=request_data)
+        print_result(data)
+        print(f'Checking if file is there')        
+        was_file_found = check_until_file(bucket_name)
 
-    if not was_file_found:
-        return    
+        if not was_file_found:
+            return    
 
-    if not args.nodelete:
-        print(f'Deleting file')        
+    if not args.nodelete:        
+        print(f'Waiting a little and deleting file')        
+        time.sleep(WAIT_TIME * 2)
         response = client.delete_object(
            Bucket=bucket_name,
            Key=FILE_NAME)
@@ -35,7 +37,7 @@ def main(args):
         print(f'Keeping file in S3')
 
 
-def check_until_file(bucket_name, round=0):
+def check_until_file(bucket_name, round=1):
     if round > 10:
         print('Too many tries. Stopping.')
         return False
@@ -45,8 +47,8 @@ def check_until_file(bucket_name, round=0):
         for i in objs['Contents']:
             if i['Key'] == FILE_NAME:
                 return True
-    print('File not found. Waiting 1 s')
-    time.sleep(1)
+    print(f'File not found. Waiting {WAIT_TIME} s')
+    time.sleep(WAIT_TIME)
     return check_until_file(bucket_name, round + 1)
     
 
@@ -77,9 +79,12 @@ def get_bucket_name():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()       
+    parser = argparse.ArgumentParser()  
+
     parser.add_argument('-msg', default='Hello dude!')
     parser.add_argument('-nodelete', action='store_true')
+    parser.add_argument('-onlydelete', action='store_true')
+    
     args = parser.parse_args()
 
     main(args)

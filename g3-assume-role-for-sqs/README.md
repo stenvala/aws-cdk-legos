@@ -8,6 +8,8 @@ The interesting thing is that the microservice 1 is completely unaware of the mi
 * URL of SQS
 * Message to be sent
 
+In a real use case the ARN and URL of SQS might come from parameter store from other persistent storage.
+
 Microservice 1 is able to assume the role (that is granted by microservice 2 and policy given to lambda in microservice 1 that allows assuming roles in general).
 
 ![plot](../sketches/sqs-assume-architecture.png)

@@ -116,6 +116,13 @@ To learn:
 
 ## Grade 3
 
+### assume-role-for-sqs
+
+To learn:
+
+- SQS
+- What assumed roles are and how to use them in loosely coupled architectures 
+
 ### polyglot-monolith-microservice-ui-jwt-auth
 
 Previous stacks operate with one programming language and if that's not python, there may be some python used in demos. For this following languages / frameworks should be somehow understood. However, I don't know Vue for example, but did this anyway with it.

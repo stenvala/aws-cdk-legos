@@ -23,7 +23,7 @@ export class CdkStack extends cdk.Stack {
     super(scope, id, props);
 
     const queue = new sqs.Queue(this, "Queue", {
-      visibilityTimeout: Duration.seconds(30), // default,
+      visibilityTimeout: Duration.seconds(30), // default
     });
 
     const fun = new lambda.Function(this, "Lambda", {
@@ -36,13 +36,14 @@ export class CdkStack extends cdk.Stack {
       },
     });
 
+    // Trigger lambda from SQS
     fun.addEventSource(
       new SqsEventSource(queue, {
         batchSize: 1,
       })
     );
 
-    // This is the role for sending message to SQS from other lambda
+    // Create role that must be assumed to be able to send message to SQS
     const policyStatement = new iam.PolicyStatement({
       resources: [queue.queueArn],
       effect: iam.Effect.ALLOW,
@@ -54,12 +55,12 @@ export class CdkStack extends cdk.Stack {
     });
 
     const role = new iam.Role(this, "SQSSendMessageRole", {
-      // This tells who can assume this role, for multiple use compositePrincipal
+      // This tells who can assume this role, use iam.CompositePrincipal for multiple roles that can assume this
       assumedBy: new iam.ArnPrincipal(getRoleArn()),
     });
     role.attachInlinePolicy(policy);
 
-    // Add also S3 bucket for writing a file
+    // Add S3 bucket for writing the S3 file
     const bucket = new s3.Bucket(this, "Bucket", {
       versioned: false,
       bucketName: BUCKET_NAME,

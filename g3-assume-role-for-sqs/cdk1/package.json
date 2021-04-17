@@ -1,5 +1,5 @@
 {
-  "name": "g3-cross-account-sqs-1",
+  "name": "g3-assume-role-for-sqs-1",
   "version": "0.1.0",
   "bin": {
     "cdk": "bin/cdk.js"

@@ -1,5 +1,5 @@
 {
-  "name": "cross-account-sqs",
+  "name": "g3-assume-role-for-sqs",
   "scripts": {
     "init": "cd src1 && npm install && cd .. && cd src2 && npm install && cd .. && cd cdk1 && npm install && cd .. && cd cdk2 && npm install && cd ..",
     "build1": "rm -rf dist1 && mkdir dist1 && cd src1 && tsc && cd .. && cp src1/package.json dist1/package.json && cp src1/package-lock.json dist1/package-lock.json && cd dist1 && npm install --only=prod && cd ..",

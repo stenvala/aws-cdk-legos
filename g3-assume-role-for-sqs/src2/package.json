@@ -1,5 +1,5 @@
 {
-  "name": "ts-lambda-to-lambda-with-iam",
+  "name": "g3-assume-role-for-sqs-async-ms",
   "version": "1.0.0",
   "dependencies": {
     "aws-sdk": "^2.806.0",
