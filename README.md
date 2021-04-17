@@ -1,15 +1,17 @@
 # AWS CDK Legos
 
-This repository has conceptually different AWS CDK stacks using various AWS services like Lego blocks to do simple and unnecessary things. Everything is typically really simple: with one command you can go through the whole stack from initialization after clone to destroy and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack (like some very elementary testing). Also, the emphasasis is not on the code, it just provides the basic fail prone functionality to the stack. One should consider about the architecture and blueprints of the CDK code.
+This repository has conceptually different AWS CDK stacks using various AWS services like Lego blocks to do simple and unnecessary things. Everything is typically really simple: with one command you can go through the whole stack from initialization to destroy via demo run and results are displayed in terminal. Many stacks are missing essential things that production grade code requires even though some concepts may have been presented in another, perhaps simpler, stack (like some very elementary testing, detailed consideration of dead letter queues, concurrency limitations etc). Also, the emphasasis is not on the code, it just provides the basic fail prone functionality to the stack. *One should consider the architectures and architectural patterns and use the CDK code for reference.*
 
-Stacks use various programming languages, but CDK uses only TypeScript. I have found that the most suitable, out of available options, for CDK. I can't recommend to use any other language. Main reasons are
+Stacks use various programming languages, but CDK uses only TypeScript. I have found that it is the most suitable, out of available options, for CDK. I can't recommend to use any other language. Main reasons are
 
 - Strong typing, easy intellisense
-- Structural (not nominal) typing seems really the way to have most flexibly properties set to constructs
+- Structural (not nominal) typing seems really the way to have the most flexible properties set to constructs
 
 ## Bootstrap CDK environment
 
 Bootstrap CDK with your account if that is not yet done. Note, this is not related to your IAM user, but to account that you have access to. It will create a cloudformation stack called CDKToolkit which has a bucket that is used in cloudformation deployments. These are required foor all regions to which you aim to deploy.
+
+To get started, execute
 
 ```bash
 cdk bootstrap aws://{account}/{region}
@@ -39,7 +41,7 @@ deactivate
 
 ## Prerequisites
 
-- You must have AWS CLI 2 installed and configured. CDK is executed with NPX so that the walkthroughs don't get outdated. Various stacks require various permissions for your deployer IAM user. These are not explictly mentioned. When you see missing permission in deployment (and it fails), go to AWS Console create groups and attach correct managed policies to these. Then, add your deployer user to these groups.
+- You must have AWS CLI 2 installed and configured. CDK is executed with NPX (not necessarily in all stacks) so that the walkthroughs don't get outdated - however, there can be errors with older typescript compilers. Various stacks require various permissions for your deployer IAM user. These are not explictly mentioned. When you see missing permission in deployment (and it fails), go to AWS Console and IAM, create groups and attach correct managed policies to these. Then, add your deployer user to these groups.
 - NPM is needed
 - Python 3.x is needed
 
@@ -47,9 +49,9 @@ deactivate
 
 Samples are categorized by the advancedness you need to have (grade)
 
-- Grade 1 (g1 prefix): very basic, start going through these in the order presented below if you are newcomer to AWS and/or CDK. Walkthrough is really fast and focus on the things you don't know yet. After you have looked some of these, create your own architecture for some play case, develop a stack and deploy.
+- Grade 1 (g1 prefix): very basic, start going through these in the order presented below if you are newcomer to AWS and/or CDK. Walkthrough is really fast and focus on the things you don't know yet. After you have looked some of these, create your own designs for some toy case, develop a stack, deploy and enjoy.
 - Grade 2 (g2): some simple, but perhaps less used concepts, that might require some more expertise.
-- Grade 3 (g3): full microservice architectures or equivalent complexity.
+- Grade 3 (g3): full microservice architectures or equivalent complexity or a bit more advanced concepts.
 
 ## Grade 1
 
@@ -120,7 +122,7 @@ To learn:
 
 To learn:
 
-- SQS
+- SQS and Lambda
 - What assumed roles are and how to use them in loosely coupled architectures 
 
 ### polyglot-monolith-microservice-ui-jwt-auth
@@ -147,7 +149,6 @@ _Even though this is in master, it is still work in progress_
 ## Coming in the future
 
 - Some EC2 demo
-- SQS
 - Kinesis
 - Cronjob demo
 - ECR
