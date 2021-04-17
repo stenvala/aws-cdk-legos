@@ -1,6 +1,14 @@
 # What's here?
 
-This creates two lambdas and one passes message to other one via SQS. The interesting thing is that the SQS instance is completely unknown by REST API lambda, but the Microservice 2 allows Microservice 1 to send messages to it's SQS. Microservice 1 can assume roles and Microservice 2 creates a role hat has permissions to send message. Then this role is assumed in Microservice 1. RoleArn and Queue Url is sent in post request to Microservice 1.
+This creates two lambdas, one after REST API gateway and one after SQS. When the lambda behind the gateway is called gateway it'll send SQS message which triggers other lambda that saves the message to S3. These form two microservices: 1 for lambda behind the gateway and 2 for SQS, lambda and S3 bucket.
+
+The interesting thing is that the microservice 1 is completely unaware of the microservice 2. Microservice 1 is invoked with a request including three things
+
+* Role ARN that must be assumed when message is sent to SQS 
+* URL of SQS
+* Message to be sent
+
+Microservice 1 is able to assume the role (that is granted by microservice 2 and policy given to lambda in microservice 1 that allows assuming roles in general).
 
 ![plot](../sketches/sqs-assume-architecture.png)
 
