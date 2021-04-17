@@ -8,11 +8,9 @@
     "deploy1": "cd cdk1 && cdk deploy --outputs-file stack-data.json && cd ..",
     "deploy2": "cd cdk2 && cdk deploy --outputs-file stack-data.json && cd ..",
     "deploy": "npm run deploy1 && npm run deploy2",
-    "firstdeploy": "npm run deploy1 && npm run deploy2 && npm run deploy1",
     "demo": "cd client && python3 demo.py && cd ..",
     "destroy": "cd cdk2 && cdk destroy && cd .. && cd cdk1 && cdk destroy && cd ..",
-    "clean": "git clean -xdf",
-    "all": "npm run init && npm run build && npm run firstdeploy && npm run demo"
+    "all": "npm run init && npm run build && npm run deploy && npm run demo"
   },
   "dependencies": {
     "npm": "^7.10.0"
