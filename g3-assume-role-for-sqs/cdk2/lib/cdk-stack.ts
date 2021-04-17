@@ -1,9 +1,22 @@
 import * as iam from "@aws-cdk/aws-iam";
 import * as lambda from "@aws-cdk/aws-lambda";
-import * as cdk from "@aws-cdk/core";
 import { SqsEventSource } from "@aws-cdk/aws-lambda-event-sources";
+import * as log from "@aws-cdk/aws-logs";
+import * as s3 from "@aws-cdk/aws-s3";
 import * as sqs from "@aws-cdk/aws-sqs";
+import * as cdk from "@aws-cdk/core";
 import { Duration } from "@aws-cdk/core";
+import * as fs from "fs";
+
+const BUCKET_NAME = "sqs-assume-temp-bucket";
+
+function getRoleArn() {
+  const data = fs.readFileSync("../cdk1/stack-data.json", "utf8");
+  const obj = JSON.parse(data);
+  for (let i in obj) {
+    return obj[i]["lambdaRoleArn"];
+  }
+}
 
 export class CdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -17,6 +30,10 @@ export class CdkStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset("../dist2"),
       handler: "app.lambdaHandler",
+      logRetention: log.RetentionDays.ONE_DAY,
+      environment: {
+        BUCKET_NAME,
+      },
     });
 
     fun.addEventSource(
@@ -25,7 +42,7 @@ export class CdkStack extends cdk.Stack {
       })
     );
 
-    // This is the role for sending to SQS
+    // This is the role for sending message to SQS from other lambda
     const policyStatement = new iam.PolicyStatement({
       resources: [queue.queueArn],
       effect: iam.Effect.ALLOW,
@@ -36,14 +53,22 @@ export class CdkStack extends cdk.Stack {
       statements: [policyStatement],
     });
 
-    // Might be that we don't need role, but policy would be enough
-    const roleName = "SQSSendMessageRole";
-
-    const role = new iam.Role(this, roleName, {
-      //assumedBy: new iam.ServicePrincipal("sqs.amazonaws.com"),
-      assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
+    const role = new iam.Role(this, "SQSSendMessageRole", {
+      // This tells who can assume this role, for multiple use compositePrincipal
+      assumedBy: new iam.ArnPrincipal(getRoleArn()),
     });
     role.attachInlinePolicy(policy);
+
+    // Add also S3 bucket for writing a file
+    const bucket = new s3.Bucket(this, "Bucket", {
+      versioned: false,
+      bucketName: BUCKET_NAME,
+      encryption: s3.BucketEncryption.KMS_MANAGED,
+      publicReadAccess: false,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
+    bucket.grantReadWrite(fun);
 
     new cdk.CfnOutput(this, "queueUrl", { value: queue.queueUrl });
     new cdk.CfnOutput(this, "roleArn", { value: role.roleArn });

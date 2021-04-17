@@ -1,17 +1,13 @@
 //mport Axios from "axios";
 //mport { aws4Interceptor } from "aws4-axios";
-import * as AWS from "aws-sdk";
 import {
-  SQSClient,
-  AddPermissionCommand,
   SendMessageCommand,
   SendMessageCommandInput,
+  SQSClient,
 } from "@aws-sdk/client-sqs";
-import { SendMessageRequest } from "aws-sdk/clients/sqs";
+import * as AWS from "aws-sdk";
 
-//AWS.config.update({ region: process.env.AWS_REGION });
-
-function assumeRole(): Promise<boolean> {
+function assumeRole() {
   return new Promise((resolve, reject) => {
     const sts = new AWS.STS();
     const params = {
@@ -28,23 +24,29 @@ function assumeRole(): Promise<boolean> {
         console.log(err, err.stack);
         resolve(false);
       } else {
+        console.log("Assumed role sucessfully");
         // successful response
-        AWS.config.update({
+        resolve({
           accessKeyId: data.Credentials.AccessKeyId,
           secretAccessKey: data.Credentials.SecretAccessKey,
           sessionToken: data.Credentials.SessionToken,
         });
-        resolve(true);
       }
     });
   });
 }
 
 async function sendMessage() {
-  const isRoleSet = await assumeRole();
-  if (!isRoleSet) {
-    console.error("Can't set role");
-    return;
+  const accessParams = await assumeRole();
+  if (!accessParams) {
+    console.error(
+      "Can't set role, thus can't send a message but not quitting now"
+    );
+    return {
+      statusCode: 403,
+      headers: { "Content-Type": "text/plain" },
+      body: "Unauthorized",
+    };
   }
   console.log("Role set correctly");
   // Set the parameters
@@ -55,20 +57,23 @@ async function sendMessage() {
   };
 
   // Create SQS service object
-  const client = new SQSClient({ region: process.env.AWS_REGION });
-
+  const client = new SQSClient({
+    region: process.env.AWS_REGION,
+    credentials: accessParams as any,
+  });
   // async/await.
   try {
     const data = await client.send(new SendMessageCommand(params));
-    // process data.
+    // process data
   } catch (error) {
     console.log(error);
-    return false;
+    return error;
   }
   return true;
 }
 
 export async function lambdaHandler(event, context) {
+  console.log(event);
   console.log(
     "Called first lambda via URL, now sending SQS message that is picked by the other lambda"
   );
@@ -77,7 +82,7 @@ export async function lambdaHandler(event, context) {
 
   return {
     statusCode: 200,
-    headers: { "Content-Type": "text/plain" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
   };
 }
