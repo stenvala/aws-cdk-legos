@@ -125,6 +125,13 @@ To learn:
 - SQS and Lambda
 - What assumed roles are and how to use them in loosely coupled architectures 
 
+### ecr-lambda
+
+To learn:
+
+- How to deploy lambdas from ECR images (and how to create ECR images)
+- Minimum working example of Dockerized python FastAPI
+
 ### polyglot-monolith-microservice-ui-jwt-auth
 
 Previous stacks operate with one programming language and if that's not python, there may be some python used in demos. For this following languages / frameworks should be somehow understood. However, I don't know Vue for example, but did this anyway with it.
@@ -148,10 +155,9 @@ _Even though this is in master, it is still work in progress_
 
 ## Coming in the future
 
-- Some EC2 demo
+- EC2
 - Kinesis
-- Cronjob demo
-- ECR
+- Fargate
 
 ## Some important commands
 
