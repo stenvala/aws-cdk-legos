@@ -1,5 +1,3 @@
-//mport Axios from "axios";
-//mport { aws4Interceptor } from "aws4-axios";
 import {
   SendMessageCommand,
   SendMessageCommandInput,
@@ -71,7 +69,7 @@ async function sendMessage(obj: Obj) {
 }
 
 /**
- * In reality we would use here express via serverless, but for the sake of demonstrating,
+ * In reality we would use here express via serverless (in case of REST API), but for the sake of demonstrating,
  * let's keep this simple. This will result in 500 for get requests and is pretty much usable
  * only by the demo client.
  */
