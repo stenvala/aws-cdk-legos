@@ -7,7 +7,8 @@
     "deploy-lambda": "cd cdk-lambda && cdk deploy --outputs-file stack-data.json && cd ..",
     "deploy-ecr": "cd cdk-ecr && cdk deploy --outputs-file stack-data.json && cd ..",
     "all-lambda": "npm run push-image && npm run deploy-lambda",
-    "demo": "cd client && python3 demo.py && cd .."
+    "demo": "cd client && python3 demo.py && cd ..",
+    "destroy": "cd cdk-lambda && cdk destroy && cd .. && cd cdk-ecr && cdk destroy && cd .."
   },
   "dependencies": {
     "npm": "^7.10.0"

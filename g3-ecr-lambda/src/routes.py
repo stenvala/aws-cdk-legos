@@ -8,7 +8,7 @@ class PostRequest(BaseModel):
     name: str
 
 
-HELLO = 'Howdy'
+HELLO = 'Hi'
 
 
 @router.get('')
