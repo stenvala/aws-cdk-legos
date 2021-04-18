@@ -4,9 +4,9 @@
     "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy && npm run clean",
     "build": "rm -rf dist && mkdir dist && cd src && tsc app.ts && cd .. && cp src/app.js dist/app.js",
     "clean": "git clean -xdf",
-    "deploy": "cd cdk && npx cdk@1.86 deploy --outputs-file ../client/stack-data.json && cd ..",
+    "deploy": "cd cdk && npx cdk deploy --outputs-file ../client/stack-data.json && cd ..",
     "demo": "cd client && python3 demo.py && cd ..",
-    "destroy": "cd cdk && npx cdk@1.86 destroy && cd ..",
+    "destroy": "cd cdk && npx cdk destroy && cd ..",
     "init": "cd src && npm install && cd .. && cd cdk && npm install && cd .."
   }
 }

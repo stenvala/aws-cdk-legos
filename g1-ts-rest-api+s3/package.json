@@ -5,8 +5,8 @@
     "build": "rm -rf dist && mkdir dist && cd src && tsc && cd .. && cp src/package.json dist/package.json && cp src/package-lock.json dist/package-lock.json && cd dist && npm install --only=prod && cd ..",
     "clean": "git clean -xdf",
     "demo": "cd client && python3 demo.py -method post && python3 demo.py -method get && python3 demo.py -method delete && cd ..",
-    "deploy": "cd cdk && npx cdk@1.86.0 deploy --outputs-file ../client/stack-data.json && cd ..",
-    "destroy": "npm run empty-bucket && cd cdk && npx cdk@1.86.0 destroy && cd ..",
+    "deploy": "cd cdk && npx cdk deploy --outputs-file ../client/stack-data.json && cd ..",
+    "destroy": "npm run empty-bucket && cd cdk && npx cdk destroy && cd ..",
     "empty-bucket": "aws s3 rm s3://g1-ts-lambda-and-s3-bucket --recursive",
     "init": "cd src && npm install && cd .. && cd cdk && npm install && cd .."
   }

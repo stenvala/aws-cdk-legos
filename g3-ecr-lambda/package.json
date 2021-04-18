@@ -4,11 +4,12 @@
     "init": "cd cdk-ecr && npm install && cd .. && cd cdk-lambda && npm install && cd ..",
     "push-image": "cd build && python3 build_and_deploy.py && cd ..",
     "push-image-keep-tag": "cd build && python3 build_and_deploy.py -tag static-value && cd ..",
-    "deploy-lambda": "cd cdk-lambda && cdk deploy --outputs-file stack-data.json && cd ..",
-    "deploy-ecr": "cd cdk-ecr && cdk deploy --outputs-file stack-data.json && cd ..",
+    "deploy-lambda": "cd cdk-lambda && npx cdk deploy --outputs-file stack-data.json && cd ..",
+    "deploy-ecr": "cd cdk-ecr && npx cdk deploy --outputs-file stack-data.json && cd ..",
     "all-lambda": "npm run push-image && npm run deploy-lambda",
     "demo": "cd client && python3 demo.py && cd ..",
-    "destroy": "cd cdk-lambda && cdk destroy && cd .. && cd cdk-ecr && cdk destroy && cd .."
+    "destroy": "cd cdk-lambda && npx cdk destroy && cd .. && cd cdk-ecr && npx cdk destroy && cd ..",
+    "all": "npm run init && npm run deploy-ecr && npm run all-lambda && npm run demo && npm run destroy"
   },
   "dependencies": {
     "npm": "^7.10.0"

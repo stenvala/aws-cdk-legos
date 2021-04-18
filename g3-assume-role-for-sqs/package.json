@@ -5,12 +5,12 @@
     "build1": "rm -rf dist1 && mkdir dist1 && cd src1 && tsc && cd .. && cp src1/package.json dist1/package.json && cp src1/package-lock.json dist1/package-lock.json && cd dist1 && npm install --only=prod && cd ..",
     "build2": "rm -rf dist2 && mkdir dist2 && cd src2 && tsc && cd .. && cp src2/package.json dist2/package.json && cp src2/package-lock.json dist2/package-lock.json && cd dist2 && npm install --only=prod && cd ..",
     "build": "npm run build1 && npm run build2",
-    "deploy1": "cd cdk1 && cdk deploy --outputs-file stack-data.json && cd ..",
-    "deploy2": "cd cdk2 && cdk deploy --outputs-file stack-data.json && cd ..",
+    "deploy1": "cd cdk1 && npx cdk deploy --outputs-file stack-data.json && cd ..",
+    "deploy2": "cd cdk2 && npx cdk deploy --outputs-file stack-data.json && cd ..",
     "deploy": "npm run deploy1 && npm run deploy2",
     "demo": "cd client && python3 demo.py && cd ..",
-    "destroy": "cd cdk2 && cdk destroy && cd .. && cd cdk1 && cdk destroy && cd ..",
-    "all": "npm run init && npm run build && npm run deploy && npm run demo"
+    "destroy": "cd cdk2 && npx cdk destroy && cd .. && cd cdk1 && npx cdk destroy && cd ..",
+    "all": "npm run init && npm run build && npm run deploy && npm run demo && npm run destroy"
   },
   "dependencies": {
     "npm": "^7.10.0"

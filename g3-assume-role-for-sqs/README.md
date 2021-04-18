@@ -18,13 +18,17 @@ Microservice 1 is able to assume the role (that is granted by microservice 2 and
 
 ```bash
 npm run init # After clone init all 3rd parties
-npm run build # Build applications
-npm run deploy # Deploy CloudFormation stacks
-npm run demo # Make http request to rest lambda
+npm run build1 # Build microservice 1
+npm run build2 # Build microservice 2
+npm run build # Build both microservices
+npm run deploy1 # Deploy microservice 1
+npm run deploy2 # Deploy microservice 2
+npm run deploy # Deploy both microservices
+npm run demo # Make http request to rest lambda and wait until file is added to S3
 npm run destroy # Destroy CloudFormation stacks
 ```
 
-Or run init, build, test, deploy, demo
+Or run init, build, deploy, demo, destroy
 
 ```bash
 npm run all

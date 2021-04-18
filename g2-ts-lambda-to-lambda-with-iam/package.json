@@ -6,9 +6,9 @@
     "clean": "git clean -xdf",
     "demo": "cd client && python3 demo.py -stack 1 && python3 demo.py -stack 2 && cd ..",
     "deploy": "npm run deploy2 && npm run deploy1",
-    "deploy1": "cd cdk1 && npx cdk@1.86.0 deploy --outputs-file stack-data.json && cd ..",
-    "deploy2": "cd cdk2 && npx cdk@1.86.0 deploy --outputs-file stack-data.json && cd ..",
-    "destroy": "cd cdk2 && npx cdk@1.86.0 destroy && cd .. && cd cdk1 && npx cdk@1.86.0 destroy && cd ..",
+    "deploy1": "cd cdk1 && npx cdk deploy --outputs-file stack-data.json && cd ..",
+    "deploy2": "cd cdk2 && npx cdk deploy --outputs-file stack-data.json && cd ..",
+    "destroy": "cd cdk2 && npx cdk destroy && cd .. && cd cdk1 && npx cdk destroy && cd ..",
     "init": "cd src && npm install && cd .. && cd cdk1 && npm install && cd .. && cd cdk2 && npm install && cd .."
   }
 }

@@ -19,7 +19,7 @@ cdk bootstrap aws://{account}/{region}
 
 ## Python virtual environment
 
-In demo walkthroughs we use Python and there are some requirements. It is advisable to create virtual environment. Following commands set it up for you
+In demo walkthroughs we use Python and there are some requirements. It is advisable to create virtual environment. Following commands set it up for you (for MacOS)
 
 ```bash
 python3 -m venv ./venv

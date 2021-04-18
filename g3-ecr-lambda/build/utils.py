@@ -8,10 +8,8 @@ import subprocess
 import argparse
 
 
-# https://stackoverflow.com/questions/24937495/how-can-i-calculate-a-hash-for-a-filesystem-directory-using-python
-
-
 def get_hash(directory):
+    # https://stackoverflow.com/questions/24937495/how-can-i-calculate-a-hash-for-a-filesystem-directory-using-python
     sha_hash = hashlib.md5()
     if not os.path.exists(directory):
         return -1
@@ -36,7 +34,6 @@ def get_hash(directory):
 
     except:
         import traceback
-        # Print the stack traceback
         traceback.print_exc()
         return -2
 
@@ -44,7 +41,6 @@ def get_hash(directory):
 
 
 def run_command(command):
-    # command = command.split(' ')
     p = subprocess.Popen(command,
                          shell=True,
                          stdout=subprocess.PIPE,

@@ -15,6 +15,7 @@ def get_props():
 
 
 def main(args):
+    # Prepare files to folder ./dist
     path = pathlib.Path('dist')
     if path.is_dir():
         shutil.rmtree(path)
@@ -27,6 +28,7 @@ def main(args):
 
     print('Files copied successfully')
 
+    # Solve tag for the build
     data = get_props()
 
     if args.tag is None:
@@ -52,6 +54,7 @@ def main(args):
 
     repo = f'{account}.dkr.ecr.{region}.amazonaws.com/{repository_name}'
 
+    # Build docker image and push to ECR repository
     commands = [
         f'docker build -t {args.tag} .',
         f'aws ecr get-login-password --region {region} | docker login --username AWS --password-stdin {account}.dkr.ecr.{region}.amazonaws.com',
