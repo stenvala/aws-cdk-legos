@@ -1,0 +1,15 @@
+{
+  "name": "g3-ecr-lambda",
+  "scripts": {
+    "init": "cd cdk-ecr && npm install && cd .. && cd cdk-lambda && npm install && cd ..",
+    "push-image": "cd build && python3 build_and_deploy.py && cd ..",
+    "push-image-keep-tag": "cd build && python3 build_and_deploy.py -tag static-value2 && cd ..",
+    "deploy-lambda": "cd cdk-lambda && cdk deploy --outputs-file stack-data.json && cd ..",
+    "deploy-ecr": "cd cdk-ecr && cdk deploy --outputs-file stack-data.json && cd ..",
+    "all-lambda": "npm run push-image && npm run deploy-lambda",
+    "demo": "cd client && python3 demo.py && cd .."
+  },
+  "dependencies": {
+    "npm": "^7.10.0"
+  }
+}
