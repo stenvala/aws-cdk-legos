@@ -1,14 +1,19 @@
-import * as lambda from "@aws-cdk/aws-lambda";
-import * as log from "@aws-cdk/aws-logs";
-import * as sfn from "@aws-cdk/aws-stepfunctions";
-import * as tasks from "@aws-cdk/aws-stepfunctions-tasks";
-import * as cdk from "@aws-cdk/core";
+import {
+  App,
+  aws_lambda as lambda,
+  aws_logs as log,
+  aws_stepfunctions as sfn,
+  aws_stepfunctions_tasks as tasks,
+  Duration,
+  Stack,
+  StackProps,
+} from "aws-cdk-lib";
 
 const RUNTIME = lambda.Runtime.PYTHON_3_8;
 const ASSET_LOCATION = "../src/";
 
-export class CdkStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+export class CdkStack extends Stack {
+  constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const init = this.createStepLambda("Initialization", "initial");
@@ -54,7 +59,7 @@ export class CdkStack extends cdk.Stack {
 
     new sfn.StateMachine(this, "StateMachine", {
       definition,
-      timeout: cdk.Duration.minutes(2) as any,
+      timeout: Duration.minutes(2),
     });
   }
 
@@ -63,7 +68,7 @@ export class CdkStack extends cdk.Stack {
       runtime: RUNTIME,
       code: lambda.Code.fromAsset(ASSET_LOCATION + handler),
       handler: handler + ".handler",
-      timeout: cdk.Duration.minutes(2) as any,
+      timeout: Duration.minutes(2),
       logRetention: log.RetentionDays.ONE_DAY,
     });
     return fun;
