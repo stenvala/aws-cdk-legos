@@ -7,7 +7,7 @@ Add files to S3, there are copied to EFS, fetch these files from Lambda or fetch
 ## Commands
 
 ```bash
-npm run init # After clone init all 3rd parties
+npm run init # After clone init all 3rd parties (note, typically you want to build your lambda's to different directory in build phase, then run tests and finally deploy)
 npm run deploy # Deploy CloudFormation stack
 npm run upload-demo-file # upload some files to bucket with AWS CLI
 npm run demo # Run a demo

@@ -7,7 +7,7 @@
     "deploy": "cd cdk && npx cdk deploy --outputs-file ../client/stack-data.json && cd ..",
     "destroy": "npm run empty-bucket && cd cdk && npx cdk destroy && cd ..",
     "empty-bucket": "aws s3 rm s3://python-lambdas-s3-to-efs --recursive",
-    "init": "cd cdk && npm install && cd ..",
+    "init": "cd cdk && npm install && cd ../src && pip install  -r requirements.txt -t . && cd ..",
     "upload-demo-files": "cd client/resources && aws s3 cp . s3://python-lambdas-s3-to-efs --recursive && cd ../.."
   }
 }

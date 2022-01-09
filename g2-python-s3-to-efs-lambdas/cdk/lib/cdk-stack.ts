@@ -1,11 +1,18 @@
-import * as apigw from "@aws-cdk/aws-apigateway";
-import * as ec2 from "@aws-cdk/aws-ec2";
-import * as efs from "@aws-cdk/aws-efs";
-import * as lambda from "@aws-cdk/aws-lambda";
-import { S3EventSource } from "@aws-cdk/aws-lambda-event-sources";
-import * as log from "@aws-cdk/aws-logs";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as cdk from "@aws-cdk/core";
+import {
+  App,
+  aws_apigateway as apigw,
+  aws_ec2 as ec2,
+  aws_efs as efs,
+  aws_lambda as lambda,
+  aws_lambda_event_sources as eventSources,
+  aws_logs as log,
+  aws_s3 as s3,
+  CfnOutput,
+  Duration,
+  RemovalPolicy,
+  Stack,
+  StackProps,
+} from "aws-cdk-lib";
 
 const BUCKET_NAME = "python-lambdas-s3-to-efs";
 const RUNTIME = lambda.Runtime.PYTHON_3_8;
@@ -13,10 +20,10 @@ const ASSET_LOCATION = "../src";
 const ASSETS = lambda.Code.fromAsset(ASSET_LOCATION);
 const MNT_EFS_TO = "/mnt/efs";
 
-export class CdkStack extends cdk.Stack {
+export class CdkStack extends Stack {
   private vpc: ec2.Vpc;
 
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+  constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
     const efsAccessPoint = this.efs();
 
@@ -35,12 +42,12 @@ export class CdkStack extends cdk.Stack {
         EFS: MNT_EFS_TO,
       },
       logRetention: log.RetentionDays.ONE_DAY,
-      timeout: cdk.Duration.minutes(15),
+      timeout: Duration.minutes(15),
       filesystem: lambda.FileSystem.fromEfsAccessPoint(
-        efsAccessPoint as any,
+        efsAccessPoint,
         MNT_EFS_TO
       ),
-      vpc: this.vpc as any,
+      vpc: this.vpc,
     });
     return fun;
   }
@@ -48,36 +55,24 @@ export class CdkStack extends cdk.Stack {
   private httpLambda(efsAccessPoint: efs.AccessPoint) {
     const fun = new lambda.Function(this, "HttpLambda", {
       runtime: RUNTIME,
-      code: lambda.Code.fromAsset(ASSET_LOCATION, {
-        bundling: {
-          image: lambda.Runtime.PYTHON_3_8.bundlingDockerImage,
-          command: [
-            "bash",
-            "-c",
-            `
-            pip install  -r requirements.txt -t /asset-output &&
-            cp -au . /asset-output
-            `,
-          ],
-        },
-      }),
+      code: ASSETS,
       logRetention: log.RetentionDays.ONE_DAY,
       handler: "http_lambda.handler",
-      timeout: cdk.Duration.seconds(30),
+      timeout: Duration.seconds(30),
       environment: {
         EFS: MNT_EFS_TO,
       },
       filesystem: lambda.FileSystem.fromEfsAccessPoint(
-        efsAccessPoint as any,
+        efsAccessPoint,
         MNT_EFS_TO
       ),
-      vpc: this.vpc as any,
+      vpc: this.vpc,
     });
     const api = new apigw.LambdaRestApi(this, "ApiGw", {
       handler: fun,
       binaryMediaTypes: ["*/*"],
     });
-    new cdk.CfnOutput(this, "url", { value: api.url });
+    new CfnOutput(this, "url", { value: api.url });
     return fun;
   }
 
@@ -88,20 +83,23 @@ export class CdkStack extends cdk.Stack {
       encryption: s3.BucketEncryption.KMS_MANAGED,
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.DESTROY,
     });
     bucket.grantReadWrite(lambda);
 
-    const s3EventSource = new S3EventSource((bucket as unknown) as any, {
+    const s3EventSource = new eventSources.S3EventSource(bucket, {
       events: [s3.EventType.OBJECT_CREATED],
     });
-    lambda.addEventSource((s3EventSource as unknown) as any);
+    lambda.addEventSource(s3EventSource);
   }
 
   private efs() {
+    // This is not the way how you want to deploy a VPC for real production use.
+    // Typically you deploy VPC in different stack with subnets, nat, etc but here we
+    // just need VPC where the EFS locates
     this.vpc = new ec2.Vpc(this, "VPC");
     const fileSystem = new efs.FileSystem(this, "EFS", {
-      vpc: this.vpc as any,
+      vpc: this.vpc,
       encrypted: false,
       lifecyclePolicy: efs.LifecyclePolicy.AFTER_14_DAYS,
       performanceMode: efs.PerformanceMode.GENERAL_PURPOSE,
