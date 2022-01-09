@@ -1,1 +1,1 @@
-demo-f3c911786f008bfb6e02e3fc9c61d75c
+static-value

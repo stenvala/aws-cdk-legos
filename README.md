@@ -17,6 +17,10 @@ To get started, execute
 cdk bootstrap aws://{account}/{region}
 ```
 
+Notes 
+* Some of the stacks use cdk v1 and some cdk v2. v2 requires its own bootstrapping. 
+* Do not install cdk globally if you need to use both versions.
+
 ## Python virtual environment
 
 In demo walkthroughs we use Python and there are some requirements. It is advisable to create virtual environment. Following commands set it up for you (for MacOS)

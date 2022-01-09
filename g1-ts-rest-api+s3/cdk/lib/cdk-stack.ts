@@ -1,17 +1,23 @@
-import * as apigw from "@aws-cdk/aws-apigateway";
-import * as lambda from "@aws-cdk/aws-lambda";
-import * as log from "@aws-cdk/aws-logs";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as cdk from "@aws-cdk/core";
+import {
+  App,
+  aws_apigateway as apigw,
+  aws_lambda as lambda,
+  aws_logs as log,
+  aws_s3 as s3,
+  CfnOutput,
+  RemovalPolicy,
+  Stack,
+  StackProps,
+} from "aws-cdk-lib";
 
 const BUCKET_NAME = "g1-ts-lambda-and-s3-bucket";
 
-export class CdkStack extends cdk.Stack {
+export class CdkStack extends Stack {
   private get bucketName() {
     return BUCKET_NAME;
   }
 
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+  constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const lambdaFun = this.lambda();
@@ -33,7 +39,7 @@ export class CdkStack extends cdk.Stack {
       handler: fun,
     });
 
-    new cdk.CfnOutput(this, "url", { value: api.url });
+    new CfnOutput(this, "url", { value: api.url });
 
     return fun;
   }
@@ -45,7 +51,7 @@ export class CdkStack extends cdk.Stack {
       encryption: s3.BucketEncryption.KMS_MANAGED,
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.DESTROY,
     });
     bucket.grantReadWrite(lambda);
   }
