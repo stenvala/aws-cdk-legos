@@ -17,6 +17,16 @@ def handler(event, context):
                 "assignPublicIp": "ENABLED",
             }
         },
+        overrides={
+            "containerOverrides": [
+                {
+                    "name": "TaskContainer",  # Updated in this container
+                    "environment": [
+                        {"name": "MY_INPUT_1", "value": "My value"}
+                    ],
+                }
+            ]
+        },
     )
     """
         overrides={
