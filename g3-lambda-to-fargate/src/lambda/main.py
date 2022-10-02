@@ -20,7 +20,9 @@ def handler(event, context):
         overrides={
             "containerOverrides": [
                 {
-                    "name": "TaskContainer",  # Updated in this container
+                    "name": os.environ[
+                        "CONTAINER_NAME"
+                    ],  # Updated in this container
                     "environment": [
                         {"name": "MY_INPUT_1", "value": "My value"}
                     ],

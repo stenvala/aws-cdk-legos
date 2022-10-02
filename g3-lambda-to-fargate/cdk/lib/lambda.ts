@@ -10,7 +10,6 @@ const ASSET_LOCATION = "../src/lambda";
 const HANDLER = "main.handler";
 const ASSETS = lambda.Code.fromAsset(ASSET_LOCATION);
 
-("subnet-07fd0695cc4076c37,subnet-0d4c471c9d50479cd");
 export class Lambda {
   constructor(stack: cdk.Stack, props: Props) {
     const fun = new lambda.Function(stack, "Lambda", {
@@ -25,6 +24,7 @@ export class Lambda {
           .join(","),
         TASK_EXECUTION_ROLE_ARN: props.constructs.taskRole!.roleArn,
         SECURITY_GROUP: props.constructs.vpc?.vpcDefaultSecurityGroup!,
+        CONTAINER_NAME: props.constructs.task!.defaultContainer!.containerName,
       },
       logRetention: logs.RetentionDays.ONE_DAY,
     });

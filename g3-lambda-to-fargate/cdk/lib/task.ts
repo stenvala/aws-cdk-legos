@@ -53,7 +53,7 @@ export class Task {
       }),
       environment: {
         EXISTING_ENV_VAR: "prebaked",
-      },
+      },    
     });
   }
 
