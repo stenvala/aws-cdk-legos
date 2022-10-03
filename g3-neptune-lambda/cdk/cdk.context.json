@@ -1,0 +1,71 @@
+{
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Id:region=eu-west-1": "vpc-052f60db5ad5eaf96",
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Subnets/Public1:region=eu-west-1": "subnet-0e1054e2976007d90",
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Subnets/Public2:region=eu-west-1": "subnet-0213dd0fbe40b57a9",
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Subnets/Private1:region=eu-west-1": "subnet-038b583825e1c4ce2",
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Subnets/Private2:region=eu-west-1": "subnet-03b0a66c424e6cd4d",
+  "vpc-provider:account=381639583452:filter.vpc-id=vpc-052f60db5ad5eaf96:region=eu-west-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-052f60db5ad5eaf96",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "isolated-subnet",
+        "type": "Isolated",
+        "subnets": [
+          {
+            "subnetId": "subnet-0d548b59b3bb9c2ca",
+            "cidr": "10.0.4.0/28",
+            "availabilityZone": "eu-west-1a",
+            "routeTableId": "rtb-01cfce22daccdf963"
+          },
+          {
+            "subnetId": "subnet-0a1d43ec8148ac4b0",
+            "cidr": "10.0.4.16/28",
+            "availabilityZone": "eu-west-1b",
+            "routeTableId": "rtb-062c40e0c9a638f32"
+          }
+        ]
+      },
+      {
+        "name": "private-subnet",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-038b583825e1c4ce2",
+            "cidr": "10.0.2.0/24",
+            "availabilityZone": "eu-west-1a",
+            "routeTableId": "rtb-0a3ea8adf0bc356d6"
+          },
+          {
+            "subnetId": "subnet-03b0a66c424e6cd4d",
+            "cidr": "10.0.3.0/24",
+            "availabilityZone": "eu-west-1b",
+            "routeTableId": "rtb-0fd1c098ac1c59b23"
+          }
+        ]
+      },
+      {
+        "name": "public-subnet",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0e1054e2976007d90",
+            "cidr": "10.0.0.0/24",
+            "availabilityZone": "eu-west-1a",
+            "routeTableId": "rtb-0c016c5f836ed5fc7"
+          },
+          {
+            "subnetId": "subnet-0213dd0fbe40b57a9",
+            "cidr": "10.0.1.0/24",
+            "availabilityZone": "eu-west-1b",
+            "routeTableId": "rtb-0235412bb830f6431"
+          }
+        ]
+      }
+    ]
+  },
+  "ssm:account=381639583452:parameterName=/NetworkInfra/SecurityGroup/Webserver/Id:region=eu-west-1": "sg-0c90f5fc1941c779b",
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Subnets/Isolated1:region=eu-west-1": "subnet-0d548b59b3bb9c2ca",
+  "ssm:account=381639583452:parameterName=/NetworkInfra/Vpc/Subnets/Isolated2:region=eu-west-1": "subnet-0a1d43ec8148ac4b0"
+}

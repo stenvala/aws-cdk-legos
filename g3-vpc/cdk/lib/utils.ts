@@ -14,7 +14,7 @@ export function addToParameterStore(
 ) {
   new ssm.StringParameter(stack, props.id, {
     allowedPattern: ".*",
-    description: props.description || "",
+    description: props.description || "Property has no description",
     parameterName: props.parameterName,
     stringValue: props.stringValue,
     tier: ssm.ParameterTier.STANDARD,

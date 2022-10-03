@@ -43,6 +43,15 @@ export class Vpc {
         },
       ],
     });
+
+    this.vpc.addInterfaceEndpoint("ParameterStoreEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.SSM,
+    });
+
+    this.vpc.addInterfaceEndpoint("ECSEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.ECS,
+    });
+
     //
     addToParameterStore(stack, {
       id: "VpcIdPS",
